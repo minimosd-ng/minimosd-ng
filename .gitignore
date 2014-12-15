@@ -1,0 +1,27 @@
+*.a
+*.bin
+*.map
+*.png
+*.log
+*.elf
+*.d
+*.ihex
+*.pyc
+*~
+*.o
+*.lst
+
+minimosd_ng
+tools
+
+# VC++ build artifacts
+*.exp
+*.ilk
+*.lib
+*.pdb
+*.prg
+*.dsc
+
+# vi tmp files
+.*.swp
+.*.swo
