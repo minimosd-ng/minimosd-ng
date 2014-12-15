@@ -1,6 +1,6 @@
 ## Oven controller Makefile
 
-MCU=atmega328
+MCU=atmega328p
 LIBS=
 
 PROGRAMMER_MCU=m328p
@@ -19,7 +19,7 @@ CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-Wa,-ahlms=$(firstword                  \
 	$(filter %.lst, $(<:.c=.lst)))
 
-PRJSRC= src/main.c src/uart.c
+PRJSRC= src/main.c src/uart.c src/max7456.c
 
 
 #  C
