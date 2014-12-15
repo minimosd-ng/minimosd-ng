@@ -3,10 +3,10 @@
 MCU=atmega328
 LIBS=
 
-PROGRAMMER_MCU=m328
+PROGRAMMER_MCU=m328p
 AVRDUDE_PROGRAMMER=usbasp
 
-PROJECT_NAME=ovencontroller
+PROJECT_NAME=minimosd-ng
 
 OPTLEVEL=s
 
@@ -19,7 +19,7 @@ CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-Wa,-ahlms=$(firstword                  \
 	$(filter %.lst, $(<:.c=.lst)))
 
-PRJSRC= src/main.c
+PRJSRC= src/main.c src/uart.c
 
 
 #  C

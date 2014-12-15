@@ -1,11 +1,19 @@
 /* MinimOSD-ng */
 
-#define F_CPU 8000000L
+#include <stdio.h>
+#include "uart.h"
 
-#undef DEBUG
+#define DEBUG
 
 int main(void)
 {
-	return 0;
+  init_uart(19200);
+#ifdef DEBUG
+  printf("\nRESET!\n\n");
+  printf("MinimOSD-ng\n");
+#endif
+  while (1)
+  {
+  }
 }
 
