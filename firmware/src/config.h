@@ -3,5 +3,8 @@
 
 #define F_CPU 16000000L
 
+/* number of mavlink comm channels */
+#define MAVLINK_COMM_NUM_BUFFERS 1
+
 
 #endif
