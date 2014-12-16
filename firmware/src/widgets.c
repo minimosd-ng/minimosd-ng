@@ -28,12 +28,14 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 extern struct widget \
   pitch_widget,
   roll_widget,
-  gpsstat_widget;
+  gpsstats_widget,
+  gpscoords_widget;
 
 WIDGETS( \
   &pitch_widget,
   &roll_widget,
-  &gpsstat_widget );
+  &gpsstats_widget,
+  &gpscoords_widget );
 
 void configure_widgets(void)
 {
