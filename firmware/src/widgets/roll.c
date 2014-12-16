@@ -26,19 +26,19 @@ static void configure(unsigned int addr, unsigned char len)
 
 static void set_mavdata(mavlink_message_t *msg)
 {
-  v = (int) ToDeg(mavlink_msg_attitude_get_pitch(msg));
-  PRINTF("pitch widget: value=%d\n", pitch);
+  v = (int) ToDeg(mavlink_msg_attitude_get_roll(msg));
+  PRINTF("roll widget: value=%d\n", v);
 }
 
 static void draw(void)
 {
   char buf[10];
-  sprintf(buf, "%4d%c%c", v, 0x05, 0x07);
+  sprintf(buf, "%4d%c%c", v, 0x05, 0x06);
   max7456_xy(x, y);
   max7456_puts(buf);
 }
 
 
-WIDGETS_WIDGET(pitch_widget, "Pitch", configure,
+WIDGETS_WIDGET(roll_widget, "Roll", configure,
                set_mavdata, MAVLINK_MSG_ID_ATTITUDE, draw);
 

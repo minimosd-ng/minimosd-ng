@@ -25,9 +25,13 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "max7456.h"
 
 /* widgets */
-extern struct widget pitch_widget;
+extern struct widget \
+  pitch_widget,
+  roll_widget;
 
-WIDGETS(&pitch_widget);
+WIDGETS( \
+  &pitch_widget,
+  &roll_widget );
 
 void configure_widgets(void)
 {
