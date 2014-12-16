@@ -24,7 +24,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "uart.h"
 #include "widgets.h"
 #include <stdio.h>
-#include "mavlink/v1.0/ardupilotmega/mavlink.h"
+#include "mavlink.h"
 
 
 #define DEBUG 1
