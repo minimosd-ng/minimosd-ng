@@ -20,8 +20,6 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 *********************************************************************/
 
-/* basic SPI communication routines */
-
 #include "config.h"
 #include <stdio.h>
 #include <avr/io.h>
