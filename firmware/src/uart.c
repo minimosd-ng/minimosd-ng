@@ -38,7 +38,9 @@ void uart_rx(unsigned char c);
 
 ISR(USART_RX_vect)
 {
-  input_func(UDR0);
+  rx_fifo.buf[rx_fifo.wr++] = UDR0;
+  rx_fifo.wr &= 0x0f;
+  rx_fifo.len++;
 }
 
 static int uart_putchar(char c, FILE *stream)
@@ -64,8 +66,6 @@ void init_uart(unsigned int b)
   rx_fifo.rd = 0;
   rx_fifo.len = 0;
 
-  uart_redirect_input(&uart_rx);
-
 	/* 8 bit, no parity, 1 stop bit */
 	UCSR0C = (3<<UCSZ00);
 
@@ -82,12 +82,6 @@ void set_baudrate(unsigned int b)
 	UBRR0 = (F_CPU/16)/b - 1;
 }
 
-
-void uart_redirect_input(void *f)
-{
-  input_func = f;
-}
-
 unsigned char uart_getc(unsigned char *c)
 {
   unsigned char ret = 0;
@@ -98,13 +92,5 @@ unsigned char uart_getc(unsigned char *c)
     ret = 1;
   }
   return ret;
-}
-
-
-void uart_rx(unsigned char c)
-{
-  rx_fifo.buf[rx_fifo.wr++] = UDR0;
-  rx_fifo.wr &= 0x0f;
-  rx_fifo.len++;
 }
 
