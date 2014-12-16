@@ -57,7 +57,7 @@ static void draw(void)
   if (eph >= 200)
     buf[0] = 0x20;
 
-  sprintf(&buf[1], "%d", nr_sats);
+  sprintf(&buf[1], "%2d", nr_sats);
   max7456_xy(x, y);
   max7456_puts(buf);
 }
