@@ -26,6 +26,8 @@ static void configure(unsigned int addr, unsigned char len)
 
 static void set_mavdata(mavlink_message_t *msg)
 {
+  if (msg->msgid != MAVLINK_MSG_ID_ATTITUDE)
+    return;
   v = (int) ToDeg(mavlink_msg_attitude_get_pitch(msg));
   PRINTF("pitch widget: value=%d\n", pitch);
 }
@@ -39,6 +41,5 @@ static void draw(void)
 }
 
 
-WIDGETS_WIDGET(pitch_widget, "Pitch", configure,
-               set_mavdata, MAVLINK_MSG_ID_ATTITUDE, draw);
+WIDGETS_WIDGET(pitch_widget, "Pitch", configure, set_mavdata, draw);
 

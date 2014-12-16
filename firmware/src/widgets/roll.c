@@ -19,13 +19,15 @@ static int v;
 /* configure widget based on eeprom data */
 static void configure(unsigned int addr, unsigned char len)
 {
-  x = 0;
+  x = 7;
   y = 0;
   props = WIDGET_ENABLED | WIDGET_VISIBLE;
 }
 
 static void set_mavdata(mavlink_message_t *msg)
 {
+  if (msg->msgid != MAVLINK_MSG_ID_ATTITUDE)
+    return;
   v = (int) ToDeg(mavlink_msg_attitude_get_roll(msg));
   PRINTF("roll widget: value=%d\n", v);
 }
@@ -39,6 +41,5 @@ static void draw(void)
 }
 
 
-WIDGETS_WIDGET(roll_widget, "Roll", configure,
-               set_mavdata, MAVLINK_MSG_ID_ATTITUDE, draw);
+WIDGETS_WIDGET(roll_widget, "Roll", configure, set_mavdata, draw);
 
