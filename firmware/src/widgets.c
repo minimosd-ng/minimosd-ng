@@ -37,6 +37,22 @@ void configure_widgets(void)
     all_widgets[i]->configure(0, 0);
 }
 
+
+void set_widget_mavdata(mavlink_message_t *msg)
+{
+  unsigned char i;
+
+  for (i = 0; i < WIDGETS_NUM-1; i++) {
+    if ((all_widgets[i]->set_mavdata != NULL) && \
+        (all_widgets[i]->mav_msgid == msg->msgid)) {
+      all_widgets[i]->set_mavdata(msg);
+    }
+  }
+}
+
+
+
+
 void render_widgets(void)
 {
   unsigned char i;
