@@ -12,8 +12,13 @@ int main(void)
   printf("\nRESET!\n\n");
   printf("MinimOSD-ng\n");
 #endif
+
+  /* init max7456 */
+  init_max7456();
+
   while (1)
   {
+
   }
 }
 
