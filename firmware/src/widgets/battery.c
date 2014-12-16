@@ -85,7 +85,7 @@ static void draw_v(void)
 static void draw_i(void)
 {
   char buf[15];
-  sprintf(buf, "%3.2f%c", i, 0x0d);
+  sprintf(buf, "%5.2f%c", i / 10.0, 0x0e);
   max7456_xy(bi.x, bi.y);
   max7456_puts(buf);
 }
