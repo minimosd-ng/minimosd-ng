@@ -42,7 +42,6 @@ typedef enum {
 #define MAX7456_DMM_INV     0x08
 #define MAX7456_DMM_BLINK   0x10
 #define MAX7456_DMM_BG      0x20
-#define MAX7456_DMM_BG      0x20
 #define MAX7456_DMM_8BIT    0x40
 
 /* RB[0-15] */
@@ -66,6 +65,7 @@ typedef enum {
 
 void init_max7456(void);
 void max7456_putc(char c);
+void max7456_puts(char *s);
 void max7456_xy(unsigned char x, unsigned char y);
 
 #endif

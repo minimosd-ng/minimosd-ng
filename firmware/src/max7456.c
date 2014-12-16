@@ -29,13 +29,15 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define SPI_START 0x01
 #define SPI_END   0x02
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
 #define PRINTF(...)
 #endif
+
+static unsigned int addr;
 
 static void init_spi(void)
 {
@@ -62,32 +64,42 @@ static unsigned char spi_transfer(unsigned char b,
   return SPDR;
 }  
 
-unsigned char max7456_rd(unsigned char reg)
+unsigned char max7456_rd(unsigned char reg, unsigned char flags)
 {
-  spi_transfer(reg | 0x80, SPI_START);
-  return spi_transfer(0xff, SPI_END);
+  spi_transfer(reg | 0x80, SPI_START & flags);
+  return spi_transfer(0xff, SPI_END & flags);
 }
 
-void max7456_wr(max7456_reg_t reg, unsigned char b)
+void max7456_wr(max7456_reg_t reg, unsigned char b, unsigned char flags)
 {
-  spi_transfer(reg, SPI_START);
-  spi_transfer(b, SPI_END);
+  spi_transfer(reg, SPI_START & flags);
+  spi_transfer(b, SPI_END & flags);
 }
 
 void max7456_putc(char c)
 {
-  max7456_wr(MAX7456_REG_DMDI, c);
+  /* set addr msb */
+  max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8), SPI_START);
+  /* set start addr lsb */
+  max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr, 0);
+  max7456_wr(MAX7456_REG_DMDI, c, SPI_END);
 }
+
+void max7456_puts(char *s)
+{
+  max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_AINC, SPI_START);
+  max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8), 0);
+  max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr, 0);
+  do {
+    max7456_wr(MAX7456_REG_DMDI, *s++, 0);
+  } while (*s != '\0');
+  max7456_wr(MAX7456_REG_DMDI, 0xff, SPI_END);
+}
+
 
 void max7456_xy(unsigned char x, unsigned char y)
 {
-  unsigned int addr = y * 30 + x;
-
-  /* set addr msb */
-  max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8));
-
-  /* set start addr lsb */
-  max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr);
+  addr = y * 30 + x;
 }
 
 void init_max7456(void)
@@ -102,11 +114,11 @@ void init_max7456(void)
   PORTD |= (1<<PD2);
 
   /* soft-reset chip */
-  max7456_wr(MAX7456_REG_VM0, MAX7456_VM0_RESET);
+  max7456_wr(MAX7456_REG_VM0, MAX7456_VM0_RESET, SPI_START | SPI_END);
   _delay_ms(100);
 
   /* auto-detect tv standard mode */
-  b = max7456_rd(MAX7456_REG_STAT);
+  b = max7456_rd(MAX7456_REG_STAT, SPI_START | SPI_END);
   if (b & (MAX7456_STAT_PAL | MAX7456_STAT_NTSC)) {
     PRINTF("Video mode detected - reg=%02x\n", b);
     b &= MAX7456_STAT_PAL;
@@ -125,15 +137,15 @@ void init_max7456(void)
   /* set auto sync mode and enable display */
   b &= ~MAX7456_VM0_SYNC;
   b |= MAX7456_VM0_VSYNC | MAX7456_VM0_ENABLE;
-  max7456_wr(MAX7456_REG_VM0, b);
+  max7456_wr(MAX7456_REG_VM0, b, SPI_START | SPI_END);
 
   /* enable auto black-level control */
-  b = max7456_rd(MAX7456_REG_OSDBL);
-  max7456_wr(MAX7456_REG_OSDBL, b & ~MAX7456_OSDBL_AUTO);
+  b = max7456_rd(MAX7456_REG_OSDBL, SPI_START | SPI_END);
+  max7456_wr(MAX7456_REG_OSDBL, b & ~MAX7456_OSDBL_AUTO, SPI_START | SPI_END);
 
   /* set same brightness for all rows */
   for(b = MAX7456_REG_RB0; b <= MAX7456_REG_RB15; b++)
-    max7456_wr(b, MAX7456_RB_WH90 | MAX7456_RB_BL0);
+    max7456_wr(b, MAX7456_RB_WH90 | MAX7456_RB_BL0, SPI_START | SPI_END);
 
 }
 
