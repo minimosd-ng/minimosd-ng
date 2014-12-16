@@ -10,6 +10,7 @@ PROJECT_NAME=minimosd-ng
 
 OPTLEVEL=s
 
+INC=-I./src -I./lib
 
 # compiler
 CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
@@ -36,7 +37,6 @@ CFILES=$(filter %.c, $(PRJSRC))
 
 SOURCEDIRS=./src
 SOURCEDIRS+= $(WIDGETS_DIR)
-INC=-I./src
 
 TARGET=$(PROJECT_NAME).elf
 
