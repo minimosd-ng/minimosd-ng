@@ -21,9 +21,13 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include <stdio.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
 #include "uart.h"
 #include "max7456.h"
+#include "mavlink.h"
 #include "widgets.h"
+
 
 #define DEBUG 1
 #if DEBUG
@@ -44,12 +48,19 @@ int main(void)
   /* init max7456 */
   init_max7456();
 
+  /* init mavlink stuff */
+  init_mavlink();
+
   /* TODO: load user settings */
   configure_widgets();
 
+  /* global enable interrupt */
+  sei();
+
   while (1)
   {
-    // TODO: process inputs
+    // process inputs
+    mavlink_process();
 
     // render widgets
     render_widgets();
