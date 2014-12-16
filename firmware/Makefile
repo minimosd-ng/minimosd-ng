@@ -19,7 +19,15 @@ CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-Wa,-ahlms=$(firstword                  \
 	$(filter %.lst, $(<:.c=.lst)))
 
-PRJSRC= src/main.c src/uart.c src/max7456.c
+PRJSRC= src/main.c src/uart.c src/max7456.c \
+        src/widgets.c
+
+# automatically build widgets
+WIDGETS_DIR = ./src/widgets
+WIDGETS_FILES = $(notdir $(shell find $(WIDGETS_DIR) -name '*.c'))
+
+PRJSRC += ${addprefix src/widgets/,$(WIDGETS_FILES)}
+
 
 
 #  C
@@ -27,6 +35,7 @@ CFILES=$(filter %.c, $(PRJSRC))
 
 
 SOURCEDIRS=./src
+SOURCEDIRS+= $(WIDGETS_DIR)
 INC=-I./src
 
 TARGET=$(PROJECT_NAME).elf
