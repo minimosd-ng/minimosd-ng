@@ -22,9 +22,24 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdio.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include "config.h"
 #include "uart.h"
 
+struct uart_fifo {
+  char buf[16];
+  unsigned char rd, wr, len;
+};
+
+static struct uart_fifo rx_fifo;
+
+void (* input_func)(unsigned char c);
+void uart_rx(unsigned char c);
+
+ISR(USART_RX_vect)
+{
+  input_func(UDR0);
+}
 
 static int uart_putchar(char c, FILE *stream)
 {
@@ -44,11 +59,18 @@ void init_uart(unsigned int b)
 {
   set_baudrate(b);
 
-	/* TX and RX enabled */
-	UCSR0B = (1<<TXEN0) | (1<<RXEN0);
+  /* reset fifo */
+  rx_fifo.wr = 0;
+  rx_fifo.rd = 0;
+  rx_fifo.len = 0;
+
+  uart_redirect_input(&uart_rx);
 
 	/* 8 bit, no parity, 1 stop bit */
 	UCSR0C = (3<<UCSZ00);
+
+	/* TX and RX enabled */
+	UCSR0B = (1<<TXEN0) | (1<<RXEN0) | (1<<RXCIE0);
 
 	/* redirect stdout to the uart */
 	stdout = &uartstdout;
@@ -59,3 +81,30 @@ void set_baudrate(unsigned int b)
 	/* baud rate select register */
 	UBRR0 = (F_CPU/16)/b - 1;
 }
+
+
+void uart_redirect_input(void *f)
+{
+  input_func = f;
+}
+
+unsigned char uart_getc(unsigned char *c)
+{
+  unsigned char ret = 0;
+  if (rx_fifo.len > 0) {
+    *c = rx_fifo.buf[rx_fifo.rd++];
+    rx_fifo.rd &= 0x0f;
+    rx_fifo.len--;
+    ret = 1;
+  }
+  return ret;
+}
+
+
+void uart_rx(unsigned char c)
+{
+  rx_fifo.buf[rx_fifo.wr++] = UDR0;
+  rx_fifo.wr &= 0x0f;
+  rx_fifo.len++;
+}
+
