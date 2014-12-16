@@ -30,14 +30,20 @@ extern struct widget \
   roll_widget,
   gpsstats_widget,
   gpscoords_widget,
-  altitude_widget;
+  altitude_widget,
+  batteryvolt_widget,
+  batterycurrent_widget,
+  batteryremain_widget;
 
 WIDGETS( \
   &pitch_widget,
   &roll_widget,
   &gpsstats_widget,
   &gpscoords_widget,
-  &altitude_widget );
+  &altitude_widget,
+  &batteryvolt_widget,
+  &batterycurrent_widget,
+  &batteryremain_widget );
 
 void configure_widgets(void)
 {
