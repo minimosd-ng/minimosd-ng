@@ -21,54 +21,47 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "config.h"
+#include <stdio.h>
 #include "widgets.h"
 #include "max7456.h"
+#include "mavlink.h"
 
-/* widgets */
-extern struct widget \
-  pitch_widget,
-  roll_widget,
-  gpsstats_widget,
-  gpscoords_widget,
-  altitude_widget;
+#define DEBUG 0
+#if DEBUG
+#define PRINTF(...) printf(__VA_ARGS__)
+#else
+#define PRINTF(...)
+#endif
 
-WIDGETS( \
-  &pitch_widget,
-  &roll_widget,
-  &gpsstats_widget,
-  &gpscoords_widget,
-  &altitude_widget );
 
-void configure_widgets(void)
+static unsigned char x, y, props;
+static int v;
+
+
+/* configure widget based on eeprom data */
+static void configure(unsigned int addr, unsigned char len)
 {
-  unsigned char i;
+  x = 13;
+  y = 1;
+  props = WIDGET_ENABLED | WIDGET_VISIBLE;
+}
 
-  for (i = 0; i < WIDGETS_NUM-1; i++)
-    all_widgets[i]->configure(0, 0);
+static void set_mavdata(mavlink_message_t *msg)
+{
+  if (msg->msgid != MAVLINK_MSG_ID_GPS_RAW_INT)
+    return;
+  v = (unsigned int) ((long) mavlink_msg_gps_raw_int_get_alt(&msg) / 1000);
+  PRINTF("absolute altitude widget: value=%d\n", v);
+}
+
+static void draw(void)
+{
+  char buf[10];
+  sprintf(buf, "%5d%c", v, 0x0c);
+  max7456_xy(x, y);
+  max7456_puts(buf);
 }
 
 
-void set_widget_mavdata(mavlink_message_t *msg)
-{
-  unsigned char i;
-
-  for (i = 0; i < WIDGETS_NUM-1; i++) {
-    if (all_widgets[i]->set_mavdata) {
-      all_widgets[i]->set_mavdata(msg);
-    }
-  }
-}
-
-
-
-
-void render_widgets(void)
-{
-  unsigned char i;
-
-  for (i = 0; i < WIDGETS_NUM-1; i++)
-    all_widgets[i]->draw();
-}
-
-
+WIDGETS_WIDGET(altitude_widget, "Altitude", configure, set_mavdata, draw);
 
