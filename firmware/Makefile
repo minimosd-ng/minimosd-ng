@@ -21,7 +21,7 @@ CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	$(filter %.lst, $(<:.c=.lst)))
 
 PRJSRC= src/main.c src/uart.c src/max7456.c \
-        src/widgets.c
+        src/mavlink.c src/widgets.c
 
 # automatically build widgets
 WIDGETS_DIR = ./src/widgets
@@ -45,7 +45,7 @@ CFLAGS += -mmcu=$(MCU)
 
 # linker
 LDFLAGS=-Wl,-Map,$(TARGET).map -mmcu=$(MCU) \
-	-lm $(LIBS)
+	-Wl,-u,vfprintf -lprintf_flt -lm $(LIBS)
 
 OBJDEPS=$(CFILES:.c=.o)
 
