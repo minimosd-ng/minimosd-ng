@@ -95,7 +95,7 @@ clean:
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
 
-flash:
+flash: $(PROJECT_NAME).hex
 	@avrdude -p $(PROGRAMMER_MCU) -c $(AVRDUDE_PROGRAMMER) -P usb -U flash:w:$(PROJECT_NAME).hex
 
 
