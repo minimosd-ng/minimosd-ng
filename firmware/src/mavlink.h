@@ -43,6 +43,10 @@ struct mavlink_data {
   unsigned int temperature;
   
   unsigned int home_alt;
+
+  /* raw channel pwm */
+  unsigned int ch_raw[8];
+  unsigned char rssi;
 };
 
 struct mavlink_data* get_mavdata(void);

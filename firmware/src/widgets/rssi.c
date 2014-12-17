@@ -33,60 +33,27 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
-struct {
-  unsigned char x, y;
-  unsigned char props;
-} bv, bi, br;
 
+static unsigned char x, y, props;
 extern struct mavlink_data mavdata;
 
 /* configure widget based on eeprom data */
-static void configure_v(unsigned int addr, unsigned char len)
+static void configure(unsigned int addr, unsigned char len)
 {
-  bv.x = 20;
-  bv.y = 0;
-  bv.props = WIDGET_ENABLED | WIDGET_VISIBLE;
+  x = 0;
+  y = 12;
+  props = WIDGET_ENABLED | WIDGET_VISIBLE;
 }
 
-static void configure_i(unsigned int addr, unsigned char len)
+static void draw(void)
 {
-  bi.x = 20;
-  bi.y = 1;
-  bi.props = WIDGET_ENABLED | WIDGET_VISIBLE;
-}
+  char buf[10];
 
-static void configure_r(unsigned int addr, unsigned char len)
-{
-  br.x = 20;
-  br.y = 2;
-  br.props = WIDGET_ENABLED | WIDGET_VISIBLE;
-}
-
-static void draw_v(void)
-{
-  char buf[15];
-  sprintf(buf, "%5.2f%c", mavdata.bat_voltage, 0x0d);
-  max7456_xy(bv.x, bv.y);
+  max7456_xy(x, y);
+  sprintf(buf, "%c%3i%c", 0x09, mavdata.rssi, 0x25);
   max7456_puts(buf);
 }
 
-static void draw_i(void)
-{
-  char buf[15];
-  sprintf(buf, "%5.2f%c", ((double) mavdata.bat_current) / 100, 0x0e);
-  max7456_xy(bi.x, bi.y);
-  max7456_puts(buf);
-}
 
-static void draw_r(void)
-{
-  char buf[15];
-  sprintf(buf, "%3d%c", mavdata.bat_remaining, 0x25);
-  max7456_xy(br.x, br.y);
-  max7456_puts(buf);
-}
-
-WIDGETS_WIDGET(batteryvolt_widget, "Battery voltage", configure_v, draw_v);
-WIDGETS_WIDGET(batterycurrent_widget, "Battery current", configure_i, draw_i);
-WIDGETS_WIDGET(batteryremain_widget, "Battery remaining", configure_r, draw_r);
+WIDGETS_WIDGET(rssi_widget, "RSSI", configure, draw);
 

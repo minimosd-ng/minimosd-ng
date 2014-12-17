@@ -55,9 +55,9 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.mode = (unsigned char) mavlink_msg_heartbeat_get_custom_mode(msg);
     break;
   case MAVLINK_MSG_ID_SYS_STATUS:
-    mavdata.bat_voltage = mavlink_msg_sys_status_get_voltage_battery(msg) / 1000.0f; //Battery voltage, in millivolts (1 = 1 millivolt)
-    mavdata.bat_current = mavlink_msg_sys_status_get_current_battery(msg); //Battery current, in 10*milliamperes (1 = 10 milliampere)         
-    mavdata.bat_remaining = mavlink_msg_sys_status_get_battery_remaining(msg); //Remaining battery energy: (0%: 0, 100%: 100)
+    mavdata.bat_voltage = mavlink_msg_sys_status_get_voltage_battery(msg) / 1000.0;
+    mavdata.bat_current = mavlink_msg_sys_status_get_current_battery(msg);
+    mavdata.bat_remaining = mavlink_msg_sys_status_get_battery_remaining(msg);
     //osd_mode = apm_mav_component;//Debug
     //osd_nav_mode = apm_mav_system;//Debug
     break;
@@ -74,19 +74,19 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.hud_airspeed = mavlink_msg_vfr_hud_get_airspeed(msg);
     mavdata.hud_groundspeed = mavlink_msg_vfr_hud_get_groundspeed(msg);
     mavdata.hud_heading = mavlink_msg_vfr_hud_get_heading(msg); // 0..360 deg, 0=north
-    mavdata.hud_throttle = (uint8_t)mavlink_msg_vfr_hud_get_throttle(msg);
+    mavdata.hud_throttle = (unsigned char) mavlink_msg_vfr_hud_get_throttle(msg);
     mavdata.hud_altitude = mavlink_msg_vfr_hud_get_alt(msg);
     mavdata.hud_climbrate = mavlink_msg_vfr_hud_get_climb(msg);
     break;
   case MAVLINK_MSG_ID_ATTITUDE:
     mavdata.pitch = ToDeg(mavlink_msg_attitude_get_pitch(msg));
     mavdata.roll = ToDeg(mavlink_msg_attitude_get_roll(msg));
-    //  osd_yaw = ToDeg(mavlink_msg_attitude_get_yaw(msg));
+    //mavdata.yaw = ToDeg(mavlink_msg_attitude_get_yaw(msg));
     break;
   case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT:
-//                  nav_roll = mavlink_msg_nav_controller_output_get_nav_roll(msg);
-//                  nav_pitch = mavlink_msg_nav_controller_output_get_nav_pitch(msg);
-//                  nav_bearing = mavlink_msg_nav_controller_output_get_nav_bearing(msg);
+    //nav_roll = mavlink_msg_nav_controller_output_get_nav_roll(msg);
+    //nav_pitch = mavlink_msg_nav_controller_output_get_nav_pitch(msg);
+    //nav_bearing = mavlink_msg_nav_controller_output_get_nav_bearing(msg);
     mavdata.nav_target_bearing = mavlink_msg_nav_controller_output_get_target_bearing(msg);
     mavdata.nav_wp_dist = mavlink_msg_nav_controller_output_get_wp_dist(msg);
     mavdata.nav_alt_error = mavlink_msg_nav_controller_output_get_alt_error(msg);
@@ -94,18 +94,18 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.nav_xtrack_error = mavlink_msg_nav_controller_output_get_xtrack_error(msg);
     break;
   case MAVLINK_MSG_ID_MISSION_CURRENT:
-    mavdata.wp_number = (uint8_t)mavlink_msg_mission_current_get_seq(msg);
+    mavdata.wp_number = (unsigned int) mavlink_msg_mission_current_get_seq(msg);
     break;
   case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
-//                    chan1_raw = mavlink_msg_rc_channels_raw_get_chan1_raw(msg);
-//                    chan2_raw = mavlink_msg_rc_channels_raw_get_chan2_raw(msg);
-//                    chan3_raw = mavlink_msg_rc_channels_raw_get_chan3_raw(msg);
-//                    chan4_raw = mavlink_msg_rc_channels_raw_get_chan4_raw(msg);
-       /*   chan5_raw = mavlink_msg_rc_channels_raw_get_chan5_raw(msg);
-          chan6_raw = mavlink_msg_rc_channels_raw_get_chan6_raw(msg);
-          chan7_raw = mavlink_msg_rc_channels_raw_get_chan7_raw(msg);
-          chan8_raw = mavlink_msg_rc_channels_raw_get_chan8_raw(msg);
-          osd_rssi = mavlink_msg_rc_channels_raw_get_rssi(msg);*/
+    mavdata.ch_raw[0] = mavlink_msg_rc_channels_raw_get_chan1_raw(msg);
+    mavdata.ch_raw[1] = mavlink_msg_rc_channels_raw_get_chan2_raw(msg);
+    mavdata.ch_raw[2] = mavlink_msg_rc_channels_raw_get_chan3_raw(msg);
+    mavdata.ch_raw[3] = mavlink_msg_rc_channels_raw_get_chan4_raw(msg);
+    mavdata.ch_raw[4] = mavlink_msg_rc_channels_raw_get_chan5_raw(msg);
+    mavdata.ch_raw[5] = mavlink_msg_rc_channels_raw_get_chan6_raw(msg);
+    mavdata.ch_raw[6] = mavlink_msg_rc_channels_raw_get_chan7_raw(msg);
+    mavdata.ch_raw[7] = mavlink_msg_rc_channels_raw_get_chan8_raw(msg);
+    mavdata.rssi_raw = mavlink_msg_rc_channels_raw_get_rssi(msg);
     break;           
   case MAVLINK_MSG_ID_WIND:
     mavdata.wind_direction = mavlink_msg_wind_get_direction(msg); // 0..360 deg, 0=north
