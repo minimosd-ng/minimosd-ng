@@ -20,19 +20,25 @@ CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-Wa,-ahlms=$(firstword                  \
 	$(filter %.lst, $(<:.c=.lst)))
 
-PRJSRC= src/main.c src/uart.c src/max7456.c \
-        src/mavlink.c src/widgets.c
+
 
 # automatically build widgets
+PROJECT_DIR = ./src
+PROJECT_FILES = $(notdir $(shell find $(PROJECT_DIR) -maxdepth 1 -name '*.c'))
+SRCS = ${addprefix src/,$(PROJECT_FILES)}
+
 WIDGETS_DIR = ./src/widgets
 WIDGETS_FILES = $(notdir $(shell find $(WIDGETS_DIR) -name '*.c'))
 
-PRJSRC += ${addprefix src/widgets/,$(WIDGETS_FILES)}
+HEADERS = $(shell find $(PROJECT_DIR) -name '*.h')
+
+
+SRCS += ${addprefix src/widgets/,$(WIDGETS_FILES)}
 
 
 
 #  C
-CFILES=$(filter %.c, $(PRJSRC))
+CFILES=$(filter %.c, $(SRCS))
 
 
 SOURCEDIRS=./src
@@ -62,9 +68,16 @@ HEXFORMAT=ihex
 
 all: $(PROJECT_NAME).hex $(TARGET) 
 	
+depend: .depend
+
+.depend: $(SRCS)
+	rm -f ./.depend
+	$(CC) $(CFLAGS) -MM $^ > ./.depend;
+
+include .depend
 
 
-$(TARGET): $(OBJDEPS)
+$(TARGET): $(OBJDEPS) $(HEADERS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJDEPS)
 
 $(PROJECT_NAME).hex: $(PROJECT_NAME).elf
@@ -76,9 +89,10 @@ clean:
 	rm -rf *.o $(PRG).elf *.eps *.png *.pdf *.bak *.hex *.bin *.srec
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
 	rm -rf ./src/*.o ./src/*.bak ./src/*.lst ./src/*.map
+	rm -rf ./src/widgets/*.o ./src/widgets/*.bak ./src/widgets/*.lst ./src/widgets/*.map
 
 # object from C
-.c.o: 
+.c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
 
 flash:
