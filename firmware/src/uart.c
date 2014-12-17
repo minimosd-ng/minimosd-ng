@@ -26,8 +26,10 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "uart.h"
 
+#define FIFO_MASK (0x0f)
+
 struct uart_fifo {
-  char buf[16];
+  char buf[FIFO_MASK+1];
   unsigned char rd, wr, len;
 };
 
@@ -39,7 +41,9 @@ void uart_rx(unsigned char c);
 ISR(USART_RX_vect)
 {
   rx_fifo.buf[rx_fifo.wr++] = UDR0;
-  rx_fifo.wr &= 0x0f;
+  if (rx_fifo.wr == rx_fifo.rd)
+    printf("OVR\n");
+  rx_fifo.wr &= FIFO_MASK;
   rx_fifo.len++;
 }
 
@@ -87,7 +91,7 @@ unsigned char uart_getc(unsigned char *c)
   unsigned char ret = 0;
   if (rx_fifo.len > 0) {
     *c = rx_fifo.buf[rx_fifo.rd++];
-    rx_fifo.rd &= 0x0f;
+    rx_fifo.rd &= FIFO_MASK;
     rx_fifo.len--;
     ret = 1;
   }
