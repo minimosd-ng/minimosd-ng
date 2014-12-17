@@ -20,54 +20,41 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 *********************************************************************/
 
+#include "config.h"
 #include <stdio.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include "uart.h"
+#include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
-#include "widgets.h"
 #include "timer.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
-#include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
 #define PRINTF(...)
 #endif
 
 
-int main(void)
+static unsigned char x, y, props;
+extern struct mavlink_data mavdata;
+
+/* configure widget based on eeprom data */
+static void configure(unsigned int addr, unsigned char len)
 {
-  /* init serial port */
-  init_uart(19200);
-
-  PRINTF("\nRESET!\n\n");
-  PRINTF("MinimOSD-ng\n");
-
-  /* init timer */
-  init_timer();
-
-  /* init max7456 */
-  init_max7456();
-
-  /* init mavlink stuff */
-  init_mavlink();
-
-  /* init widget stuff */
-  init_widgets();
-
-  /* TODO: load user settings */
-  configure_widgets();
-
-  /* global enable interrupt */
-  sei();
-
-  while (1)
-  {
-    mavlink_process();
-    clock_process();
-  }
+  x = 0;
+  y = 3;
+  props = WIDGET_ENABLED | WIDGET_VISIBLE;
 }
+
+static void draw(void)
+{
+  struct datetime *t = get_time();
+  char buf[10];
+  sprintf(buf, "%02d:%02d:%02d", t->h, t->m, t->s);
+  max7456_xy(x, y);
+  max7456_puts(buf);
+}
+
+
+WIDGETS_WIDGET(clock_widget, "Clock", configure, draw);
 

@@ -34,7 +34,8 @@ extern struct widget \
   altitude_widget,
   batteryvolt_widget,
   batterycurrent_widget,
-  batteryremain_widget;
+  batteryremain_widget,
+  clock_widget;
 
 WIDGETS( \
   &pitch_widget,
@@ -44,7 +45,8 @@ WIDGETS( \
   &altitude_widget,
   &batteryvolt_widget,
   &batterycurrent_widget,
-  &batteryremain_widget );
+  &batteryremain_widget,
+  &clock_widget );
 
 
 static unsigned char widx;
