@@ -9,5 +9,6 @@ void init_timer(void);
 unsigned int now(void);
 void clock_process(void);
 struct datetime* get_time(void);
+unsigned char get_toogle(void);
 
 #endif

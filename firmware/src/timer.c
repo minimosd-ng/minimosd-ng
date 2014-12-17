@@ -31,6 +31,7 @@ volatile unsigned char cnt125;
 
 static struct datetime time;
 static unsigned int last_tick;
+static unsigned char toogle = 0;
 
 /* counter that increments each 1ms */
 volatile unsigned int jiffies;
@@ -70,10 +71,13 @@ unsigned int now(void)
 
 void clock_process(void)
 {
-  unsigned int n = now();
+  unsigned int dt = now() - last_tick;
 
-  if ((n - last_tick) > 1000) {
-    last_tick += 1000;
+  if (dt > 500) {
+    last_tick += 500;
+    toogle = ~toogle;
+    if (toogle)
+      return;
     if (++time.s == 60) {
       time.s = 0;
       if (++time.m == 60) {
@@ -89,5 +93,10 @@ void clock_process(void)
 struct datetime* get_time(void)
 {
   return &time;
+}
+
+unsigned char get_toogle(void)
+{
+  return toogle;
 }
 

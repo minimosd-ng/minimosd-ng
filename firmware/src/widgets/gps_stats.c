@@ -25,6 +25,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
+#include "timer.h"
 
 #define DEBUG 0
 #if DEBUG
@@ -54,7 +55,7 @@ static void draw(void)
   switch (mavdata.gps_fix_type) {
   case 0:
   case 1:
-    buf[0] = 0x20; // 0x2a
+    buf[0] = get_toogle() ? 0x2a : 0x20; // 0x2a
     break;
   case 2:
     buf[0] = 0x1f;
@@ -65,7 +66,8 @@ static void draw(void)
   }
 
   if (mavdata.gps_eph >= 200)
-    buf[0] = 0x20;
+    buf[0] = get_toogle() ? 0x2a : 0x20;
+
 
   sprintf(&buf[1], "%2d", mavdata.gps_nrsats);
   max7456_xy(x, y);
