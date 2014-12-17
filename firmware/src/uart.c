@@ -26,7 +26,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "uart.h"
 
-#define FIFO_MASK (0x0f)
+#define FIFO_MASK (0x1f)
 
 struct uart_fifo {
   char buf[FIFO_MASK+1];
