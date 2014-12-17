@@ -51,6 +51,9 @@ int main(void)
   /* init mavlink stuff */
   init_mavlink();
 
+  /* init widget stuff */
+  init_widgets();
+
   /* TODO: load user settings */
   configure_widgets();
 
@@ -59,11 +62,7 @@ int main(void)
 
   while (1)
   {
-    // process inputs
     mavlink_process();
-
-    // render widgets
-    render_widgets();
   }
 }
 

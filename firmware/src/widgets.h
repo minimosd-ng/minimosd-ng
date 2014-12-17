@@ -29,7 +29,7 @@ struct widget {
 
 
 void configure_widgets(void);
-void render_widgets(void);
+void init_widgets(void);
 
 
 #define WIDGETS_WIDGET(name, id, configure, draw) \

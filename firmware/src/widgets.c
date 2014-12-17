@@ -23,6 +23,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "widgets.h"
 #include "max7456.h"
+#include <avr/interrupt.h>
 
 /* widgets */
 extern struct widget \
@@ -45,6 +46,22 @@ WIDGETS( \
   &batterycurrent_widget,
   &batteryremain_widget );
 
+
+static unsigned char widx;
+
+void init_widgets(void)
+{
+  /* init widget indexer */
+  widx = 0;
+
+  /* vsync trigger int on falling edge */
+  EICRA |=  _BV(ISC01);
+  EICRA &= ~_BV(ISC00);
+
+  /* enable osd refresh */
+  EIMSK |= _BV(INT0);
+}
+
 void configure_widgets(void)
 {
   unsigned char i;
@@ -53,17 +70,11 @@ void configure_widgets(void)
     all_widgets[i]->configure(0, 0);
 }
 
-
-static unsigned char i = 0;
-
-void render_widgets(void)
+/* VSYNC interrupt used to render widgets */
+ISR(INT0_vect)
 {
-  //for (i = 0; i < WIDGETS_NUM-1; i++)
-  all_widgets[i++]->draw();
-
-  if (i >= WIDGETS_NUM-1)
-    i = 0;
+  all_widgets[widx++]->draw();
+  if (widx >= WIDGETS_NUM-1)
+    widx = 0;
 }
-
-
 
