@@ -23,9 +23,6 @@ struct widget {
   /* drawing function */
   void (*configure)(unsigned int addr, unsigned char len);
 
-  /* set_data from mavlink message */
-  void (*set_mavdata)(mavlink_message_t *msg);
-
   /* drawing function */
   void (*draw)(void);
 };
@@ -33,11 +30,10 @@ struct widget {
 
 void configure_widgets(void);
 void render_widgets(void);
-void set_widget_mavdata(mavlink_message_t *msg);
 
 
-#define WIDGETS_WIDGET(name, id, configure, set_mavdata, draw) \
-const struct widget name = { id, configure, set_mavdata, draw }
+#define WIDGETS_WIDGET(name, id, configure, draw) \
+const struct widget name = { id, configure, draw }
 
 #define WIDGETS_NUM (sizeof(all_widgets)/sizeof(struct widgets *))
 

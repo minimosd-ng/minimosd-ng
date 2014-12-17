@@ -26,7 +26,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "max7456.h"
 #include "mavlink.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -35,8 +35,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 
 static unsigned char x, y, props;
-static char nr_sats, fix_type;
-static int eph;
+extern struct mavlink_data mavdata;
 
 
 /* configure widget based on eeprom data */
@@ -47,23 +46,12 @@ static void configure(unsigned int addr, unsigned char len)
   props = WIDGET_ENABLED | WIDGET_VISIBLE;
 }
 
-static void set_mavdata(mavlink_message_t *msg)
-{
-  if (msg->msgid != MAVLINK_MSG_ID_GPS_RAW_INT)
-    return;
-
-  nr_sats = (unsigned char) mavlink_msg_gps_raw_int_get_satellites_visible(msg);
-  fix_type = (unsigned char) mavlink_msg_gps_raw_int_get_fix_type(msg);
-  eph = (int) mavlink_msg_gps_raw_int_get_eph(msg);
-
-  PRINTF("gps widget: nr_sats=%d fix_type=%d eph=%d\n", nr_sats, fix_type, eph);
-}
 
 static void draw(void)
 {
   char buf[10];
 
-  switch (fix_type) {
+  switch (mavdata.gps_fix_type) {
   case 0:
   case 1:
     buf[0] = 0x20; // 0x2a
@@ -76,14 +64,14 @@ static void draw(void)
     break;
   }
 
-  if (eph >= 200)
+  if (mavdata.gps_eph >= 200)
     buf[0] = 0x20;
 
-  sprintf(&buf[1], "%2d", nr_sats);
+  sprintf(&buf[1], "%2d", mavdata.gps_nrsats);
   max7456_xy(x, y);
   max7456_puts(buf);
 }
 
 
-WIDGETS_WIDGET(gpsstats_widget, "Gps stats", configure, set_mavdata, draw);
+WIDGETS_WIDGET(gpsstats_widget, "Gps stats", configure, draw);
 

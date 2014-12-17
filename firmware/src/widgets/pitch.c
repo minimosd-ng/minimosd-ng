@@ -35,8 +35,8 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 
 static unsigned char x, y, props;
-static int v;
 
+extern struct mavlink_data mavdata;
 
 /* configure widget based on eeprom data */
 static void configure(unsigned int addr, unsigned char len)
@@ -46,22 +46,14 @@ static void configure(unsigned int addr, unsigned char len)
   props = WIDGET_ENABLED | WIDGET_VISIBLE;
 }
 
-static void set_mavdata(mavlink_message_t *msg)
-{
-  if (msg->msgid != MAVLINK_MSG_ID_ATTITUDE)
-    return;
-  v = (int) ToDeg(mavlink_msg_attitude_get_pitch(msg));
-  PRINTF("pitch widget: value=%d\n", pitch);
-}
-
 static void draw(void)
 {
   char buf[10];
-  sprintf(buf, "%4d%c%c", v, 0x05, 0x07);
+  sprintf(buf, "%4d%c%c", mavdata.pitch, 0x05, 0x07);
   max7456_xy(x, y);
   max7456_puts(buf);
 }
 
 
-WIDGETS_WIDGET(pitch_widget, "Pitch", configure, set_mavdata, draw);
+WIDGETS_WIDGET(pitch_widget, "Pitch", configure, draw);
 

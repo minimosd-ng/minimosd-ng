@@ -38,9 +38,7 @@ struct {
   unsigned char props;
 } bv, bi, br;
 
-static double v, i;
-static unsigned char r;
-
+extern struct mavlink_data mavdata;
 
 /* configure widget based on eeprom data */
 static void configure_v(unsigned int addr, unsigned char len)
@@ -64,20 +62,10 @@ static void configure_r(unsigned int addr, unsigned char len)
   br.props = WIDGET_ENABLED | WIDGET_VISIBLE;
 }
 
-static void set_mavdata(mavlink_message_t *msg)
-{
-  if (msg->msgid != MAVLINK_MSG_ID_SYS_STATUS)
-    return;
-  v = mavlink_msg_sys_status_get_voltage_battery(msg) / 1000.0;
-  i = mavlink_msg_sys_status_get_current_battery(msg);
-  r = mavlink_msg_sys_status_get_battery_remaining(msg);
-  PRINTF("battery multiple widgets: v=%d\n i=%d r=%d", v, i, r);
-}
-
 static void draw_v(void)
 {
   char buf[15];
-  sprintf(buf, "%5.2f%c", v, 0x0d);
+  sprintf(buf, "%5.2f%c", mavdata.bat_voltage, 0x0d);
   max7456_xy(bv.x, bv.y);
   max7456_puts(buf);
 }
@@ -85,7 +73,7 @@ static void draw_v(void)
 static void draw_i(void)
 {
   char buf[15];
-  sprintf(buf, "%5.2f%c", i / 10.0, 0x0e);
+  sprintf(buf, "%5.2f%c", mavdata.bat_current / 10.0, 0x0e);
   max7456_xy(bi.x, bi.y);
   max7456_puts(buf);
 }
@@ -93,12 +81,12 @@ static void draw_i(void)
 static void draw_r(void)
 {
   char buf[15];
-  sprintf(buf, "%3d%c", r, 0x25);
+  sprintf(buf, "%3d%c", mavdata.bat_remaining, 0x25);
   max7456_xy(br.x, br.y);
   max7456_puts(buf);
 }
 
-WIDGETS_WIDGET(batteryvolt_widget, "Battery voltage", configure_v, set_mavdata, draw_v);
-WIDGETS_WIDGET(batterycurrent_widget, "Battery current", configure_i, NULL, draw_i);
-WIDGETS_WIDGET(batteryremain_widget, "Battery remaining", configure_r, NULL, draw_r);
+WIDGETS_WIDGET(batteryvolt_widget, "Battery voltage", configure_v, draw_v);
+WIDGETS_WIDGET(batterycurrent_widget, "Battery current", configure_i, draw_i);
+WIDGETS_WIDGET(batteryremain_widget, "Battery remaining", configure_r, draw_r);
 

@@ -35,7 +35,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 
 static unsigned char x, y, props;
-static int v;
+extern struct mavlink_data mavdata;
 
 
 /* configure widget based on eeprom data */
@@ -46,22 +46,14 @@ static void configure(unsigned int addr, unsigned char len)
   props = WIDGET_ENABLED | WIDGET_VISIBLE;
 }
 
-static void set_mavdata(mavlink_message_t *msg)
-{
-  if (msg->msgid != MAVLINK_MSG_ID_GPS_RAW_INT)
-    return;
-  v = (unsigned int) ((long) mavlink_msg_gps_raw_int_get_alt(&msg) / 1000);
-  PRINTF("absolute altitude widget: value=%d\n", v);
-}
-
 static void draw(void)
 {
   char buf[10];
-  sprintf(buf, "%5d%c", v, 0x0c);
+  sprintf(buf, "%5.0f%c", mavdata.gps_altitude, 0x0c);
   max7456_xy(x, y);
   max7456_puts(buf);
 }
 
 
-WIDGETS_WIDGET(altitude_widget, "Altitude", configure, set_mavdata, draw);
+WIDGETS_WIDGET(altitude_widget, "Altitude", configure, draw);
 
