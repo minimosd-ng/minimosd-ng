@@ -39,6 +39,7 @@ WIDGET_IMPORT(rcchannels_widget);
 WIDGET_IMPORT(batvoltage_widget);
 WIDGET_IMPORT(batcurrent_widget);
 WIDGET_IMPORT(batremain_widget);
+WIDGET_IMPORT(startup_widget);
 //WIDGET_IMPORT(_widget);
 
 WIDGETS( \
@@ -53,11 +54,14 @@ WIDGETS( \
   &clock_widget,
   &rcchannels_widget,
   &rssi_widget,
+  &startup_widget,
 );
 
 
 unsigned char widget_default_config[] EEMEM = {
   /* tab, widget_id, x, y */
+  0, STARTUP_WIDGET_ID,     3,  4,
+
   1, ROLL_WIDGET_ID,        0,  0,
   1, PITCH_WIDGET_ID,       0,  1,
   1, RSSI_WIDGET_ID,        0,  2,
