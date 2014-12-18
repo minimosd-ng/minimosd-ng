@@ -85,6 +85,10 @@ $(PROJECT_NAME).hex: $(PROJECT_NAME).elf
 		-j .data                       \
 		-O $(HEXFORMAT) $< $@ ; avr-size -C --mcu $(MCU) $(PROJECT_NAME).elf
 
+$(PROJECT_NAME).eep: $(PROJECT_NAME).elf
+	$(OBJCOPY) -j .eeprom --no-change-warnings --change-section-lma .eeprom=0  \
+		-O $(HEXFORMAT) $< $@
+
 clean:
 	rm -rf *.o $(PRG).elf *.eps *.png *.pdf *.bak *.hex *.bin *.srec
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
@@ -98,4 +102,6 @@ clean:
 flash: $(PROJECT_NAME).hex
 	@avrdude -p $(PROGRAMMER_MCU) -c $(AVRDUDE_PROGRAMMER) -P usb -U flash:w:$(PROJECT_NAME).hex
 
+eeprom: $(PROJECT_NAME).eep
+	@avrdude -p $(PROGRAMMER_MCU) -c $(AVRDUDE_PROGRAMMER) -P usb -U eeprom:w:$(PROJECT_NAME).eep
 

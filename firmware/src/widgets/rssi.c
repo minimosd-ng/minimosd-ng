@@ -22,6 +22,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
+#include <string.h>
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
@@ -33,27 +34,18 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
-
-static unsigned char x, y, props;
 extern struct mavlink_data mavdata;
 
-/* configure widget based on eeprom data */
-static void configure(unsigned int addr, unsigned char len)
-{
-  x = 0;
-  y = 12;
-  props = WIDGET_ENABLED | WIDGET_VISIBLE;
-}
+WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 static void draw(void)
 {
   char buf[10];
-
-  max7456_xy(x, y);
+  max7456_xy(state.x, state.y);
   sprintf(buf, "%c%3i%c", 0x09, mavdata.rssi, 0x25);
   max7456_puts(buf);
 }
 
 
-WIDGETS_WIDGET(rssi_widget, "RSSI", configure, draw);
+WIDGET_DECLARE(rssi_widget, "RSSI", RSSI_WIDGET_ID, draw);
 

@@ -22,32 +22,20 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
-#include <string.h>
-#include "widgets.h"
-#include "max7456.h"
-#include "mavlink.h"
-#include "timer.h"
+#include <avr/eeprom.h>
 
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
+static struct minimosd_ng_config cfg;
 
 
-WIDGET_STATE(0, 0, WIDGET_DISABLED);
-
-extern struct mavlink_data mavdata;
-
-static void draw(void)
+void load_config(void)
 {
-  struct datetime *t = get_time();
-  char buf[10];
-  sprintf(buf, "%02d:%02d:%02d", t->h, t->m, t->s);
-  max7456_xy(state.x, state.y);
-  max7456_puts(buf);
+  // TODO: load global settings
+
 }
 
-WIDGET_DECLARE(clock_widget, "Clock", CLOCK_WIDGET_ID, draw);
+
+struct minimosd_ng_config* get_config(void)
+{
+  return &cfg;
+}
 

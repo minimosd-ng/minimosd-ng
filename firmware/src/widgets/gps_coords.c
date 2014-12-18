@@ -22,6 +22,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
+#include <string.h>
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
@@ -33,31 +34,21 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
+WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
-static unsigned char x, y, props;
 extern struct mavlink_data mavdata;
-
-
-/* configure widget based on eeprom data */
-static void configure(unsigned int addr, unsigned char len)
-{
-  x = 0;
-  y = 1;
-  props = WIDGET_ENABLED | WIDGET_VISIBLE;
-}
 
 static void draw(void)
 {
   char buf[15];
-  max7456_xy(x, y);
+  max7456_xy(state.x, state.y);
   sprintf(buf, "%11.6f", mavdata.gps_lat);
   max7456_puts(buf);
   
-  max7456_xy(x, y+1);
+  max7456_xy(state.x, state.y+1);
   sprintf(buf, "%11.6f", mavdata.gps_lon);
   max7456_puts(buf);
 }
 
-
-WIDGETS_WIDGET(gpscoords_widget, "Gps coords", configure, draw);
+WIDGET_DECLARE(gpscoords_widget, "Gps coords", GPSCOORDS_WIDGET_ID, draw);
 

@@ -26,7 +26,6 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
-#include "timer.h"
 
 #define DEBUG 0
 #if DEBUG
@@ -35,19 +34,17 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
-
 WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
 static void draw(void)
 {
-  struct datetime *t = get_time();
-  char buf[10];
-  sprintf(buf, "%02d:%02d:%02d", t->h, t->m, t->s);
+  char buf[12];
+  sprintf(buf, "%5.2f%c", ((double) mavdata.bat_current) / 100, 0x0e);
   max7456_xy(state.x, state.y);
   max7456_puts(buf);
 }
 
-WIDGET_DECLARE(clock_widget, "Clock", CLOCK_WIDGET_ID, draw);
+WIDGET_DECLARE(batcurrent_widget, "Battery current", BATCURRENT_WIDGET_ID, draw);
 

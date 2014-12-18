@@ -105,7 +105,7 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.ch_raw[5] = mavlink_msg_rc_channels_raw_get_chan6_raw(msg);
     mavdata.ch_raw[6] = mavlink_msg_rc_channels_raw_get_chan7_raw(msg);
     mavdata.ch_raw[7] = mavlink_msg_rc_channels_raw_get_chan8_raw(msg);
-    mavdata.rssi_raw = mavlink_msg_rc_channels_raw_get_rssi(msg);
+    mavdata.rssi = mavlink_msg_rc_channels_raw_get_rssi(msg);
     break;           
   case MAVLINK_MSG_ID_WIND:
     mavdata.wind_direction = mavlink_msg_wind_get_direction(msg); // 0..360 deg, 0=north
