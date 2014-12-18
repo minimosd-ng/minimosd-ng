@@ -59,8 +59,9 @@ int main(void)
   init_widgets();
 
   /* TODO: load user settings */
-  /* load default display tab */
-  configure_widgets();
+  
+  /* load welcome tab */
+  load_widgets_tab(0);
 
   /* global enable interrupt */
   sei();

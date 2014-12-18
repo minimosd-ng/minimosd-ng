@@ -47,7 +47,7 @@ struct widget {
 };
 
 
-void configure_widgets(void);
+void load_widgets_tab(unsigned char tab);
 void init_widgets(void);
 
 

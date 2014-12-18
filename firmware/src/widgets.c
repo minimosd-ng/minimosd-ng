@@ -25,6 +25,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "max7456.h"
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
+#include <stdio.h>
 
 /* import widgets */
 WIDGET_IMPORT(pitch_widget);
@@ -57,23 +58,23 @@ WIDGETS( \
 
 unsigned char widget_default_config[] EEMEM = {
   /* tab, widget_id, x, y */
-  0, ROLL_WIDGET_ID,        0,  0,
-  0, PITCH_WIDGET_ID,       0,  1,
-  0, RSSI_WIDGET_ID,        0,  2,
-  0, ALTITUDE_WIDGET_ID,    0,  3,
-  0, CLOCK_WIDGET_ID,       0,  4,
-  0, GPSCOORDS_WIDGET_ID,   0,  5,
-  0, GPSSTATUS_WIDGET_ID,   0,  7,
-  1, RCCHANNELS_WIDGET_ID, 12,  0,
-  0, BATVOLTAGE_WIDGET_ID,  0,  8,
-  0, BATCURRENT_WIDGET_ID,  0,  9,
-  0, BATREMAIN_WIDGET_ID,   0, 10,
+  1, ROLL_WIDGET_ID,        0,  0,
+  1, PITCH_WIDGET_ID,       0,  1,
+  1, RSSI_WIDGET_ID,        0,  2,
+  1, ALTITUDE_WIDGET_ID,    0,  3,
+  1, CLOCK_WIDGET_ID,       0,  4,
+  1, GPSCOORDS_WIDGET_ID,   0,  5,
+  1, GPSSTATUS_WIDGET_ID,   0,  7,
+  2, RCCHANNELS_WIDGET_ID, 12,  0,
+  1, BATVOLTAGE_WIDGET_ID,  0,  8,
+  1, BATCURRENT_WIDGET_ID,  0,  9,
+  1, BATREMAIN_WIDGET_ID,   0, 10,
 
   0xff
   };
 
 
-static unsigned char widx, tab = 0;
+static unsigned char widx;
 
 void init_widgets(void)
 {
@@ -86,9 +87,13 @@ void init_widgets(void)
 
   /* enable osd refresh */
   EIMSK |= _BV(INT0);
+
+  widx = 0;
 }
 
-const struct widget *get_widget(unsigned char id)
+
+
+static const struct widget *get_widget(unsigned char id)
 {
   unsigned char i;
   for (i = 0; i < WIDGETS_NUM; i++)
@@ -98,7 +103,7 @@ const struct widget *get_widget(unsigned char id)
 }
 
 
-void find_config(unsigned char tab, unsigned char id, struct widget_config *cfg)
+static void find_config(unsigned char tab, unsigned char id, struct widget_config *cfg)
 {
   struct widget_config *addr = 0x00;
   while ((unsigned int) addr < (0x400 - 0x10)) {
@@ -111,15 +116,19 @@ void find_config(unsigned char tab, unsigned char id, struct widget_config *cfg)
 }
 
 
-void configure_widgets(void)
+void load_widgets_tab(unsigned char tab)
 {
   unsigned char i;
   struct widget_config cfg;
   struct widget_state s;
 
+  /* disable refresh interrupt */
+  EIMSK &= ~_BV(INT0);
+  max7456_clr();
+
+
   for (i = 0; i < WIDGETS_NUM; i++) {
     find_config(tab, all_widgets[i]->id, &cfg);
-    printf("got cfg: tab=%d id=%d x=%d y=%d\n", cfg.tab, cfg.id, cfg.x, cfg.y);
     if (cfg.tab == 0xff) {
       s.props = WIDGET_DISABLED;
     } else {
@@ -129,19 +138,32 @@ void configure_widgets(void)
     }
     all_widgets[i]->set_state(&s);
   }
+
+  widx = 0;
+  /* re-enable interrupt */
+  EIMSK |= _BV(INT0);
 }
 
 /* VSYNC interrupt used to render widgets */
 ISR(INT0_vect)
 {
-  const struct widget *w = all_widgets[widx++];
-  struct widget_state *s = w->get_state();
+  const struct widget *w;
+  struct widget_state *s;
+  unsigned char rendered = 0;
 
-  if (widx >= WIDGETS_NUM)
-    widx = 0;
+  /* render at least 5 widgets per call */
+  while (rendered < 5) {
+    w = all_widgets[widx++];
+    s = w->get_state();
+    if (s->props & WIDGET_ENABLED) {
+      w->draw();
+      rendered++;      
+    }
 
-  if (s->props & WIDGET_ENABLED)
-    w->draw();
-
+    if (widx >= WIDGETS_NUM) {
+      widx = 0;
+      break;
+    }
+  }
 }
 
