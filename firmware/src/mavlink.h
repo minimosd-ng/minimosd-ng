@@ -9,6 +9,7 @@ void calc_process(void);
 
 struct calc_data {
   unsigned int home_distance;
+  unsigned int home_direction;
 };
 
 
