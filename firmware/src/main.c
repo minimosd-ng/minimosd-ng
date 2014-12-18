@@ -90,11 +90,10 @@ int main(void)
       default:
         break;
       }
+
+      calc_process();
       
     };
-
-
-
 
     mavlink_process();
     clock_process();

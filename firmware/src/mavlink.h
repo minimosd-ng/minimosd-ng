@@ -5,6 +5,12 @@
 
 void init_mavlink(void);
 void mavlink_process(void);
+void calc_process(void);
+
+struct calc_data {
+  unsigned int home_distance;
+};
+
 
 struct mavlink_data {
   int pitch;
@@ -26,12 +32,7 @@ struct mavlink_data {
   
   /* vrf hud */
   mavlink_vfr_hud_t vfr_hud;
-/*  float hud_airspeed;
-  float hud_groundspeed;
-  int hud_heading;
-  unsigned int hud_throttle;
-  float hud_altitude, hud_climbrate;
-  */
+
   /* nav controller */
   unsigned int nav_target_bearing, nav_wp_dist;
   float nav_alt_error, nav_aspd_error, nav_xtrack_error;
@@ -49,9 +50,9 @@ struct mavlink_data {
   /* raw channel pwm */
   unsigned int ch_raw[8];
   unsigned char rssi;
-};
 
-struct mavlink_data* get_mavdata(void);
+  struct calc_data calcs; 
+};
 
 #define ToDeg(x) (x*57.2957795131)
 

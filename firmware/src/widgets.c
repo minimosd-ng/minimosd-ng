@@ -43,6 +43,7 @@ WIDGET_IMPORT(startup_widget);
 WIDGET_IMPORT(cog_widget);
 WIDGET_IMPORT(windrose_widget);
 WIDGET_IMPORT(heading_widget);
+WIDGET_IMPORT(homedistance_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -60,27 +61,29 @@ WIDGETS( \
   &cog_widget,
   &windrose_widget,
   &heading_widget,
+  &homedistance_widget,
 );
 
 
 unsigned char widget_default_config[] EEMEM = {
   /* tab, widget_id, x, y */
-  0, STARTUP_WIDGET_ID,     3,  4,
+  0, STARTUP_WIDGET_ID,       3,  4,
 
-  1, ROLL_WIDGET_ID,        0,  0,
-  1, PITCH_WIDGET_ID,       0,  1,
-  1, RSSI_WIDGET_ID,        0,  2,
-  1, ALTITUDE_WIDGET_ID,    0,  3,
-  1, CLOCK_WIDGET_ID,       0,  4,
-  1, GPSCOORDS_WIDGET_ID,   0,  5,
-  1, GPSSTATUS_WIDGET_ID,   0,  7,
-  2, RCCHANNELS_WIDGET_ID, 12,  0,
-  1, BATVOLTAGE_WIDGET_ID,  0,  8,
-  1, BATCURRENT_WIDGET_ID,  0,  9,
-  1, BATREMAIN_WIDGET_ID,   0, 10,
-  1, COG_WIDGET_ID,         0, 11,
-  1, WINDROSE_WIDGET_ID,    0, 12,
-  1, HEADING_WIDGET_ID,     0, 13,
+  1, ROLL_WIDGET_ID,          0,  0,
+  1, PITCH_WIDGET_ID,         0,  1,
+  1, RSSI_WIDGET_ID,          0,  2,
+  1, ALTITUDE_WIDGET_ID,      0,  3,
+  1, CLOCK_WIDGET_ID,         0,  4,
+  1, GPSCOORDS_WIDGET_ID,     0,  5,
+  1, GPSSTATUS_WIDGET_ID,     0,  7,
+  2, RCCHANNELS_WIDGET_ID,   12,  0,
+  1, BATVOLTAGE_WIDGET_ID,    0,  8,
+  1, BATCURRENT_WIDGET_ID,    0,  9,
+  1, BATREMAIN_WIDGET_ID,     0, 10,
+  1, COG_WIDGET_ID,           0, 11,
+  1, WINDROSE_WIDGET_ID,      0, 12,
+  1, HEADING_WIDGET_ID,       0, 13,
+  1, HOMEDISTANCE_WIDGET_ID,  0, 13,
 
   0xff
   };
@@ -102,18 +105,6 @@ void init_widgets(void)
 
   widx = 0;
 }
-
-
-
-static const struct widget *get_widget(unsigned char id)
-{
-  unsigned char i;
-  for (i = 0; i < WIDGETS_NUM; i++)
-    if (all_widgets[i]->id == id)
-      return all_widgets[i];
-  return NULL;
-}
-
 
 static void find_config(unsigned char tab, unsigned char id, struct widget_config *cfg)
 {

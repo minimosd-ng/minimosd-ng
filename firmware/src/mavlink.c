@@ -117,11 +117,6 @@ void mavlink_parse_msg(mavlink_message_t *msg)
   }
 }
 
-struct mavlink_data* get_mavdata(void)
-{
-  return &mavdata;
-}
-
 void mavlink_process(void)
 {
   unsigned char c;
@@ -136,5 +131,11 @@ void mavlink_process(void)
   if (mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
     mavlink_parse_msg(&msg);
   }
+}
+
+void calc_process(void)
+{
+  /* TODO: do math */
+  mavdata.calcs.home_distance = 0;
 }
 
