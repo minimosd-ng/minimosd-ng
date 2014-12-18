@@ -42,7 +42,7 @@ WIDGET_IMPORT(batremain_widget);
 WIDGET_IMPORT(startup_widget);
 WIDGET_IMPORT(cog_widget);
 WIDGET_IMPORT(windrose_widget);
-//WIDGET_IMPORT(_widget);
+WIDGET_IMPORT(heading_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -59,6 +59,7 @@ WIDGETS( \
   &startup_widget,
   &cog_widget,
   &windrose_widget,
+  &heading_widget,
 );
 
 
@@ -79,6 +80,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, BATREMAIN_WIDGET_ID,   0, 10,
   1, COG_WIDGET_ID,         0, 11,
   1, WINDROSE_WIDGET_ID,    0, 12,
+  1, HEADING_WIDGET_ID,     0, 13,
 
   0xff
   };

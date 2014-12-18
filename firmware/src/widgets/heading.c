@@ -40,24 +40,10 @@ extern struct mavlink_data mavdata;
 
 static void draw(void)
 {
-  const char full_rose[] = {
-    0x82,0x80,0x81,0x80,
-    0x84,0x80,0x81,0x80,
-    0x83,0x80,0x81,0x80,
-    0x85,0x80,0x81,0x80,
-  };
-  char buf[8];
-  char idx = ((int) ((mavdata.vfr_hud.heading * 16) / 360) - 3) & 0x0f;
-  unsigned char i;
-
-  for (i = 1; i < 6; i++) {
-    buf[i] = full_rose[(i+idx) & 0x0f];
-  }
-  buf[0] = 0xc3;
-  buf[6] = 0x87;
-  buf[7] = '\0';
+  char buf[5];
+  sprintf(buf, "%3d%c", mavdata.vfr_hud.heading, 0x05);
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(windrose_widget, "Wind rose", WINDROSE_WIDGET_ID,  draw);
+WIDGET_DECLARE(heading_widget, "Heading", HEADING_WIDGET_ID, draw);
 

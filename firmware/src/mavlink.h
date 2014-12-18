@@ -25,11 +25,13 @@ struct mavlink_data {
   unsigned char mode;
   
   /* vrf hud */
-  float hud_airspeed;
+  mavlink_vfr_hud_t vfr_hud;
+/*  float hud_airspeed;
   float hud_groundspeed;
-  unsigned int hud_throttle, hud_heading;
+  int hud_heading;
+  unsigned int hud_throttle;
   float hud_altitude, hud_climbrate;
-  
+  */
   /* nav controller */
   unsigned int nav_target_bearing, nav_wp_dist;
   float nav_alt_error, nav_aspd_error, nav_xtrack_error;
