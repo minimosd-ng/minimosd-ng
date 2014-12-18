@@ -57,8 +57,17 @@ WIDGETS( \
 
 unsigned char widget_default_config[] EEMEM = {
   /* tab, widget_id, x, y */
-  0, ROLL_WIDGET_ID, 0, 0,
-  0, PITCH_WIDGET_ID, 0, 1,
+  0, ROLL_WIDGET_ID,        0,  0,
+  0, PITCH_WIDGET_ID,       0,  1,
+  0, RSSI_WIDGET_ID,        0,  2,
+  0, ALTITUDE_WIDGET_ID,    0,  3,
+  0, CLOCK_WIDGET_ID,       0,  4,
+  0, GPSCOORDS_WIDGET_ID,   0,  5,
+  0, GPSSTATUS_WIDGET_ID,   0,  7,
+  1, RCCHANNELS_WIDGET_ID, 12,  0,
+  0, BATVOLTAGE_WIDGET_ID,  0,  8,
+  0, BATCURRENT_WIDGET_ID,  0,  9,
+  0, BATREMAIN_WIDGET_ID,   0, 10,
 
   0xff
   };

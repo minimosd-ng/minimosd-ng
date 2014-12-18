@@ -64,13 +64,13 @@ static unsigned char spi_transfer(unsigned char b,
   return SPDR;
 }  
 
-unsigned char max7456_rd(unsigned char reg, unsigned char flags)
+static unsigned char max7456_rd(unsigned char reg, unsigned char flags)
 {
   spi_transfer(reg | 0x80, SPI_START & flags);
   return spi_transfer(0xff, SPI_END & flags);
 }
 
-void max7456_wr(max7456_reg_t reg, unsigned char b, unsigned char flags)
+static void max7456_wr(max7456_reg_t reg, unsigned char b, unsigned char flags)
 {
   spi_transfer(reg, SPI_START & flags);
   spi_transfer(b, SPI_END & flags);
@@ -100,6 +100,12 @@ void max7456_puts(char *s)
 void max7456_xy(unsigned char x, unsigned char y)
 {
   addr = y * 30 + x;
+}
+
+void max7456_clr(void)
+{
+  max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_VSCLR | MAX7456_DMM_CLR,
+              SPI_START | SPI_END);
 }
 
 void init_max7456(void)
