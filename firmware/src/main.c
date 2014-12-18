@@ -62,10 +62,8 @@ int main(void)
   /* init widget stuff */
   init_widgets();
 
-  /* TODO: load user settings */
-  
-  /* load welcome tab */
-  load_widgets_tab(0);
+  /* load initial tab */
+  load_widgets_tab(cfg.display_tab);
 
   /* global enable interrupt */
   sei();

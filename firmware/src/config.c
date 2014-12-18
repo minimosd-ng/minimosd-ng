@@ -24,12 +24,13 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <avr/eeprom.h>
 
-struct minimosd_ng_config cfg;
-
+struct minimosd_ng_config cfg = {
+  .display_tab = 0,
+  .mavlink_baudrate = 19200,
+};
 
 void load_config(void)
 {
-  // TODO: load global settings
-  cfg.mavlink_baudrate = 19200;
+  // TODO: load global settings from eeprom
 }
 
