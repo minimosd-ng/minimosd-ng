@@ -38,7 +38,7 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 extern mavlink_status_t status;
-extern struct minimosd_ng_config cfg;
+extern struct minimosd_ng_config config;
 
 
 static void draw(void)
@@ -48,7 +48,7 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
   sprintf(buf, "Mavlink packets: %d", status.packet_rx_success_count);
   max7456_puts(state.x, state.y+2, buf);
-  sprintf(buf, "Mavlink baudrate: %d", cfg.mavlink_baudrate);
+  sprintf(buf, "Mavlink baudrate: %d", config.mavlink_baudrate);
   max7456_puts(state.x, state.y+3, buf);
 }
 

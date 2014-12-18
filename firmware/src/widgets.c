@@ -40,6 +40,7 @@ WIDGET_IMPORT(batvoltage_widget);
 WIDGET_IMPORT(batcurrent_widget);
 WIDGET_IMPORT(batremain_widget);
 WIDGET_IMPORT(startup_widget);
+WIDGET_IMPORT(cog_widget);
 //WIDGET_IMPORT(_widget);
 
 WIDGETS( \
@@ -55,6 +56,7 @@ WIDGETS( \
   &rcchannels_widget,
   &rssi_widget,
   &startup_widget,
+  &cog_widget,
 );
 
 
@@ -73,6 +75,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, BATVOLTAGE_WIDGET_ID,  0,  8,
   1, BATCURRENT_WIDGET_ID,  0,  9,
   1, BATREMAIN_WIDGET_ID,   0, 10,
+  1, COG_WIDGET_ID,         0, 11,
 
   0xff
   };
@@ -119,12 +122,17 @@ static void find_config(unsigned char tab, unsigned char id, struct widget_confi
   };
 }
 
+static unsigned char current_tab = 0xff;
 
 void load_widgets_tab(unsigned char tab)
 {
   unsigned char i;
   struct widget_config cfg;
   struct widget_state s;
+
+  if (current_tab == tab)
+    return;
+  current_tab = tab;
 
   /* disable refresh interrupt */
   EIMSK &= ~_BV(INT0);

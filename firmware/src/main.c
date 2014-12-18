@@ -37,17 +37,21 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
-extern struct minimosd_ng_config cfg;
-
+extern struct minimosd_ng_config config;
+extern struct mavlink_data mavdata;
+ 
 int main(void)
 {
+  unsigned char STATE = 0;
+  unsigned int n, t;
+
   /* load global config from eeprom */
   load_config();
 
   /* init serial port */
-  init_uart(cfg.mavlink_baudrate);
+  init_uart(config.mavlink_baudrate);
 
-  PRINTF("\nRESET!\n\n");
+  PRINTF("\nRESET!\n");
   PRINTF("MinimOSD-ng\n");
 
   /* init timer */
@@ -63,13 +67,35 @@ int main(void)
   init_widgets();
 
   /* load initial tab */
-  load_widgets_tab(cfg.display_tab);
+  load_widgets_tab(0);
 
   /* global enable interrupt */
   sei();
 
   while (1)
   {
+    n = now();
+    if ((n - t) > 200) {
+      t += 200;
+
+      switch (STATE) {
+      case 0:
+        if (n > 3000) {
+          load_widgets_tab(1);
+          STATE = 1;
+        }
+        break;
+      case 1:
+        break;
+      default:
+        break;
+      }
+      
+    };
+
+
+
+
     mavlink_process();
     clock_process();
   }

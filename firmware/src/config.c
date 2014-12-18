@@ -24,8 +24,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <avr/eeprom.h>
 
-struct minimosd_ng_config cfg = {
-  .display_tab = 0,
+struct minimosd_ng_config config = {
   .mavlink_baudrate = 19200,
 };
 

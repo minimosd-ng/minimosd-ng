@@ -73,7 +73,7 @@ void mavlink_parse_msg(mavlink_message_t *msg)
   case MAVLINK_MSG_ID_VFR_HUD:
     mavdata.hud_airspeed = mavlink_msg_vfr_hud_get_airspeed(msg);
     mavdata.hud_groundspeed = mavlink_msg_vfr_hud_get_groundspeed(msg);
-    mavdata.hud_heading = mavlink_msg_vfr_hud_get_heading(msg); // 0..360 deg, 0=north
+    mavdata.hud_heading = mavlink_msg_vfr_hud_get_heading(msg);
     mavdata.hud_throttle = (unsigned char) mavlink_msg_vfr_hud_get_throttle(msg);
     mavdata.hud_altitude = mavlink_msg_vfr_hud_get_alt(msg);
     mavdata.hud_climbrate = mavlink_msg_vfr_hud_get_climb(msg);
