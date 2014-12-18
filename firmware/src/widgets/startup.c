@@ -37,14 +37,19 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
+extern mavlink_status_t status;
+extern struct minimosd_ng_config cfg;
+
 
 static void draw(void)
 {
-  char buf[20];
+  char buf[30];
   sprintf(buf, "MinimOSD-ng %dv%d", VERSION_MAJOR, VERSION_MINOR);
-  max7456_putsxy(state.x, state.y, buf);
-  sprintf(buf, "(add config here)");
-  max7456_putsxy(state.x, state.y+2, buf);
+  max7456_puts(state.x, state.y, buf);
+  sprintf(buf, "Mavlink packets: %d", status.packet_rx_success_count);
+  max7456_puts(state.x, state.y+2, buf);
+  sprintf(buf, "Mavlink baudrate: %d", cfg.mavlink_baudrate);
+  max7456_puts(state.x, state.y+3, buf);
 }
 
 WIDGET_DECLARE(startup_widget, "Startup", STARTUP_WIDGET_ID,  draw);

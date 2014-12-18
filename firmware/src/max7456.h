@@ -64,10 +64,8 @@ typedef enum {
 
 
 void init_max7456(void);
-void max7456_putc(char c);
-void max7456_puts(char *s);
-void max7456_putsxy(unsigned char x, unsigned char y, char *s);
-void max7456_xy(unsigned char x, unsigned char y);
+void max7456_putc(unsigned char x, unsigned char y, char c);
+void max7456_puts(unsigned char x, unsigned char y, char *s);
 void max7456_clr(void);
 
 #endif

@@ -42,7 +42,7 @@ static void draw(void)
 {
   char buf[10];
   sprintf(buf, "%c%3i%c", 0x09, mavdata.rssi, 0x25);
-  max7456_putsxy(state.x, state.y, buf);
+  max7456_puts(state.x, state.y, buf);
 }
 
 WIDGET_DECLARE(rssi_widget, "RSSI", RSSI_WIDGET_ID, draw);

@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 *********************************************************************/
-
+#include "config.h"
 #include <stdio.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -37,11 +37,15 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
+extern struct minimosd_ng_config cfg;
 
 int main(void)
 {
+  /* load global config from eeprom */
+  load_config();
+
   /* init serial port */
-  init_uart(19200);
+  init_uart(cfg.mavlink_baudrate);
 
   PRINTF("\nRESET!\n\n");
   PRINTF("MinimOSD-ng\n");

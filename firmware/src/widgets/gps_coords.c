@@ -42,10 +42,10 @@ static void draw(void)
 {
   char buf[15];
   sprintf(buf, "%11.6f", mavdata.gps_lat);
-  max7456_putsxy(state.x, state.y, buf);
+  max7456_puts(state.x, state.y, buf);
 
   sprintf(buf, "%11.6f", mavdata.gps_lon);
-  max7456_putsxy(state.x, state.y+1, buf);
+  max7456_puts(state.x, state.y+1, buf);
 }
 
 WIDGET_DECLARE(gpscoords_widget, "Gps coords", GPSCOORDS_WIDGET_ID, draw);

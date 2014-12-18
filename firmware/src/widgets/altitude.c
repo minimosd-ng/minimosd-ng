@@ -42,7 +42,7 @@ static void draw(void)
 {
   char buf[10];
   sprintf(buf, "%5.0f%c", mavdata.gps_altitude, 0x0c);
-  max7456_putsxy(state.x, state.y, buf);
+  max7456_puts(state.x, state.y, buf);
 }
 
 WIDGET_DECLARE(altitude_widget, "Altitude", ALTITUDE_WIDGET_ID, draw);

@@ -37,7 +37,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 
 static mavlink_message_t msg; 
-static mavlink_status_t status;
+mavlink_status_t status;
 
 struct mavlink_data mavdata;
 
@@ -133,11 +133,11 @@ void mavlink_process(void)
 
   if (!uart_getc(&c))
     return;
-
+#if 0
   /* XXX: for debug only */
   if ((c >= '0') && (c <='9'))
     load_widgets_tab(c-'0');
-
+#endif
   if (mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
     mavlink_parse_msg(&msg);
   }

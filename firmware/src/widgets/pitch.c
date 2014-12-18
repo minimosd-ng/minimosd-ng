@@ -42,7 +42,7 @@ static void draw(void)
 {
   char buf[10];
   sprintf(buf, "%4d%c%c", mavdata.pitch, 0x05, 0x07);
-  max7456_putsxy(state.x, state.y, buf);
+  max7456_puts(state.x, state.y, buf);
 }
 
 WIDGET_DECLARE(pitch_widget, "Pitch", PITCH_WIDGET_ID,  draw);

@@ -45,7 +45,7 @@ static void draw(void)
   struct datetime *t = get_time();
   char buf[10];
   sprintf(buf, "%2d:%02d:%02d", t->h, t->m, t->s);
-  max7456_putsxy(state.x, state.y, buf);
+  max7456_puts(state.x, state.y, buf);
 }
 
 WIDGET_DECLARE(clock_widget, "Clock", CLOCK_WIDGET_ID, draw);

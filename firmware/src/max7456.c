@@ -37,8 +37,6 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
-static unsigned int addr;
-
 static void init_spi(void)
 {
   /* setup SPI output pins */
@@ -76,17 +74,17 @@ static void max7456_wr(max7456_reg_t reg, unsigned char b, unsigned char flags)
   spi_transfer(b, SPI_END & flags);
 }
 
-void max7456_putc(char c)
+void max7456_putc(unsigned char x, unsigned char y, char c)
 {
-  /* set addr msb */
+  unsigned int addr = y * 30 + x;
   max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8), SPI_START);
-  /* set start addr lsb */
   max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr, 0);
   max7456_wr(MAX7456_REG_DMDI, c, SPI_END);
 }
 
-void max7456_puts(char *s)
+void max7456_puts(unsigned char x, unsigned char y, char *s)
 {
+  unsigned int addr = y * 30 + x;
   max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_AINC, SPI_START);
   max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8), 0);
   max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr, 0);
@@ -94,24 +92,6 @@ void max7456_puts(char *s)
     max7456_wr(MAX7456_REG_DMDI, *s++, 0);
   } while (*s != '\0');
   max7456_wr(MAX7456_REG_DMDI, 0xff, SPI_END);
-}
-
-void max7456_putsxy(unsigned char x, unsigned char y, char *s)
-{
-  addr = y * 30 + x;
-  max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_AINC, SPI_START);
-  max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8), 0);
-  max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr, 0);
-  do {
-    max7456_wr(MAX7456_REG_DMDI, *s++, 0);
-  } while (*s != '\0');
-  max7456_wr(MAX7456_REG_DMDI, 0xff, SPI_END);
-}
-
-
-void max7456_xy(unsigned char x, unsigned char y)
-{
-  addr = y * 30 + x;
 }
 
 void max7456_clr(void)
