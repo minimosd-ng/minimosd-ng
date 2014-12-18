@@ -134,6 +134,10 @@ void mavlink_process(void)
   if (!uart_getc(&c))
     return;
 
+  /* XXX: for debug only */
+  if ((c >= '0') && (c <='9'))
+    load_widgets_tab(c-'0');
+
   if (mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
     mavlink_parse_msg(&msg);
   }
