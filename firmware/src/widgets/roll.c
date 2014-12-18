@@ -42,8 +42,7 @@ static void draw(void)
 {
   char buf[10];
   sprintf(buf, "%4d%c%c", mavdata.roll, 0x05, 0x06);
-  max7456_xy(state.x, state.y);
-  max7456_puts(buf);
+  max7456_putsxy(state.x, state.y, buf);
 }
 
 WIDGET_DECLARE(roll_widget, "Roll", ROLL_WIDGET_ID, draw);

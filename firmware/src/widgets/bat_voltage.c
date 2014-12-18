@@ -42,8 +42,7 @@ static void draw(void)
 {
   char buf[12];
   sprintf(buf, "%5.2f%c", mavdata.bat_voltage, 0x0d);
-  max7456_xy(state.x, state.y);
-  max7456_puts(buf);
+  max7456_putsxy(state.x, state.y, buf);
 }
 
 WIDGET_DECLARE(batvoltage_widget, "Battery voltage", BATVOLTAGE_WIDGET_ID, draw);

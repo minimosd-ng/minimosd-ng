@@ -43,9 +43,8 @@ static void draw(void)
   char buf[10];
   unsigned char i;
   for (i = 0; i < 8; i++) {
-    max7456_xy(state.x, state.y+i);
     sprintf(buf, "CH%d %4d", i+1, mavdata.ch_raw[i]);
-    max7456_puts(buf);
+    max7456_putsxy(state.x, state.y+i, buf);
   }
 }
 

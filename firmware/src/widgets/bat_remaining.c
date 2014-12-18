@@ -42,8 +42,7 @@ static void draw(void)
 {
   char buf[12];
   sprintf(buf, "%3d%c", mavdata.bat_remaining, 0x25);
-  max7456_xy(state.x, state.y);
-  max7456_puts(buf);
+  max7456_putsxy(state.x, state.y, buf);
 }
 
 WIDGET_DECLARE(batremain_widget, "Battery remaining", BATREMAIN_WIDGET_ID, draw);

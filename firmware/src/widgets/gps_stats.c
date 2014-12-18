@@ -60,8 +60,7 @@ static void draw(void)
     buf[0] = get_toogle() ? 0x2a : 0x20;
 
   sprintf(&buf[1], "%2d", mavdata.gps_nrsats);
-  max7456_xy(state.x, state.y);
-  max7456_puts(buf);
+  max7456_putsxy(state.x, state.y, buf);
 }
 
 WIDGET_DECLARE(gpsstats_widget, "GPS stats", GPSSTATUS_WIDGET_ID, draw);

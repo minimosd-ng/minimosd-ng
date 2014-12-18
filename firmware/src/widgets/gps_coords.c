@@ -41,13 +41,11 @@ extern struct mavlink_data mavdata;
 static void draw(void)
 {
   char buf[15];
-  max7456_xy(state.x, state.y);
   sprintf(buf, "%11.6f", mavdata.gps_lat);
-  max7456_puts(buf);
-  
-  max7456_xy(state.x, state.y+1);
+  max7456_putsxy(state.x, state.y, buf);
+
   sprintf(buf, "%11.6f", mavdata.gps_lon);
-  max7456_puts(buf);
+  max7456_putsxy(state.x, state.y+1, buf);
 }
 
 WIDGET_DECLARE(gpscoords_widget, "Gps coords", GPSCOORDS_WIDGET_ID, draw);
