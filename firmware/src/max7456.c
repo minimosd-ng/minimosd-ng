@@ -94,6 +94,19 @@ void max7456_puts(unsigned char x, unsigned char y, char *s)
   max7456_wr(MAX7456_REG_DMDI, 0xff, SPI_END);
 }
 
+void max7456_putsn(unsigned char x, unsigned char y, char *s, unsigned char n)
+{
+  unsigned int addr = y * 30 + x;
+  max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_AINC, SPI_START);
+  max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8), 0);
+  max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr, 0);
+  do {
+    max7456_wr(MAX7456_REG_DMDI, *s++, 0);
+  } while (--n > 0);
+  max7456_wr(MAX7456_REG_DMDI, 0xff, SPI_END);
+}
+
+
 void max7456_clr(void)
 {
   max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_VSCLR | MAX7456_DMM_CLR,

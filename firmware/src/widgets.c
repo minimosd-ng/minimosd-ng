@@ -89,7 +89,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, HEADING_WIDGET_ID,        0, 13,
   1, HOMEDISTANCE_WIDGET_ID,   8,  0,
   1, HOMEDIRECTION_WIDGET_ID,  8,  1,
-  1, HORIZON_WIDGET_ID         8, 11,
+  1, HORIZON_WIDGET_ID,        8,  7,
   0xff
   };
 
