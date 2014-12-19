@@ -149,7 +149,7 @@ void load_widgets_tab(unsigned char tab)
       s.x = cfg.x;
       s.y = cfg.y;
     }
-    all_widgets[i]->set_state(&s);
+    all_widgets[i]->do_state(&s);
   }
 
   widx = 0;
@@ -167,7 +167,7 @@ ISR(INT0_vect)
   /* render at least 5 widgets per call */
   while (rendered < 5) {
     w = all_widgets[widx++];
-    s = w->get_state();
+    s = w->do_state(NULL);
     if (s->props & WIDGET_ENABLED) {
       w->draw();
       rendered++;      

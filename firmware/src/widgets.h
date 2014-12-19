@@ -46,8 +46,7 @@ struct widget {
   unsigned char id;
 
   /* set/get widget state */
-  void (*set_state)(struct widget_state *s);
-  struct widget_state* (*get_state)(void);
+  struct widget_state* (*do_state)(struct widget_state *s);
 
   /* drawing function */
   void (*draw)(void);
@@ -61,11 +60,14 @@ void init_widgets(void);
 /* helper macros */
 
 #define WIDGET_DECLARE(name, title, id, draw) \
-static void set_state(struct widget_state *s) \
-{ memcpy(&state, s, sizeof(struct widget_state)); } \
-static struct widget_state *get_state(void) \
-{ return &state; } \
-const struct widget name = { title, id, set_state, get_state, draw }
+static struct widget_state* do_state(struct widget_state *s) \
+{ \
+  struct widget_state *my_state = &state; \
+  if (s) \
+    memcpy(my_state, s, sizeof(struct widget_state)); \
+  return my_state; \
+} \
+const struct widget name = { title, id, do_state, draw }
 
 #define WIDGET_STATE(_x, _y, _props) \
 static struct widget_state state = { .x = _x, .y = _y, .props = _props }
