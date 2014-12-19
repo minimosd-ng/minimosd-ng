@@ -8,8 +8,11 @@ void mavlink_process(void);
 void calc_process(void);
 
 struct calc_data {
+  unsigned char has_home;
   unsigned int home_distance;
   unsigned int home_direction;
+
+  float home_lat, home_lon;
 };
 
 
@@ -43,7 +46,7 @@ struct mavlink_data {
   
   /* wind */
   float wind_direction, wind_speed;
-  
+
   unsigned int temperature;
   
   unsigned int home_alt;

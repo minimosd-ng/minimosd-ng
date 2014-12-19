@@ -71,7 +71,12 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.gps_eph = mavlink_msg_gps_raw_int_get_eph(msg);
     break; 
   case MAVLINK_MSG_ID_VFR_HUD:
-    mavlink_msg_vfr_hud_decode((const mavlink_message_t*) &msg, &mavdata.vfr_hud);
+    mavdata.vfr_hud.airspeed = mavlink_msg_vfr_hud_get_airspeed(msg);
+    mavdata.vfr_hud.groundspeed = mavlink_msg_vfr_hud_get_groundspeed(msg);
+    mavdata.vfr_hud.alt = mavlink_msg_vfr_hud_get_alt(msg);
+    mavdata.vfr_hud.climb = mavlink_msg_vfr_hud_get_climb(msg);
+    mavdata.vfr_hud.heading = mavlink_msg_vfr_hud_get_heading(msg);
+    mavdata.vfr_hud.throttle = mavlink_msg_vfr_hud_get_throttle(msg);
     break;
   case MAVLINK_MSG_ID_ATTITUDE:
     mavdata.pitch = ToDeg(mavlink_msg_attitude_get_pitch(msg));
@@ -133,9 +138,33 @@ void mavlink_process(void)
   }
 }
 
+
+#define EARTH_AVG_RADIUS  (6367449)
+
 void calc_process(void)
 {
-  /* TODO: do math */
-  mavdata.calcs.home_distance = 0;
+  /* calcs for home */
+  float dlat = mavdata.calcs.home_lat - mavdata.gps_lat;
+  float dlon = mavdata.calcs.home_lon - mavdata.gps_lon;
+  float cos_lat = cos(ToRad(fabs(mavdata.calcs.home_lat)));
+
+  /* calculate aprox home distance */
+  float dlon_cos = dlon * cos_lat;
+  float dist = ToRad(EARTH_AVG_RADIUS) * sqrt(dlat*dlat + dlon_cos*dlon_cos);
+
+  /* home initial bearing */
+  float dlat_cos = dlat / cos_lat;
+  float bearing = 90 + ToDeg(atan2(dlat_cos, -dlon));
+
+  /* return bearing */
+  bearing += 180;
+
+  /* relative return bearing */
+  bearing -= mavdata.vfr_hud.heading;
+  if(bearing < 0)
+    bearing += 360;
+
+  mavdata.calcs.home_distance = (unsigned int) dist;
+  mavdata.calcs.home_direction = (unsigned int) bearing;
 }
 
