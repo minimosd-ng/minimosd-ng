@@ -18,6 +18,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
+ Horizon widget for minimosd-ng
+ Based on smooth horizon by Jörg Rothfuchs 
+ Optimization by Luis Alves
+
 *********************************************************************/
 
 #include "config.h"
@@ -27,7 +31,6 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "max7456.h"
 #include "mavlink.h"
 #include <math.h>
-#include <stdlib.h>
 
 #define DEBUG 0
 #if DEBUG
@@ -40,18 +43,19 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-/* Calculates artificial horizon             */
-/* Based on smooth horizon by Jörg Rothfuchs */
+/* configurable parameters */
 
-/* with different factors we can adapt do different cam optics */
-#define AH_PITCH_FACTOR 0.010471976 // conversion factor for pitch
-#define AH_ROLL_FACTOR  0.017453293 // conversion factor for roll
-#define AH_COLS         12          // number of artificial horizon columns
-#define AH_ROWS         5           // number of artificial horizon rows
-#define CHAR_COLS       12          // number of MAX7456 char columns
-#define CHAR_ROWS       18          // number of MAX7456 char rows
-#define CHAR_SPECIAL    9           // number of MAX7456 special chars for the artificial horizon
-#define AH_TOTAL_LINES  AH_ROWS * CHAR_ROWS // helper define
+#define COLS  12      /* artificial horizon columns */
+#define ROWS  5       /* artificial horizon rows    */
+
+/* change factor to adapt do different cam optics */
+#define PITCH_FACTOR  0.6
+#define ROLL_FACTOR   1
+
+/* end of configurable parameters */
+
+#define NUM_FONT_CHARS  9
+#define YSIZE  (ROWS * MAX7456_FONT_ROWS)
 
 #define LINE_SET_STRAIGHT__	(0xC7 - 1)  // code of the first MAX7456 straight char -1
 #define LINE_SET_STRAIGHT_O	(0xD0 - 3)  // code of the first MAX7456 straight overflow char -3
@@ -75,80 +79,70 @@ extern struct mavlink_data mavdata;
 void get_horizon(char *buf)
 {
   unsigned char col, row;
-  int pitch_line, middle, hit, subval;
-  int roll;
-  unsigned char line_set = LINE_SET_STRAIGHT__;
-  unsigned char line_set_overflow = LINE_SET_STRAIGHT_O;
-  unsigned char subval_overflow = 9;
-  
-  /* preset the line char attributes */
-  roll = mavdata.roll;
+  int pitch_line, hit, subval, x;
+  unsigned char line_set, line_set_overflow, subval_overflow, roll;
+  unsigned char neg = 0;
+  float roll_tan;
 
-  if ((roll >= 0 && roll < 90) || (roll >= -179 && roll < -90)) {
-    /* positive angle line chars */
-    if (roll < 0)
-      roll += 180;
-    if (roll > ANGLE_2) {
-      line_set = LINE_SET_P___STAG_2;
-      line_set_overflow = LINE_SET_P_O_STAG_2;
-      subval_overflow = 7;
-    } else if (roll > ANGLE_1) {
-      line_set = LINE_SET_P___STAG_1;
-      line_set_overflow = LINE_SET_P_O_STAG_1;
-      subval_overflow = 8;
-    }
+  if (mavdata.roll < 0)
+    roll = (unsigned char) mavdata.roll + 180;
+  else
+    roll = (unsigned char) mavdata.roll;
+
+  if (roll > 90) {
+    neg = 1;
+    roll += (90-roll) << 1;
+  }
+
+  if (roll > ANGLE_2) {
+    line_set = neg ? LINE_SET_N___STAG_2 : LINE_SET_P___STAG_2;
+    line_set_overflow = neg ? LINE_SET_N_O_STAG_2 : LINE_SET_P_O_STAG_2;
+    subval_overflow = 7;
+  } else if (roll > ANGLE_1) {
+    line_set = neg ? LINE_SET_N___STAG_1 : LINE_SET_P___STAG_1;
+    line_set_overflow = neg ? LINE_SET_N_O_STAG_1 : LINE_SET_P_O_STAG_1;
+    subval_overflow = 8;
   } else {
-    /* negative angle line chars */
-    if (roll > 90)
-      roll -= 180;
-      if (abs(roll) > ANGLE_2) {
-        line_set = LINE_SET_N___STAG_2;
-        line_set_overflow = LINE_SET_N_O_STAG_2;
-        subval_overflow = 7;
-      } else if (abs(roll) > ANGLE_1) {
-        line_set = LINE_SET_N___STAG_1;
-        line_set_overflow = LINE_SET_N_O_STAG_1;
-        subval_overflow = 8;
-      }
+    line_set = LINE_SET_STRAIGHT__;
+    line_set_overflow = LINE_SET_STRAIGHT_O;
+    subval_overflow = 9;
   }
  
   // 90 total lines
-  pitch_line = (int) ((float) tan(-AH_PITCH_FACTOR * mavdata.pitch) * AH_TOTAL_LINES) + AH_TOTAL_LINES/2;
+  pitch_line = (int) (tan(ToRad(mavdata.pitch) * PITCH_FACTOR * (-1)) * YSIZE) + YSIZE / 2;
+  roll_tan = tan(ToRad(mavdata.roll) * ROLL_FACTOR);
 
-  for (col = 1; col <= AH_COLS; col++) {
+  for (col = 0; col < COLS; col++) {
     // -66 to +66 center X point at middle of each column
-    middle = col * CHAR_COLS - (AH_COLS/2 * CHAR_COLS) - CHAR_COLS/2;
+    x = (col * MAX7456_FONT_COLS - (COLS / 2 * MAX7456_FONT_COLS) - MAX7456_FONT_COLS / 2) + MAX7456_FONT_COLS;
     // 1 to 90 calculating hit point on Y plus offset 
-    hit = tan(AH_ROLL_FACTOR * mavdata.roll) * middle + pitch_line;
-    if (hit >= 1 && hit <= AH_TOTAL_LINES) {
+    hit = (roll_tan * x) + pitch_line;
+    if ((hit > 0) && (hit <= YSIZE)) {
       // 0 to 4 bottom-up
-      row = (hit-1) / CHAR_ROWS;
+      row = (hit-1) / MAX7456_FONT_ROWS;
 
       // 1 to 9
-      subval = (hit - (row * CHAR_ROWS) + 1) / (CHAR_ROWS / CHAR_SPECIAL);
-   
-      buf[(col-1) + (AH_ROWS - row - 1) * AH_COLS] = line_set + subval;
+      subval = (hit - (row * MAX7456_FONT_ROWS) + 1) / (MAX7456_FONT_ROWS / NUM_FONT_CHARS);
+      buf[col + row * COLS] = line_set + subval;
 
       // check if we have to print an overflow line char
       // only if it is a char which needs overflow and if it is not the upper most row
-      if (subval >= subval_overflow && row < 4) {
-        buf[(col-1) + (AH_ROWS - row - 2) * AH_COLS] = line_set_overflow + subval - OVERFLOW_CHAR_OFFSET;
-      }
+      if (subval >= subval_overflow && row < 4)
+        buf[col + (row + 1) * COLS] = line_set_overflow + subval - OVERFLOW_CHAR_OFFSET;
     }
   }
 }
 
 
-
 static void draw(void)
 {
-  char buf[AH_ROWS * AH_COLS];
+  char buf[ROWS * COLS];
   unsigned char i;
 
-  memset(buf, ' ', AH_ROWS * AH_COLS);
+  memset(buf, ' ', ROWS * COLS);
   get_horizon(buf);
-  for (i = 0; i < AH_ROWS; i++) {
-    max7456_putsn(state.x+1, state.y + i, &buf[AH_COLS * i], AH_COLS);
+  for (i = 0; i < ROWS; i++) {
+    max7456_putsn(state.x+1, state.y + (ROWS - 1) - i, &buf[COLS * i], COLS);
   }
   max7456_putc(state.x, state.y+2, 0xc6);
   max7456_putc(state.x+13, state.y+2, 0xc5);

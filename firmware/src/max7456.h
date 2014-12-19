@@ -62,6 +62,10 @@ typedef enum {
 /* OSDBL register */
 #define MAX7456_OSDBL_AUTO  0x10
 
+/* Font size */
+#define MAX7456_FONT_COLS   12
+#define MAX7456_FONT_ROWS   18
+
 
 void init_max7456(void);
 void max7456_putc(unsigned char x, unsigned char y, char c);

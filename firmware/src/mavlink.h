@@ -56,6 +56,7 @@ struct mavlink_data {
 };
 
 #define ToDeg(x) (x*57.2957795131)
+#define ToRad(x) (x*0.0174532925199)
 
 #endif
 
