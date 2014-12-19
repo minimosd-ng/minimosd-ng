@@ -45,5 +45,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(batremain_widget, "Battery remaining", BATREMAIN_WIDGET_ID, draw);
+WIDGET_DECLARE(batremain_widget, BATREMAIN_WIDGET_ID, draw);
 

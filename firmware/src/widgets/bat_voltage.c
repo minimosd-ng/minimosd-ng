@@ -45,5 +45,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(batvoltage_widget, "Battery voltage", BATVOLTAGE_WIDGET_ID, draw);
+WIDGET_DECLARE(batvoltage_widget, BATVOLTAGE_WIDGET_ID, draw);
 

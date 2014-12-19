@@ -63,5 +63,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(gpsstats_widget, "GPS stats", GPSSTATUS_WIDGET_ID, draw);
+WIDGET_DECLARE(gpsstats_widget, GPSSTATUS_WIDGET_ID, draw);
 

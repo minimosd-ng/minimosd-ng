@@ -45,5 +45,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(roll_widget, "Roll", ROLL_WIDGET_ID, draw);
+WIDGET_DECLARE(roll_widget, ROLL_WIDGET_ID, draw);
 

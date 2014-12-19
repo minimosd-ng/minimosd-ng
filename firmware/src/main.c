@@ -43,7 +43,7 @@ extern struct mavlink_data mavdata;
 int main(void)
 {
   unsigned char STATE = 0;
-  unsigned int n, t;
+  unsigned int n, t = 0;
 
   /* load global config from eeprom */
   load_config();
@@ -72,11 +72,26 @@ int main(void)
   /* global enable interrupt */
   sei();
 
+  mavdata.calcs.home_lat = 41.290543;
+  mavdata.calcs.home_lon = -8.568684;
+
   while (1)
   {
     n = now();
     if ((n - t) > 200) {
       t += 200;
+
+      if (now() < 5000)
+        mavdata.calcs.home_lat += 0.000043;
+      else if (now() < 10000)
+        mavdata.calcs.home_lon += 0.000043;
+      else if (now() < 20000)
+        mavdata.calcs.home_lon -= 0.000043;
+      else if (now() < 30000)
+        mavdata.calcs.home_lat -= 0.000043;
+      else if (now() < 40000)
+        mavdata.calcs.home_lon += 0.000043;
+
 
       switch (STATE) {
       case 0:

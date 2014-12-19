@@ -48,5 +48,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(clock_widget, "Clock", CLOCK_WIDGET_ID, draw);
+WIDGET_DECLARE(clock_widget, CLOCK_WIDGET_ID, draw);
 

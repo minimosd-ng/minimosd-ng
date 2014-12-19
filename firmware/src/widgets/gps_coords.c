@@ -48,5 +48,5 @@ static void draw(void)
   max7456_puts(state.x, state.y+1, buf);
 }
 
-WIDGET_DECLARE(gpscoords_widget, "Gps coords", GPSCOORDS_WIDGET_ID, draw);
+WIDGET_DECLARE(gpscoords_widget, GPSCOORDS_WIDGET_ID, draw);
 

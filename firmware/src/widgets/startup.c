@@ -52,5 +52,5 @@ static void draw(void)
   max7456_puts(state.x, state.y+3, buf);
 }
 
-WIDGET_DECLARE(startup_widget, "Startup", STARTUP_WIDGET_ID,  draw);
+WIDGET_DECLARE(startup_widget, STARTUP_WIDGET_ID,  draw);
 

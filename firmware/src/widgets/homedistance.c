@@ -53,5 +53,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(homedistance_widget, "HomeDist", HOMEDISTANCE_WIDGET_ID, draw);
+WIDGET_DECLARE(homedistance_widget, HOMEDISTANCE_WIDGET_ID, draw);
 

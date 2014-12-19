@@ -47,5 +47,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(cog_widget, "COG", COG_WIDGET_ID,  draw);
+WIDGET_DECLARE(cog_widget, COG_WIDGET_ID,  draw);
 

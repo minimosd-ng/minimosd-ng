@@ -47,5 +47,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(homedirection_widget, "Home direction", HOMEDIRECTION_WIDGET_ID, draw);
+WIDGET_DECLARE(homedirection_widget, HOMEDIRECTION_WIDGET_ID, draw);
 

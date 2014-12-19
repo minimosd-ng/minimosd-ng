@@ -59,5 +59,5 @@ static void draw(void)
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(windrose_widget, "Wind rose", WINDROSE_WIDGET_ID,  draw);
+WIDGET_DECLARE(windrose_widget, WINDROSE_WIDGET_ID,  draw);
 

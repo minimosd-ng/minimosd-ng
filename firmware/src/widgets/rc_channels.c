@@ -48,5 +48,5 @@ static void draw(void)
   }
 }
 
-WIDGET_DECLARE(rcchannels_widget, "RC Channels", RCCHANNELS_WIDGET_ID, draw);
+WIDGET_DECLARE(rcchannels_widget, RCCHANNELS_WIDGET_ID, draw);
 

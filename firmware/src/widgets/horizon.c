@@ -148,5 +148,5 @@ static void draw(void)
   max7456_putc(state.x+13, state.y+2, 0xc5);
 }
 
-WIDGET_DECLARE(horizon_widget, "Horizon", HORIZON_WIDGET_ID, draw);
+WIDGET_DECLARE(horizon_widget, HORIZON_WIDGET_ID, draw);
 
