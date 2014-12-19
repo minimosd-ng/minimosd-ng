@@ -65,17 +65,20 @@ HEXFORMAT=ihex
 
 .PHONY : flash
 
+all: $(PROJECT_NAME).hex $(TARGET)
 
-all: $(PROJECT_NAME).hex $(TARGET) 
-	
 depend: .depend
 
-.depend: $(SRCS)
+.depend: $(SRCS) $(HEADERS)
 	rm -f ./.depend
 	$(CC) $(CFLAGS) -MM $^ > ./.depend;
 
 include .depend
 
+# object from C
+%.o: %.c $(HEADERS)
+	@echo Compiling $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJDEPS) $(HEADERS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJDEPS)
@@ -94,10 +97,6 @@ clean:
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
 	rm -rf ./src/*.o ./src/*.bak ./src/*.lst ./src/*.map
 	rm -rf ./src/widgets/*.o ./src/widgets/*.bak ./src/widgets/*.lst ./src/widgets/*.map
-
-# object from C
-.c.o:
-	$(CC) $(CFLAGS) -c $< -o $@
 
 flash: $(PROJECT_NAME).hex
 	@avrdude -p $(PROGRAMMER_MCU) -c $(AVRDUDE_PROGRAMMER) -P usb -U flash:w:$(PROJECT_NAME).hex
