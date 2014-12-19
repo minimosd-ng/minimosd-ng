@@ -40,10 +40,18 @@ extern struct mavlink_data mavdata;
 
 static void draw(void)
 {
-  char buf[10];
-  sprintf(buf, "%c%4d%c", 0xb, mavdata.calcs.home_distance, 0x0c);
+  char buf[10], u = 0xc;
+  unsigned int v = mavdata.calcs.home_distance;
+  if (v > 10000) {
+    v /= 1000;
+    u = 0x1b;
+  }
+  buf[0] = 0xb;
+  sprintf(&buf[1], "%4d", v);
+  buf[5] = u;
+  buf[6] = '\0';
   max7456_puts(state.x, state.y, buf);
 }
 
-WIDGET_DECLARE(homedistance_widget, "Home distance", HOMEDISTANCE_WIDGET_ID, draw);
+WIDGET_DECLARE(homedistance_widget, "HomeDist", HOMEDISTANCE_WIDGET_ID, draw);
 
