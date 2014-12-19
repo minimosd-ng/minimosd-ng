@@ -46,6 +46,7 @@ WIDGET_IMPORT(heading_widget);
 WIDGET_IMPORT(homedistance_widget);
 WIDGET_IMPORT(homedirection_widget);
 WIDGET_IMPORT(horizon_widget);
+WIDGET_IMPORT(flightstats_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -66,6 +67,7 @@ WIDGETS( \
   &homedistance_widget,
   &homedirection_widget,
   &horizon_widget,
+  &flightstats_widget,
 );
 
 
@@ -90,6 +92,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, HOMEDISTANCE_WIDGET_ID,   8,  0,
   1, HOMEDIRECTION_WIDGET_ID,  8,  1,
   1, HORIZON_WIDGET_ID,        8,  7,
+  3, FLIGHTSTATS_WIDGET_ID,    0,  0,
   0xff
   };
 
