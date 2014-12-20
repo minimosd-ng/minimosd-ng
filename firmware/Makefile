@@ -1,7 +1,7 @@
 ## Oven controller Makefile
 
 MCU=atmega328p
-LIBS=
+LIBS=-lm -lprintf_flt -lc
 
 PROGRAMMER_MCU=m328p
 AVRDUDE_PROGRAMMER=usbasp
@@ -19,7 +19,6 @@ CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-Wall -Wstrict-prototypes               \
 	-Wa,-ahlms=$(firstword                  \
 	$(filter %.lst, $(<:.c=.lst)))
-
 
 
 # automatically build widgets
@@ -50,8 +49,8 @@ CFLAGS += ${addprefix -I,$(SOURCEDIRS)}
 CFLAGS += -mmcu=$(MCU)
 
 # linker
-LDFLAGS=-Wl,-Map,$(TARGET).map -mmcu=$(MCU) \
-	-Wl,-u,vfprintf -lprintf_flt -lm $(LIBS)
+LDFLAGS=-Wl,-Map,$(TARGET).map,-u,vprintf \
+	-mmcu=$(MCU) $(LIBS)
 
 OBJDEPS=$(CFILES:.c=.o)
 
@@ -81,7 +80,7 @@ include .depend
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJDEPS) $(HEADERS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJDEPS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJDEPS) $(LIBS)
 
 $(PROJECT_NAME).hex: $(PROJECT_NAME).elf
 	$(OBJCOPY) -j .text                    \
