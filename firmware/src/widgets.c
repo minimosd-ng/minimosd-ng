@@ -47,6 +47,7 @@ WIDGET_IMPORT(homedistance_widget);
 WIDGET_IMPORT(homedirection_widget);
 WIDGET_IMPORT(horizon_widget);
 WIDGET_IMPORT(flightstats_widget);
+WIDGET_IMPORT(radar_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -68,6 +69,7 @@ WIDGETS( \
   &homedirection_widget,
   &horizon_widget,
   &flightstats_widget,
+  &radar_widget,
 );
 
 
@@ -93,6 +95,9 @@ unsigned char widget_default_config[] EEMEM = {
   1, HOMEDIRECTION_WIDGET_ID,  8,  1,
   1, HORIZON_WIDGET_ID,        8,  7,
   3, FLIGHTSTATS_WIDGET_ID,    0,  0,
+  4, RADAR_WIDGET_ID,          0,  0,
+  4, HOMEDISTANCE_WIDGET_ID,   0, 14,
+  4, HOMEDIRECTION_WIDGET_ID,  0, 15,
   0xff
   };
 
@@ -148,7 +153,7 @@ void load_widgets_tab(unsigned char tab)
     if (cfg.tab == 0xff) {
       s.props = WIDGET_DISABLED;
     } else {
-      s.props = WIDGET_ENABLED;
+      s.props = WIDGET_ENABLED | WIDGET_INIT;
       s.x = cfg.x;
       s.y = cfg.y;
     }

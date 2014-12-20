@@ -96,7 +96,7 @@ int main(void)
       switch (STATE) {
       case 0:
         if (n > 3000) {
-          load_widgets_tab(1);
+          load_widgets_tab(4);
           STATE = 1;
         }
         break;

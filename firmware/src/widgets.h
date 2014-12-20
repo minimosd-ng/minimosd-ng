@@ -21,12 +21,14 @@ enum {
   HOMEDIRECTION_WIDGET_ID,
   HORIZON_WIDGET_ID,
   FLIGHTSTATS_WIDGET_ID,
+  RADAR_WIDGET_ID,
 };
 
 
 /* widget properties */
 #define WIDGET_DISABLED 0x00
 #define WIDGET_ENABLED  0x01
+#define WIDGET_INIT     0x02
 
 struct widget_config {
   unsigned char tab;
