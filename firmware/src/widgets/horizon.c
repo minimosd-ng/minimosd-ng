@@ -79,14 +79,17 @@ extern struct mavlink_data mavdata;
 
 #define OVF_CHAR_OFFSET  6   // offset for the overflow subvals
 
-void get_horizon(char *buf)
+
+struct ah_vars {
+  unsigned char line_set, line_set_ovf, subval_ovf;
+  int pitch_offset;
+  float roll_ratio;
+};
+
+static void get_vars(struct ah_vars *vars)
 {
-  unsigned char row, col;
-  int pitch_offset, y, x;
-  unsigned char line_set, subval, line_set_ovf, subval_ovf;
   unsigned char roll;
   unsigned char neg = 0;
-  float roll_ratio;
 
   if (mavdata.roll < 0)
     roll = (unsigned char) mavdata.roll + 180;
@@ -99,33 +102,39 @@ void get_horizon(char *buf)
   }
 
   if (roll > ANGLE_2) {
-    line_set = neg ? LINE_A2N : LINE_A2P;
-    line_set_ovf = neg ? LINE_A2N_OVF : LINE_A2P_OVF;
-    subval_ovf = 5;
+    vars->line_set = neg ? LINE_A2N : LINE_A2P;
+    vars->line_set_ovf = neg ? LINE_A2N_OVF : LINE_A2P_OVF;
+    vars->subval_ovf = 5;
   } else if (roll > ANGLE_1) {
-    line_set = neg ? LINE_A1N : LINE_A1P;
-    line_set_ovf = neg ? LINE_A1N_OVF : LINE_A1P_OVF;
-    subval_ovf = 6;
+    vars->line_set = neg ? LINE_A1N : LINE_A1P;
+    vars->line_set_ovf = neg ? LINE_A1N_OVF : LINE_A1P_OVF;
+    vars->subval_ovf = 6;
   } else {
-    line_set = LINE_A0;
-    line_set_ovf = LINE_A0_OVF;
-    subval_ovf = 7;
+    vars->line_set = LINE_A0;
+    vars->line_set_ovf = LINE_A0_OVF;
+    vars->subval_ovf = 7;
   }
 
-  /* pitch offset */ 
-  pitch_offset = (int) (tan(ToRad(mavdata.pitch) * PITCH_FACTOR * (-1)) * YSIZE) + YSIZE / 2;
-  roll_ratio = tan(ToRad(mavdata.roll) * ROLL_FACTOR);
+  vars->pitch_offset = (int) (tan(ToRad(mavdata.pitch) * PITCH_FACTOR * (-1)) * YSIZE) + YSIZE / 2;
+  vars->roll_ratio = tan(ToRad(mavdata.roll) * ROLL_FACTOR);
+}
+
+static void get_horizon(char *buf, struct ah_vars *vars)
+{
+  unsigned char row, col;
+  int y, x;
+  unsigned char subval, subval_ovf;
 
   for (col = 0; col < COLS; col++) {
     x = col * MAX7456_FONT_COLS - (COLS + 1) * MAX7456_FONT_COLS / 2 + MAX7456_FONT_COLS;
-    y = (int) (roll_ratio * x) + pitch_offset;
+    y = (int) (vars->roll_ratio * x) + vars->pitch_offset;
     if ((y < 0) || (y >= YSIZE))
       continue;
     row = y / MAX7456_FONT_ROWS;
     subval = (y % MAX7456_FONT_ROWS) / (MAX7456_FONT_ROWS / NUM_FONT_CHARS);
-    buf[col + row * COLS] = line_set + subval;
-    if (subval > subval_ovf && row < 4)
-      buf[col + (row + 1) * COLS] = line_set_ovf + subval - OVF_CHAR_OFFSET;
+    buf[col + row * COLS] = vars->line_set + subval;
+    if (subval > vars->subval_ovf && row < 4)
+      buf[col + (row + 1) * COLS] = vars->line_set_ovf + subval - OVF_CHAR_OFFSET;
   }
 }
 
@@ -134,7 +143,9 @@ void get_horizon(char *buf)
 static char draw(void)
 {
   static char *buf;
+  struct ah_vars vars;
   unsigned char i;
+  char ret = 1;
 
   if (state.props & WIDGET_INIT) {
     /* draw level arrows */
@@ -146,19 +157,21 @@ static char draw(void)
   if ((state.props & WIDGET_DRAW) == 0) {
     buf = (char *) malloc(ROWS*COLS);
     if (buf == NULL)
-      return -1;
+      goto err;
     memset(buf, ' ', ROWS * COLS);
-    get_horizon(buf);
+    get_vars(&vars);
+    get_horizon(buf, &vars);
     state.props |= WIDGET_DRAW;
-    return 0;
+    ret = 0;
   } else {
     for (i = 0; i < ROWS; i++) {
       max7456_putsn(state.x+1, state.y + (ROWS - 1) - i, &buf[COLS * i], COLS);
     }
     free(buf);
     state.props &= ~WIDGET_DRAW;
-    return 1;
   }
+err:
+  return ret;
 }
 
 WIDGET_DECLARE(horizon_widget, HORIZON_WIDGET_ID, draw);
