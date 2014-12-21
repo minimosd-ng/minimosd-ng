@@ -38,11 +38,12 @@ extern struct mavlink_data mavdata;
 
 WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
-static void draw(void)
+static char draw(void)
 {
   char buf[10];
   sprintf(buf, "%5.0f%c", mavdata.gps_altitude, 0x0c);
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(altitude_widget, ALTITUDE_WIDGET_ID, draw);

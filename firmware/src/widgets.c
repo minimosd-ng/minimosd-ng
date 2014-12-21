@@ -26,6 +26,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
 #include <stdio.h>
+#include "timer.h"
 
 /* import widgets */
 WIDGET_IMPORT(pitch_widget);
@@ -70,6 +71,7 @@ WIDGETS( \
   &horizon_widget,
   &flightstats_widget,
   &radar_widget,
+  NULL,
 );
 
 
@@ -102,12 +104,14 @@ unsigned char widget_default_config[] EEMEM = {
   };
 
 
-static unsigned char widx;
+static struct widget *rlist[WIDGETS_NUM];
+static struct widget **rwid;
 
 void init_widgets(void)
 {
-  /* init widget indexer */
-  widx = 0;
+  /* init widget rendering indexer */
+  rlist[0] = NULL;
+  rwid = &rlist[0];
 
   /* vsync trigger int on falling edge */
   EICRA |=  _BV(ISC01);
@@ -115,8 +119,6 @@ void init_widgets(void)
 
   /* enable osd refresh */
   EIMSK |= _BV(INT0);
-
-  widx = 0;
 }
 
 static void find_config(unsigned char tab, unsigned char id, struct widget_config *cfg)
@@ -135,9 +137,9 @@ static unsigned char current_tab = 0xff;
 
 void load_widgets_tab(unsigned char tab)
 {
-  unsigned char i;
   struct widget_config cfg;
   struct widget_state s;
+  const struct widget **w, **r;
 
   if (current_tab == tab)
     return;
@@ -147,44 +149,64 @@ void load_widgets_tab(unsigned char tab)
   EIMSK &= ~_BV(INT0);
   max7456_clr();
 
-
-  for (i = 0; i < WIDGETS_NUM; i++) {
-    find_config(tab, all_widgets[i]->id, &cfg);
+  w = &all_widgets[0];
+  r = &rlist[0];
+  do {
+    find_config(tab, (*w)->id, &cfg);
     if (cfg.tab == 0xff) {
       s.props = WIDGET_DISABLED;
     } else {
       s.props = WIDGET_ENABLED | WIDGET_INIT;
       s.x = cfg.x;
       s.y = cfg.y;
+      *r = *w;
+      r++;
     }
-    all_widgets[i]->do_state(&s);
-  }
+    (*w)->do_state(&s);
+    w++;
 
-  widx = 0;
+  } while ((*w) != NULL);
+  *r = NULL;
+
+  rwid = &rlist[0];
   /* re-enable interrupt */
   EIMSK |= _BV(INT0);
 }
 
-/* VSYNC interrupt used to render widgets */
+/*
+ VSYNC interrupt is used to render widgets.
+ The pulse gives us aprox. 1.3 ms for rendering
+ widgets without any flickering artifacts.
+*/
 ISR(INT0_vect)
 {
-  const struct widget *w;
-  struct widget_state *s;
+  struct widget *s_rwid = (*rwid);
   unsigned char rendered = 0;
+  unsigned int t = nnow();
 
-  /* render at least 5 widgets per call */
-  while (rendered < 5) {
-    w = all_widgets[widx++];
-    s = w->do_state(NULL);
-    if (s->props & WIDGET_ENABLED) {
-      w->draw();
-      rendered++;      
-    }
+  /* any widget to render? */
+  if ((*rwid) == NULL)
+    return;
 
-    if (widx >= WIDGETS_NUM) {
-      widx = 0;
+  /* allow 1ms to draw widgets */
+  while ((nnow() - t) <= 1000) {
+    if ((*rwid)->draw())
+      rendered += 1;
+    else
+      continue;
+
+    rwid++;
+    /* wrap around */
+    if ((*rwid) == NULL)
+      rwid = &rlist[0];
+
+    /* check if all done */
+    if ((*rwid) == s_rwid)
       break;
-    }
   }
+  t = nnow() - t;
+  //if (t > 1300)
+  printf("r=%d t=%lu\n", (int) rendered, (unsigned long) t);
+
 }
 

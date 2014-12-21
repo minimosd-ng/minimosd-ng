@@ -38,7 +38,7 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-static void draw(void)
+static char draw(void)
 {
   const char full_rose[] = {
     0x82,0x80,0x81,0x80,
@@ -57,6 +57,7 @@ static void draw(void)
   buf[6] = 0x87;
   buf[7] = '\0';
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(windrose_widget, WINDROSE_WIDGET_ID,  draw);

@@ -40,12 +40,13 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-static void draw(void)
+static char draw(void)
 {
   struct datetime *t = get_time();
   char buf[10];
   sprintf(buf, "%2d:%02d:%02d", t->h, t->m, t->s);
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(clock_widget, CLOCK_WIDGET_ID, draw);

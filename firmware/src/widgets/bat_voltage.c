@@ -38,11 +38,12 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-static void draw(void)
+static char draw(void)
 {
   char buf[12];
   sprintf(buf, "%5.2f%c", mavdata.bat_voltage, 0x0d);
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(batvoltage_widget, BATVOLTAGE_WIDGET_ID, draw);

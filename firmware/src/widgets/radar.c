@@ -58,7 +58,7 @@ struct xy {
 
 static struct xy prev_home;
 
-static void draw(void)
+static char draw(void)
 {
   float direction_rad, s;
   unsigned int scale, distance = mavdata.calcs.home_distance;
@@ -91,6 +91,7 @@ static void draw(void)
 
   prev_home.x = x;
   prev_home.y = y;
+  return 1;
 }
 
 WIDGET_DECLARE(radar_widget, RADAR_WIDGET_ID, draw);

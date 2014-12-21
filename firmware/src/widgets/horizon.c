@@ -134,7 +134,7 @@ void get_horizon(char *buf)
 }
 
 
-static void draw(void)
+static char draw(void)
 {
   char buf[ROWS * COLS];
   unsigned char i;
@@ -146,6 +146,7 @@ static void draw(void)
   }
   max7456_putc(state.x, state.y+2, 0xc6);
   max7456_putc(state.x+13, state.y+2, 0xc5);
+  return 1;
 }
 
 WIDGET_DECLARE(horizon_widget, HORIZON_WIDGET_ID, draw);

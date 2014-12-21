@@ -38,13 +38,14 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-static void draw(void)
+static char draw(void)
 {
   char buf[3];
   char idx = ((int) (mavdata.calcs.home_direction * 16) / 360);
   idx = (idx & 0xf) << 1;
   sprintf(buf, "%c%c", 0x90+idx, 0x91+idx);
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(homedirection_widget, HOMEDIRECTION_WIDGET_ID, draw);

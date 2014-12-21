@@ -41,7 +41,7 @@ extern mavlink_status_t status;
 extern struct minimosd_ng_config config;
 
 
-static void draw(void)
+static char draw(void)
 {
   char buf[30];
   sprintf(buf, "MinimOSD-ng %dv%d", VERSION_MAJOR, VERSION_MINOR);
@@ -50,6 +50,7 @@ static void draw(void)
   max7456_puts(state.x, state.y+2, buf);
   sprintf(buf, "Mavlink baudrate: %d", config.mavlink_baudrate);
   max7456_puts(state.x, state.y+3, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(startup_widget, STARTUP_WIDGET_ID,  draw);

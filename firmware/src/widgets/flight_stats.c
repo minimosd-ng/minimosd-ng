@@ -38,11 +38,12 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-static void draw(void)
+static char draw(void)
 {
   char buf[20];
   sprintf(buf, "Flight status");
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(flightstats_widget, FLIGHTSTATS_WIDGET_ID, draw);

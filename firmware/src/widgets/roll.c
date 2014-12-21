@@ -38,11 +38,12 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-static void draw(void)
+static char draw(void)
 {
   char buf[10];
   sprintf(buf, "%4d%c%c", mavdata.roll, 0x05, 0x06);
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(roll_widget, ROLL_WIDGET_ID, draw);

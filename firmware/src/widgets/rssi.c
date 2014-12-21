@@ -38,11 +38,12 @@ extern struct mavlink_data mavdata;
 
 WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
-static void draw(void)
+static char draw(void)
 {
   char buf[10];
   sprintf(buf, "%c%3d%c", 0x09, mavdata.rssi, 0x25);
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(rssi_widget, RSSI_WIDGET_ID, draw);

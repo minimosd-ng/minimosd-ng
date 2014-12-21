@@ -49,7 +49,7 @@ struct widget {
   struct widget_state* (*do_state)(struct widget_state *s);
 
   /* drawing function */
-  void (*draw)(void);
+  char (*draw)(void);
 };
 
 

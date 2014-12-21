@@ -38,11 +38,12 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-static void draw(void)
+static char draw(void)
 {
   char buf[12];
   sprintf(buf, "%5.2f%c", ((double) mavdata.bat_current) / 100, 0x0e);
   max7456_puts(state.x, state.y, buf);
+  return 1;
 }
 
 WIDGET_DECLARE(batcurrent_widget, BATCURRENT_WIDGET_ID, draw);

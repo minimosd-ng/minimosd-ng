@@ -38,7 +38,7 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
-static void draw(void)
+static char draw(void)
 {
   char buf[10];
   unsigned char i;
@@ -46,6 +46,7 @@ static void draw(void)
     sprintf(buf, "CH%d %4d", i+1, mavdata.ch_raw[i]);
     max7456_puts(state.x, state.y+i, buf);
   }
+  return 1;
 }
 
 WIDGET_DECLARE(rcchannels_widget, RCCHANNELS_WIDGET_ID, draw);
