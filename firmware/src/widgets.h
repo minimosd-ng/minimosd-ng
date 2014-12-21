@@ -67,7 +67,7 @@ static struct widget_state* do_state(struct widget_state *s) \
     memcpy(my_state, s, sizeof(struct widget_state)); \
   return my_state; \
 } \
-const struct widget name = { id, do_state, draw }
+struct widget name = { id, do_state, draw }
 
 #define WIDGET_STATE(_x, _y, _props) \
 static struct widget_state state = { .x = _x, .y = _y, .props = _props }
@@ -75,7 +75,7 @@ static struct widget_state state = { .x = _x, .y = _y, .props = _props }
 #define WIDGETS_NUM (sizeof(all_widgets)/sizeof(struct widgets *))
 
 #define WIDGETS(...) \
-const struct widget *all_widgets[] = {__VA_ARGS__}
+struct widget *all_widgets[] = {__VA_ARGS__}
 
 #define WIDGET_IMPORT(name) \
 extern struct widget name;

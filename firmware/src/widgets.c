@@ -28,6 +28,8 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include "timer.h"
 
+#define DEBUG_WIDGET_TIMMNIG 1
+
 /* import widgets */
 WIDGET_IMPORT(pitch_widget);
 WIDGET_IMPORT(roll_widget);
@@ -111,14 +113,11 @@ void init_widgets(void)
 {
   /* init widget rendering indexer */
   rlist[0] = NULL;
-  rwid = &rlist[0];
+  rwid = rlist;
 
   /* vsync trigger int on falling edge */
   EICRA |=  _BV(ISC01);
   EICRA &= ~_BV(ISC00);
-
-  /* enable osd refresh */
-  EIMSK |= _BV(INT0);
 }
 
 static void find_config(unsigned char tab, unsigned char id, struct widget_config *cfg)
@@ -139,7 +138,7 @@ void load_widgets_tab(unsigned char tab)
 {
   struct widget_config cfg;
   struct widget_state s;
-  const struct widget **w, **r;
+  struct widget **w, **r;
 
   if (current_tab == tab)
     return;
@@ -149,28 +148,24 @@ void load_widgets_tab(unsigned char tab)
   EIMSK &= ~_BV(INT0);
   max7456_clr();
 
-  w = &all_widgets[0];
-  r = &rlist[0];
+  w = all_widgets;
+  r = rlist;
   do {
     find_config(tab, (*w)->id, &cfg);
-    if (cfg.tab == 0xff) {
-      s.props = WIDGET_DISABLED;
-    } else {
+    if (cfg.tab != 0xff) {
       s.props = WIDGET_ENABLED | WIDGET_INIT;
       s.x = cfg.x;
       s.y = cfg.y;
-      *r = *w;
-      r++;
+      *r++ = *w;
+      (*w)->do_state(&s);
     }
-    (*w)->do_state(&s);
-    w++;
-
-  } while ((*w) != NULL);
+  } while ((*++w) != NULL);
   *r = NULL;
 
-  rwid = &rlist[0];
-  /* re-enable interrupt */
-  EIMSK |= _BV(INT0);
+  rwid = rlist;
+  /* re-enable interrupt if we have at least 1 widget to render */
+  if ((*rwid) != NULL)
+    EIMSK |= _BV(INT0);
 }
 
 /*
@@ -180,33 +175,37 @@ void load_widgets_tab(unsigned char tab)
 */
 ISR(INT0_vect)
 {
-  struct widget *s_rwid = (*rwid);
+  struct widget *start_rwid, *prev;
   unsigned char rendered = 0;
   unsigned int t = nnow();
+  unsigned int dt = 0;
 
-  /* any widget to render? */
-  if ((*rwid) == NULL)
-    return;
+  start_rwid = *rwid;
 
   /* allow 1ms to draw widgets */
-  while ((nnow() - t) <= 1000) {
+  while ((dt = nnow() - t) < (750 / 125)) {
     if ((*rwid)->draw())
       rendered += 1;
     else
       continue;
 
+#if DEBUG_WIDGET_TIMMNIG
+    prev = *rwid;
+#endif
+
     rwid++;
     /* wrap around */
     if ((*rwid) == NULL)
-      rwid = &rlist[0];
+      rwid = rlist;
 
     /* check if all done */
-    if ((*rwid) == s_rwid)
+    if ((*rwid) == start_rwid)
       break;
   }
-  t = nnow() - t;
-  //if (t > 1300)
-  printf("r=%d t=%lu\n", (int) rendered, (unsigned long) t);
+#if DEBUG_WIDGET_TIMMNIG
+  if (dt > (1300/125))
+    printf("(%d) id=%d %uus\n", (int) prev->id, (int) rendered, dt * 125);
+#endif
 
 }
 
