@@ -64,10 +64,10 @@ unsigned int nnow(void)
 {
 	unsigned int j, c;
 	cli();
-  j = jiffies;
   c = cnt125;
+  j = jiffies;
   sei();
-  return (unsigned int) jiffies * 1000 + cnt125 * 125;
+  return (unsigned int) (j << 3) + c;
 }
 
 unsigned int now(void)
