@@ -183,15 +183,14 @@ ISR(INT0_vect)
   start_rwid = *rwid;
 
   /* allow 1ms to draw widgets */
-  while ((dt = nnow() - t) < (750 / 125)) {
+  while ((dt = nnow() - t) < (626 / 125)) {
+#if DEBUG_WIDGET_TIMMNIG
+    prev = *rwid;
+#endif
     if ((*rwid)->draw())
       rendered += 1;
     else
       continue;
-
-#if DEBUG_WIDGET_TIMMNIG
-    prev = *rwid;
-#endif
 
     rwid++;
     /* wrap around */
@@ -204,7 +203,7 @@ ISR(INT0_vect)
   }
 #if DEBUG_WIDGET_TIMMNIG
   if (dt > (1300/125))
-    printf("(%d) id=%d %uus\n", (int) prev->id, (int) rendered, dt * 125);
+    printf("(%d) id=%d %uus\n", (int) rendered, (int) prev->id, dt * 125);
 #endif
 
 }
