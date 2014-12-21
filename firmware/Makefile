@@ -1,105 +1,227 @@
-## Oven controller Makefile
 
-MCU=atmega328p
-LIBS=-lm -lprintf_flt -lc
+MCU = atmega328p
+FORMAT = ihex
+TARGET = minimosd-ng
+ASRC = 
+OPT = s
 
-PROGRAMMER_MCU=m328p
-AVRDUDE_PROGRAMMER=usbasp
-
-PROJECT_NAME=minimosd-ng
-
-OPTLEVEL=s
-
-INC=-I./src -I./lib
-
-# compiler
-CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
-	-fpack-struct -fshort-enums             \
-	-funsigned-bitfields -funsigned-char    \
-	-Wall -Wstrict-prototypes               \
-	-Wa,-ahlms=$(firstword                  \
-	$(filter %.lst, $(<:.c=.lst)))
-
-
-# automatically build widgets
 PROJECT_DIR = ./src
 PROJECT_FILES = $(notdir $(shell find $(PROJECT_DIR) -maxdepth 1 -name '*.c'))
-SRCS = ${addprefix src/,$(PROJECT_FILES)}
+SRC = ${addprefix src/,$(PROJECT_FILES)}
 
 WIDGETS_DIR = ./src/widgets
 WIDGETS_FILES = $(notdir $(shell find $(WIDGETS_DIR) -name '*.c'))
-
-HEADERS = $(shell find $(PROJECT_DIR) -name '*.h')
-
-
-SRCS += ${addprefix src/widgets/,$(WIDGETS_FILES)}
+SRC += ${addprefix src/widgets/,$(WIDGETS_FILES)}
 
 
 
-#  C
-CFILES=$(filter %.c, $(SRCS))
+# Name of this Makefile (used for "make depend").
+MAKEFILE = Makefile
+
+# Debugging format.
+# Native formats for AVR-GCC's -g are stabs [default], or dwarf-2.
+# AVR (extended) COFF requires stabs, plus an avr-objcopy run.
+DEBUG = stabs
+
+# Compiler flag to set the C Standard level.
+# c89   - "ANSI" C
+# gnu89 - c89 plus GCC extensions
+# c99   - ISO C99 standard (not yet fully implemented)
+# gnu99 - c99 plus GCC extensions
+CSTANDARD = -std=gnu99
+
+# Place -D or -U options here
+CDEFS =
+
+# Place -I options here
+CINCS = -I./lib -I./src
 
 
-SOURCEDIRS=./src
-SOURCEDIRS+= $(WIDGETS_DIR)
+CDEBUG = -g$(DEBUG)
+CWARN = -Wall -Wstrict-prototypes
+CTUNING = -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+#CEXTRA = -Wa,-adhlns=$(<:.c=.lst)
+CFLAGS = $(CDEBUG) $(CDEFS) $(CINCS) -O$(OPT) $(CWARN) $(CSTANDARD) $(CEXTRA) $(CTUNING)
 
-TARGET=$(PROJECT_NAME).elf
 
-CFLAGS += ${addprefix -I,$(SOURCEDIRS)}
-CFLAGS += -mmcu=$(MCU)
+#ASFLAGS = -Wa,-adhlns=$(<:.S=.lst),-gstabs 
 
-# linker
-LDFLAGS=-Wl,-Map,$(TARGET).map,-u,vprintf \
-	-mmcu=$(MCU) $(LIBS)
 
-OBJDEPS=$(CFILES:.c=.o)
+#Additional libraries.
 
-CC=avr-gcc
-OBJCOPY=avr-objcopy
+# Minimalistic printf version
+PRINTF_LIB_MIN = -Wl,-u,vfprintf -lprintf_min
 
-HEXFORMAT=ihex
+# Floating point printf version (requires MATH_LIB = -lm below)
+PRINTF_LIB_FLOAT = -Wl,-u,vfprintf -lprintf_flt
 
-.SUFFIXES : .c .cc .cpp .C .o .out .s .S \
-	.hex .ee.hex .h .hh .hpp
+PRINTF_LIB = $(PRINTF_LIB_FLOAT)
 
-.PHONY : flash
+# Minimalistic scanf version
+SCANF_LIB_MIN = -Wl,-u,vfscanf -lscanf_min
 
-all: $(PROJECT_NAME).hex $(TARGET)
+# Floating point + %[ scanf version (requires MATH_LIB = -lm below)
+SCANF_LIB_FLOAT = -Wl,-u,vfscanf -lscanf_flt
 
-depend: .depend
+SCANF_LIB = 
 
-.depend: $(SRCS) $(HEADERS)
-	rm -f ./.depend
-	$(CC) $(CFLAGS) -MM $^ > ./.depend;
+MATH_LIB = -lm
 
-include .depend
+# External memory options
 
-# object from C
-%.o: %.c $(HEADERS)
-	@echo Compiling $<
-	$(CC) $(CFLAGS) -c -o $@ $<
+# 64 KB of external RAM, starting after internal RAM (ATmega128!),
+# used for variables (.data/.bss) and heap (malloc()).
+#EXTMEMOPTS = -Wl,--section-start,.data=0x801100,--defsym=__heap_end=0x80ffff
 
-$(TARGET): $(OBJDEPS) $(HEADERS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJDEPS) $(LIBS)
+# 64 KB of external RAM, starting after internal RAM (ATmega128!),
+# only used for heap (malloc()).
+#EXTMEMOPTS = -Wl,--defsym=__heap_start=0x801100,--defsym=__heap_end=0x80ffff
 
-$(PROJECT_NAME).hex: $(PROJECT_NAME).elf
-	$(OBJCOPY) -j .text                    \
-		-j .data                       \
-		-O $(HEXFORMAT) $< $@ ; avr-size -C --mcu $(MCU) $(PROJECT_NAME).elf
+EXTMEMOPTS =
 
-$(PROJECT_NAME).eep: $(PROJECT_NAME).elf
-	$(OBJCOPY) -j .eeprom --no-change-warnings --change-section-lma .eeprom=0  \
-		-O $(HEXFORMAT) $< $@
+#LDMAP = $(LDFLAGS) -Wl,-Map=$(TARGET).map,--cref
+LDFLAGS = $(EXTMEMOPTS) $(LDMAP) $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 
+
+# Programming support using avrdude. Settings and variables.
+
+AVRDUDE_PROGRAMMER = usbasp
+AVRDUDE_PORT = usb
+
+AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
+#AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
+
+
+# Uncomment the following if you want avrdude's erase cycle counter.
+# Note that this counter needs to be initialized first using -Yn,
+# see avrdude manual.
+#AVRDUDE_ERASE_COUNTER = -y
+
+# Uncomment the following if you do /not/ wish a verification to be
+# performed after programming the device.
+#AVRDUDE_NO_VERIFY = -V
+
+# Increase verbosity level.  Please use this when submitting bug
+# reports about avrdude. See <http://savannah.nongnu.org/projects/avrdude> 
+# to submit bug reports.
+#AVRDUDE_VERBOSE = -v -v
+
+AVRDUDE_BASIC = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
+AVRDUDE_FLAGS = $(AVRDUDE_BASIC) $(AVRDUDE_NO_VERIFY) $(AVRDUDE_VERBOSE) $(AVRDUDE_ERASE_COUNTER)
+
+
+CC = avr-gcc
+OBJCOPY = avr-objcopy
+OBJDUMP = avr-objdump
+SIZE = avr-size
+NM = avr-nm
+AVRDUDE = avrdude
+REMOVE = rm -f
+MV = mv -f
+
+# Define all object files.
+OBJ = $(SRC:.c=.o) $(ASRC:.S=.o) 
+
+# Define all listing files.
+LST = $(ASRC:.S=.lst) $(SRC:.c=.lst)
+
+# Combine all necessary flags and optional flags.
+# Add target processor to flags.
+ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS)
+ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
+
+
+# Default target.
+all: build
+
+build: elf hex eep
+
+elf: $(TARGET).elf
+hex: $(TARGET).hex
+eep: $(TARGET).eep
+lss: $(TARGET).lss 
+sym: $(TARGET).sym
+
+
+# Program the device.  
+flash: $(TARGET).hex
+	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)
+
+eeprom: $(TARGET).eep
+	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_EEPROM)
+
+
+# Convert ELF to COFF for use in debugging / simulating in AVR Studio or VMLAB.
+COFFCONVERT=$(OBJCOPY) --debugging \
+--change-section-address .data-0x800000 \
+--change-section-address .bss-0x800000 \
+--change-section-address .noinit-0x800000 \
+--change-section-address .eeprom-0x810000 
+
+
+coff: $(TARGET).elf
+	$(COFFCONVERT) -O coff-avr $(TARGET).elf $(TARGET).cof
+
+
+extcoff: $(TARGET).elf
+	$(COFFCONVERT) -O coff-ext-avr $(TARGET).elf $(TARGET).cof
+
+
+.SUFFIXES: .elf .hex .eep .lss .sym
+
+.elf.hex:
+	$(OBJCOPY) -O $(FORMAT) -R .eeprom $< $@
+
+.elf.eep:
+	-$(OBJCOPY) -j .eeprom --set-section-flags=.eeprom="alloc,load" \
+	--change-section-lma .eeprom=0 -O $(FORMAT) $< $@
+
+# Create extended listing file from ELF output file.
+.elf.lss:
+	$(OBJDUMP) -h -S $< > $@
+
+# Create a symbol table from ELF output file.
+.elf.sym:
+	$(NM) -n $< > $@
+
+
+
+# Link: create ELF output file from object files.
+$(TARGET).elf: $(OBJ)
+	$(CC) $(ALL_CFLAGS) $(OBJ) --output $@ $(LDFLAGS)
+	$(SIZE) -C --mcu $(MCU) $@
+
+# Compile: create object files from C source files.
+.c.o:
+	$(CC) -c $(ALL_CFLAGS) $< -o $@ 
+
+
+# Compile: create assembler files from C source files.
+.c.s:
+	$(CC) -S $(ALL_CFLAGS) $< -o $@
+
+
+# Assemble: create object files from assembler source files.
+.S.o:
+	$(CC) -c $(ALL_ASFLAGS) $< -o $@
+
+
+
+# Target: clean project.
 clean:
-	rm -rf *.o $(PRG).elf *.eps *.png *.pdf *.bak *.hex *.bin *.srec
-	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
-	rm -rf ./src/*.o ./src/*.bak ./src/*.lst ./src/*.map
-	rm -rf ./src/widgets/*.o ./src/widgets/*.bak ./src/widgets/*.lst ./src/widgets/*.map
+	$(REMOVE) $(TARGET).hex $(TARGET).eep $(TARGET).cof $(TARGET).elf \
+	$(TARGET).map $(TARGET).sym $(TARGET).lss \
+	$(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d)
 
-flash: $(PROJECT_NAME).hex
-	@avrdude -p $(PROGRAMMER_MCU) -c $(AVRDUDE_PROGRAMMER) -P usb -U flash:w:$(PROJECT_NAME).hex
+depend:
+	if grep '^# DO NOT DELETE' $(MAKEFILE) >/dev/null; \
+	then \
+		sed -e '/^# DO NOT DELETE/,$$d' $(MAKEFILE) > \
+			$(MAKEFILE).$$$$ && \
+		$(MV) $(MAKEFILE).$$$$ $(MAKEFILE); \
+	fi
+	echo '# DO NOT DELETE THIS LINE -- make depend depends on it.' \
+		>> $(MAKEFILE); \
+	$(CC) -M -mmcu=$(MCU) $(CDEFS) $(CINCS) $(SRC) $(ASRC) >> $(MAKEFILE)
 
-eeprom: $(PROJECT_NAME).eep
-	@avrdude -p $(PROGRAMMER_MCU) -c $(AVRDUDE_PROGRAMMER) -P usb -U eeprom:w:$(PROJECT_NAME).eep
-
+.PHONY:	all build elf hex eep lss sym flash eeprom coff extcoff clean depend
