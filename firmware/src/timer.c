@@ -60,6 +60,16 @@ void init_timer(void)
 	TIMSK0 |= _BV(OCIE0A);
 }
 
+unsigned int nnow(void)
+{
+	unsigned int j, c;
+	cli();
+  j = jiffies;
+  c = cnt125;
+  sei();
+  return (unsigned int) jiffies * 1000 + cnt125 * 125;
+}
+
 unsigned int now(void)
 {
 	unsigned int n;

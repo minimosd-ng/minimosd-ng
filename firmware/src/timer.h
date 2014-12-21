@@ -6,6 +6,7 @@ struct datetime {
 };
 
 void init_timer(void);
+unsigned int nnow(void);
 unsigned int now(void);
 void clock_process(void);
 struct datetime* get_time(void);
