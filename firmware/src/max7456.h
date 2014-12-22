@@ -58,6 +58,7 @@ typedef enum {
 /* STAT register */
 #define MAX7456_STAT_PAL    0x01
 #define MAX7456_STAT_NTSC   0x02
+#define MAX7456_STAT_RESET  0x40
 
 /* OSDBL register */
 #define MAX7456_OSDBL_AUTO  0x10
@@ -66,11 +67,11 @@ typedef enum {
 #define MAX7456_FONT_COLS   12
 #define MAX7456_FONT_ROWS   18
 
-
 void init_max7456(void);
 void max7456_putc(unsigned char x, unsigned char y, char c);
 void max7456_puts(unsigned char x, unsigned char y, char *s);
 void max7456_putsn(unsigned char x, unsigned char y, char *s, unsigned char n);
+void max7456_printf(unsigned char x, unsigned char y, char *s, ...);
 void max7456_clr(void);
 
 #endif

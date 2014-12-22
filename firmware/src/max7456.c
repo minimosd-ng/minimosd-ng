@@ -106,6 +106,15 @@ void max7456_putsn(unsigned char x, unsigned char y, char *s, unsigned char n)
   max7456_wr(MAX7456_REG_DMDI, 0xff, SPI_END);
 }
 
+void max7456_printf(unsigned char x, unsigned char y, char *format, ...)
+{
+  char buf[50];
+  va_list argptr;
+  va_start(argptr, format);
+  vsprintf(buf, format, argptr);
+  va_end(argptr);
+  max7456_puts(x, y, buf);
+}
 
 void max7456_clr(void)
 {
@@ -157,7 +166,6 @@ void init_max7456(void)
   /* set same brightness for all rows */
   for(b = MAX7456_REG_RB0; b <= MAX7456_REG_RB15; b++)
     max7456_wr(b, MAX7456_RB_WH90 | MAX7456_RB_BL0, SPI_START | SPI_END);
-
 }
 
 
