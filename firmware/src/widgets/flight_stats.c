@@ -40,9 +40,11 @@ extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
-  char buf[20];
-  sprintf(buf, "Flight status");
-  max7456_puts(state.x, state.y, buf);
+  if (state.props & WIDGET_INIT) {
+    max7456_printf(state.x, state.y, "Flight status");
+    state.props &= ~WIDGET_INIT;
+  }
+
   return 1;
 }
 

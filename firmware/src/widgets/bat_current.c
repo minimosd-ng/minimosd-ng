@@ -38,11 +38,15 @@ WIDGET_STATE(0, 0, WIDGET_DISABLED);
 
 extern struct mavlink_data mavdata;
 
+#define CURRENT_UNITS_FONT (0x0e)
+
 static char draw(void)
 {
-  char buf[12];
-  sprintf(buf, "%5.2f%c", ((double) mavdata.bat_current) / 100, 0x0e);
-  max7456_puts(state.x, state.y, buf);
+  if (state.props & WIDGET_INIT) {
+    max7456_putc(state.x+5, state.y, CURRENT_UNITS_FONT);
+    state.props &= ~WIDGET_INIT;
+  }
+  max7456_printf(state.x, state.y, "%5.2f", ((double) mavdata.bat_current) / 100);
   return 1;
 }
 

@@ -62,8 +62,7 @@ static char draw(void)
 {
   float direction_rad, s;
   unsigned int scale, distance = mavdata.calcs.home_distance;
-  char x, y, i;
-  char buf[XSIZE];
+  char x, y;
 
   if (distance < SCALE1)
     scale = SCALE1;
@@ -86,8 +85,7 @@ static char draw(void)
   max7456_putc(state.x + prev_home.x, state.y + prev_home.y, ' ');
   max7456_putc(state.x + x, state.y + y, 0xb);
 
-  sprintf(buf, "%4d%c", scale, 0xc);
-  max7456_puts(state.x, state.y, buf);
+  max7456_printf(state.x, state.y, "%4d%c", scale, 0xc);
 
   prev_home.x = x;
   prev_home.y = y;

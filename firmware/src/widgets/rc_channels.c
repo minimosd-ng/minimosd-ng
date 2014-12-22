@@ -40,12 +40,16 @@ extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
-  char buf[10];
   unsigned char i;
-  for (i = 0; i < 8; i++) {
-    sprintf(buf, "CH%d %4d", i+1, mavdata.ch_raw[i]);
-    max7456_puts(state.x, state.y+i, buf);
+
+  if (state.props & WIDGET_INIT) {
+    for (i = 0; i < 8; i++)
+      max7456_printf(state.x, state.y + i, "CH%d", i+1);
+    state.props &= ~WIDGET_INIT;
   }
+
+  for (i = 0; i < 8; i++)
+    max7456_printf(state.x+4, state.y+i, "%4d", mavdata.ch_raw[i]);
   return 1;
 }
 
