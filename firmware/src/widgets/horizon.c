@@ -123,7 +123,7 @@ static void get_horizon(char *buf, struct ah_vars *vars)
 {
   unsigned char row, col;
   int y, x;
-  unsigned char subval, subval_ovf;
+  unsigned char subval;
 
   for (col = 0; col < COLS; col++) {
     x = col * MAX7456_FONT_COLS - (COLS + 1) * MAX7456_FONT_COLS / 2 + MAX7456_FONT_COLS;
