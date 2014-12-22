@@ -115,6 +115,7 @@ static unsigned char current_tidx = TAB_TABLE_END;
 static struct widget *rlist[WIDGETS_NUM];
 static struct widget **rwid;
 static unsigned char *tab_list;
+static unsigned char nlock;
 
 static void load_widgets_tab(unsigned char tidx);
 
@@ -170,6 +171,7 @@ void init_widgets(void)
   /* init widget rendering indexer */
   rlist[0] = NULL;
   rwid = rlist;
+  nlock = 1;
 
   /* init list of configured tabs */
   tab_list = init_tab_list();
@@ -197,6 +199,10 @@ static void load_widgets_tab(unsigned char tidx)
 
   /* disable refresh interrupt */
   EIMSK &= ~_BV(INT0);
+  /* wait until lock is released */
+  if (nlock == 0)
+    goto locked;
+
   max7456_clr();
 
   w = all_widgets;
@@ -215,6 +221,7 @@ static void load_widgets_tab(unsigned char tidx)
 
   rwid = rlist;
   current_tidx = tidx;
+locked:
   /* re-enable interrupt if we have at least 1 widget to render */
   if ((*rwid) != NULL)
     EIMSK |= _BV(INT0);
@@ -320,7 +327,7 @@ ISR(INT0_vect)
 #if DEBUG_WIDGET_TIMMNIG
     prev = *rwid;
 #endif
-    if ((*rwid)->draw())
+    if (nlock = (*rwid)->draw())
       rendered += 1;
     else
       continue;
