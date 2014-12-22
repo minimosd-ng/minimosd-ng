@@ -24,8 +24,15 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <avr/eeprom.h>
 
+
 struct minimosd_ng_config config = {
   .mavlink_baudrate = 19200,
+
+  /* tab switching */
+  .tab_sw = {
+    .method = CONF_TABSWITCH_METHOD,
+    .ch     = CONF_TABSWITCH_CH,
+  },
 };
 
 void load_config(void)

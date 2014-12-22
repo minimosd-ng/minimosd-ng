@@ -66,9 +66,6 @@ int main(void)
   /* init widget stuff */
   init_widgets();
 
-  /* load initial tab */
-  load_widgets_tab(0);
-
   /* global enable interrupt */
   sei();
 
@@ -81,6 +78,7 @@ int main(void)
     if ((n - t) > 200) {
       t += 200;
 
+#if 0
       if (now() < 5000)
         mavdata.calcs.home_lat += 0.000043;
       else if (now() < 10000)
@@ -91,27 +89,35 @@ int main(void)
         mavdata.calcs.home_lat -= 0.000043;
       else if (now() < 40000)
         mavdata.calcs.home_lon += 0.000043;
+#endif
+#if 0
+      mavdata.roll += 1;
+      if (mavdata.roll >= 180)
+        mavdata.roll = -180;
 
+      mavdata.pitch += 2;
+      if (mavdata.pitch >= 50)
+        mavdata.pitch = -50;
+#endif
 
       switch (STATE) {
       case 0:
         if (n > 3000) {
-          load_widgets_tab(4);
           STATE = 1;
         }
         break;
       case 1:
+        widgets_process();
         break;
       default:
         break;
       }
 
       calc_process();
-      
+      clock_process();
     };
-
+    /* parse mavlink data stream */
     mavlink_process();
-    clock_process();
   }
 }
 

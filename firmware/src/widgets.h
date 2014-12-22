@@ -1,6 +1,7 @@
 #ifndef __WIDGETS_H__
 #define __WIDGETS_H__
 
+/* Widgets unique ID */
 enum {
   PITCH_WIDGET_ID = 0,
   ROLL_WIDGET_ID,
@@ -24,6 +25,10 @@ enum {
   RADAR_WIDGET_ID,
 };
 
+/* we should always have at least one tab */
+/* tab ID 0xff is reserved for end of table indicator */
+#define STARTUP_TAB   0x00
+#define TAB_TABLE_END 0xff
 
 /* widget properties */
 #define WIDGET_DISABLED 0x00
@@ -53,8 +58,8 @@ struct widget {
 };
 
 
-void load_widgets_tab(unsigned char tab);
 void init_widgets(void);
+void widgets_process(void);
 
 
 /* helper macros */
