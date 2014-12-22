@@ -34,7 +34,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
-WIDGET_STATE(0, 0, WIDGET_DISABLED);
+static struct widget_state state;
 
 extern struct mavlink_data mavdata;
 extern mavlink_status_t status;
@@ -43,13 +43,9 @@ extern struct minimosd_ng_config config;
 
 static char draw(void)
 {
-  char buf[30];
-  sprintf(buf, "MinimOSD-ng %dv%d", VERSION_MAJOR, VERSION_MINOR);
-  max7456_puts(state.x, state.y, buf);
-  sprintf(buf, "Mavlink packets: %d", status.packet_rx_success_count);
-  max7456_puts(state.x, state.y+2, buf);
-  sprintf(buf, "Mavlink baudrate: %d", config.mavlink_baudrate);
-  max7456_puts(state.x, state.y+3, buf);
+  max7456_printf(state.x, state.y, "MinimOSD-ng %dv%d", VERSION_MAJOR, VERSION_MINOR);
+  max7456_printf(state.x, state.y+2, "Mavlink packets: %d", status.packet_rx_success_count);
+  max7456_printf(state.x, state.y+3, "Mavlink baudrate: %d", config.mavlink_baudrate);
   return 1;
 }
 

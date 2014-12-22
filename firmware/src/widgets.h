@@ -74,9 +74,6 @@ static struct widget_state* do_state(struct widget_state *s) \
 } \
 struct widget name = { id, do_state, draw }
 
-#define WIDGET_STATE(_x, _y, _props) \
-static struct widget_state state = { .x = _x, .y = _y, .props = _props }
-
 #define WIDGETS_NUM (sizeof(all_widgets)/sizeof(struct widgets *))
 
 #define WIDGETS(...) \

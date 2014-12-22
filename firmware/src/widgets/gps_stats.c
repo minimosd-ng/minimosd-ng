@@ -35,7 +35,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINTF(...)
 #endif
 
-WIDGET_STATE(0, 0, WIDGET_DISABLED);
+static struct widget_state state;
 
 extern struct mavlink_data mavdata;
 
