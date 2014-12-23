@@ -55,7 +55,7 @@ WIDGET_IMPORT(flightstats_widget);
 WIDGET_IMPORT(radar_widget);
 WIDGET_IMPORT(wpdirection_widget);
 WIDGET_IMPORT(relaltitude_widget);
-WIDGET_IMPORT(groundspeed_widget);
+WIDGET_IMPORT(airspeed_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -81,6 +81,7 @@ WIDGETS( \
   &wpdirection_widget,
   &relaltitude_widget,
   &groundspeed_widget,
+  &airspeed_widget,
   NULL,
 );
 
