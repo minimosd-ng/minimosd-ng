@@ -6,7 +6,9 @@
 #define MAX7456_FONT_HOME         (0x0b)
 #define MAX7456_FONT_METERS       (0x0c)
 #define MAX7456_FONT_KILOMETERS   (0x1b)
+#define MAX7456_FONT_KMH          (0x10)
 
+#define MAX7456_FONT_MILESH       (0x19)
 
 typedef enum {
   MAX7456_REG_VM0   = 0x00,
