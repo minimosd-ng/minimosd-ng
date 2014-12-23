@@ -40,11 +40,10 @@ extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
-  char buf[3];
   char idx = ((int) (mavdata.calcs.home_direction * 16) / 360);
   idx = (idx & 0xf) << 1;
-  sprintf(buf, "%c%c", 0x90+idx, 0x91+idx);
-  max7456_puts(state.x, state.y, buf);
+  max7456_printf(state.x, state.y, "%c%c",
+        MAX7456_DIR_ARROWS + idx, MAX7456_DIR_ARROWS + idx + 1);
   return 1;
 }
 
