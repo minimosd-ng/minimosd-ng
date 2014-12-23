@@ -87,7 +87,7 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     //nav_roll = mavlink_msg_nav_controller_output_get_nav_roll(msg);
     //nav_pitch = mavlink_msg_nav_controller_output_get_nav_pitch(msg);
     //nav_bearing = mavlink_msg_nav_controller_output_get_nav_bearing(msg);
-    mavdata.nav_target_bearing = mavlink_msg_nav_controller_output_get_target_bearing(msg);
+    mavdata.nav_bearing = mavlink_msg_nav_controller_output_get_target_bearing(msg);
     mavdata.nav_wp_dist = mavlink_msg_nav_controller_output_get_wp_dist(msg);
     mavdata.nav_alt_error = mavlink_msg_nav_controller_output_get_alt_error(msg);
     mavdata.nav_aspd_error = mavlink_msg_nav_controller_output_get_aspd_error(msg);

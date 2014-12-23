@@ -38,7 +38,8 @@ struct mavlink_data {
   mavlink_vfr_hud_t vfr_hud;
 
   /* nav controller */
-  unsigned int nav_target_bearing, nav_wp_dist;
+  int nav_bearing;
+  unsigned int nav_wp_dist;
   float nav_alt_error, nav_aspd_error, nav_xtrack_error;
   
   /* mission */
