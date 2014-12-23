@@ -53,6 +53,7 @@ WIDGET_IMPORT(homedirection_widget);
 WIDGET_IMPORT(horizon_widget);
 WIDGET_IMPORT(flightstats_widget);
 WIDGET_IMPORT(radar_widget);
+WIDGET_IMPORT(wpdirection_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -75,6 +76,7 @@ WIDGETS( \
   &horizon_widget,
   &flightstats_widget,
   &radar_widget,
+  &wpdirection_widget,
   NULL,
 );
 
@@ -104,6 +106,7 @@ unsigned char widget_default_config[] EEMEM = {
   4, RADAR_WIDGET_ID,          0,  0,
   4, HOMEDISTANCE_WIDGET_ID,   0, 14,
   4, HOMEDIRECTION_WIDGET_ID,  0, 15,
+  1, WPDIRECTION_WIDGET_ID,    0, 14,
   TAB_TABLE_END,
   };
 
