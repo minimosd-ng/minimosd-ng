@@ -1,6 +1,10 @@
 #ifndef __MAX7456__
 #define __MAX7456_H__
 
+/* special font charaters */
+#define MAX7456_DIR_ARROWS 0x90
+
+
 typedef enum {
   MAX7456_REG_VM0   = 0x00,
   MAX7456_REG_VM1   = 0x01,
