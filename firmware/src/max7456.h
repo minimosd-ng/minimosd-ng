@@ -2,7 +2,10 @@
 #define __MAX7456_H__
 
 /* special font charaters */
-#define MAX7456_DIR_ARROWS 0x90
+#define MAX7456_FONT_DIR_ARROWS   (0x90)
+#define MAX7456_FONT_HOME         (0x0b)
+#define MAX7456_FONT_METERS       (0x0c)
+#define MAX7456_FONT_KILOMETERS   (0x1b)
 
 
 typedef enum {
