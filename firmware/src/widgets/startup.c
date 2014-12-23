@@ -43,9 +43,15 @@ extern struct minimosd_ng_config config;
 
 static char draw(void)
 {
-  max7456_printf(state.x, state.y, "MinimOSD-ng %dv%d", VERSION_MAJOR, VERSION_MINOR);
-  max7456_printf(state.x, state.y+2, "Mavlink packets: %d", status.packet_rx_success_count);
-  max7456_printf(state.x, state.y+3, "Mavlink baudrate: %d", config.mavlink_baudrate);
+  if (state.props & WIDGET_INIT) {
+    max7456_printf(state.x, state.y, "MinimOSD-ng %dv%d", VERSION_MAJOR, VERSION_MINOR);
+    max7456_printf(state.x, state.y+2, "Mavlink packets:");
+    max7456_printf(state.x, state.y+3, "Mavlink baudrate:");
+    state.props &= ~WIDGET_INIT;
+  }
+
+  max7456_printf(state.x+18, state.y+2, "%d", status.packet_rx_success_count);
+  max7456_printf(state.x+18, state.y+3, "%d", config.mavlink_baudrate);
   return 1;
 }
 
