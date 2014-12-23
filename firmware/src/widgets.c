@@ -55,6 +55,7 @@ WIDGET_IMPORT(flightstats_widget);
 WIDGET_IMPORT(radar_widget);
 WIDGET_IMPORT(wpdirection_widget);
 WIDGET_IMPORT(relaltitude_widget);
+WIDGET_IMPORT(groundspeed_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -79,6 +80,7 @@ WIDGETS( \
   &radar_widget,
   &wpdirection_widget,
   &relaltitude_widget,
+  &groundspeed_widget,
   NULL,
 );
 
@@ -336,7 +338,7 @@ ISR(INT0_vect)
 #if DEBUG_WIDGET_TIMMING
     prev = *rwid;
 #endif
-    if (nlock = (*rwid)->draw())
+    if ((nlock = (*rwid)->draw()) == 1)
       rendered += 1;
     else
       continue;
