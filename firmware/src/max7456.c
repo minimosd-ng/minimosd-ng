@@ -122,6 +122,64 @@ void max7456_clr(void)
               SPI_START | SPI_END);
 }
 
+void max7456_nvmwr(unsigned char addr, unsigned char *bitmap)
+{
+  unsigned char i, *b = bitmap, vm0;
+
+  /* disable display */
+  vm0 = max7456_rd(MAX7456_REG_VM0, SPI_START);
+  max7456_wr(MAX7456_REG_VM0, vm0 & ~MAX7456_VM0_ENABLE, 0);
+
+  /* set character address */
+  max7456_wr(MAX7456_REG_CMAH, addr, 0);
+
+  /* send 54 bytes */
+  for (i = 0; i < MAX7456_BITMAP_SIZE; i++) {
+    /* send pixel addr */
+    max7456_wr(MAX7456_REG_CMAL, i, 0);
+    /* send pixel data */
+    max7456_wr(MAX7456_REG_CMDI, *b++, 0);
+  }
+
+  /* send write cmd */
+  max7456_wr(MAX7456_REG_CMM, MAX7456_CMM_WRITE, 0);
+
+  /* wait until done - bit 5 in the status register returns to 0 (12ms) */
+  while (max7456_rd(MAX7456_REG_STAT, 0) & MAX7456_STAT_CMS);
+
+  /* enable display */
+  max7456_wr(MAX7456_REG_VM0, vm0, SPI_END);
+}
+
+void max7456_nvmrd(unsigned char addr, unsigned char *bitmap)
+{
+  unsigned char i, *b = bitmap, vm0;
+
+  /* disable display */
+  vm0 = max7456_rd(MAX7456_REG_VM0, SPI_START);
+  max7456_wr(MAX7456_REG_VM0, vm0 & ~MAX7456_VM0_ENABLE, 0);
+
+  /* set character address */
+  max7456_wr(MAX7456_REG_CMAH, addr, 0);
+
+  /* send read nvm cmd */
+  max7456_wr(MAX7456_REG_CMM, MAX7456_CMM_READ, 0);
+
+  /* wait until done - bit 5 in the status register returns to 0 (0.5us) */
+  while (max7456_rd(MAX7456_REG_STAT, 0) & MAX7456_STAT_CMS);
+
+  /* read 54 bytes */
+  for (i = 0; i < MAX7456_BITMAP_SIZE; i++) {
+    /* send pixel addr */
+    max7456_wr(MAX7456_REG_CMAL, i, 0);
+    /* send pixel data */
+    *b++ = max7456_rd(MAX7456_REG_CMDO, 0);
+  }
+
+  /* enable display */
+  max7456_wr(MAX7456_REG_VM0, vm0, SPI_END);
+}
+
 void init_max7456(void)
 {
   unsigned char b;
@@ -135,7 +193,7 @@ void init_max7456(void)
 
   /* soft-reset chip */
   max7456_wr(MAX7456_REG_VM0, MAX7456_VM0_RESET, SPI_START | SPI_END);
-  _delay_ms(100);
+  _delay_ms(200);
 
   /* auto-detect tv standard mode */
   b = max7456_rd(MAX7456_REG_STAT, SPI_START | SPI_END);
@@ -148,11 +206,13 @@ void init_max7456(void)
     b = MAX7456_VM0_PAL;
   }
 
+#if DEBUG
   if (b) {
     PRINTF("PAL video mode\n");
   } else { 
     PRINTF("NTSC video mode\n");
   }
+#endif
 
   /* set auto sync mode and enable display */
   b &= ~MAX7456_VM0_SYNC;
