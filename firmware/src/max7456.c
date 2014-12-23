@@ -118,8 +118,11 @@ void max7456_printf(unsigned char x, unsigned char y, char *format, ...)
 
 void max7456_clr(void)
 {
+  /* clear display memory on the next VSYNC */
   max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_VSCLR | MAX7456_DMM_CLR,
               SPI_START | SPI_END);
+  /* wait for the operation to be completed */
+  while(max7456_rd(MAX7456_REG_DMM, SPI_START | SPI_END) & MAX7456_DMM_CLR);
 }
 
 void max7456_nvmwr(unsigned char addr, unsigned char *bitmap)
