@@ -155,10 +155,9 @@ static char draw(void)
   }
 
   if ((state.props & WIDGET_DRAW) == 0) {
-    buf = (char *) malloc(ROWS*COLS);
+    buf = (char *) calloc(ROWS*COLS, sizeof(char));
     if (buf == NULL)
       goto err;
-    memset(buf, ' ', ROWS * COLS);
     get_vars(&vars);
     get_horizon(buf, &vars);
     state.props |= WIDGET_DRAW;
