@@ -115,7 +115,7 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.temperature = mavlink_msg_scaled_pressure_get_temperature(msg);
     break;
   case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
-    mavdata.home_alt = mavdata.vfr_hud.alt - (mavlink_msg_global_position_int_get_relative_alt(msg)*0.001);
+    //mavdata.relative_alt = mavlink_msg_global_position_int_get_relative_alt(msg) * 0.001;
     break;
   default:
       break;

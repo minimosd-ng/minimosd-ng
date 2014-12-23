@@ -50,13 +50,16 @@ struct mavlink_data {
 
   unsigned int temperature;
   
-  unsigned int home_alt;
+
 
   /* raw channel pwm */
   unsigned int ch_raw[8];
   unsigned char rssi;
 
   struct calc_data calcs; 
+
+  /* TODO: unused, cleanup later */
+  //unsigned int relative_alt;
 };
 
 #define ToDeg(x) (x*57.2957795131)
