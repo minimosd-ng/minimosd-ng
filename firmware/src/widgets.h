@@ -24,6 +24,7 @@ enum {
   FLIGHTSTATS_WIDGET_ID,
   RADAR_WIDGET_ID,
   WPDIRECTION_WIDGET_ID,
+  RELALTITUDE_WIDGET_ID,
 };
 
 /* we should always have at least one tab */

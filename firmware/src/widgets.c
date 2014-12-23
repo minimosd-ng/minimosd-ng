@@ -30,7 +30,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "timer.h"
 #include "mavlink.h"
 
-#define DEBUG_WIDGET_TIMMNIG 1
+#define DEBUG_WIDGET_TIMMING 0
 
 /* import widgets */
 WIDGET_IMPORT(pitch_widget);
@@ -54,6 +54,7 @@ WIDGET_IMPORT(horizon_widget);
 WIDGET_IMPORT(flightstats_widget);
 WIDGET_IMPORT(radar_widget);
 WIDGET_IMPORT(wpdirection_widget);
+WIDGET_IMPORT(relaltitude_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -77,6 +78,7 @@ WIDGETS( \
   &flightstats_widget,
   &radar_widget,
   &wpdirection_widget,
+  &relaltitude_widget,
   NULL,
 );
 
@@ -107,6 +109,7 @@ unsigned char widget_default_config[] EEMEM = {
   4, HOMEDISTANCE_WIDGET_ID,   0, 14,
   4, HOMEDIRECTION_WIDGET_ID,  0, 15,
   1, WPDIRECTION_WIDGET_ID,    0, 14,
+  1, RELALTITUDE_WIDGET_ID,    0, 15,
   TAB_TABLE_END,
   };
 
@@ -318,16 +321,19 @@ void widgets_process(void)
 */
 ISR(INT0_vect)
 {
-  struct widget *start_rwid, *prev;
+  struct widget *start_rwid;
   unsigned char rendered = 0;
   unsigned int t = nnow();
   unsigned int dt = 0;
+#if DEBUG_WIDGET_TIMMING
+  struct widget *prev = NULL;
+#endif
 
   start_rwid = *rwid;
 
   /* allow ~1ms to draw widgets */
   while ((dt = nnow() - t) < (700 / 125)) {
-#if DEBUG_WIDGET_TIMMNIG
+#if DEBUG_WIDGET_TIMMING
     prev = *rwid;
 #endif
     if (nlock = (*rwid)->draw())
@@ -344,7 +350,7 @@ ISR(INT0_vect)
     if ((*rwid) == start_rwid)
       break;
   }
-#if DEBUG_WIDGET_TIMMNIG
+#if DEBUG_WIDGET_TIMMING
   if (dt > (1400/125))
     printf("(%d) id=%d %uus\n", (int) rendered, (int) prev->id, dt * 125);
 #endif
