@@ -40,17 +40,14 @@ extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
-  char buf[10], u = 0xc;
   unsigned int v = mavdata.calcs.home_distance;
+  char u = MAX7456_FONT_METERS;
   if (v > 10000) {
     v /= 1000;
-    u = 0x1b;
+    u = MAX7456_FONT_KILOMETERS;
   }
-  buf[0] = 0xb;
-  sprintf(&buf[1], "%4d", v);
-  buf[5] = u;
-  buf[6] = '\0';
-  max7456_puts(state.x, state.y, buf);
+  max7456_printf(state.x, state.y, "%c%4d%c",
+    MAX7456_FONT_HOME, v, u);
   return 1;
 }
 

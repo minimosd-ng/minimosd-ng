@@ -41,7 +41,7 @@ static struct widget_state state;
 static char draw(void)
 {
   if (state.props & WIDGET_INIT) {
-    max7456_putc(state.x+5, state.y, 0x0c);
+    max7456_putc(state.x+5, state.y, MAX7456_FONT_METERS);
     state.props &= ~WIDGET_INIT;
   }
   max7456_printf(state.x, state.y, "%5d", (long) mavdata.gps_altitude);
