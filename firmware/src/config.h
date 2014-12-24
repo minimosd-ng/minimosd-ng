@@ -1,26 +1,37 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
-/* maximum number of display tabs */
-#define CONF_MAX_TABS   20
+/* default config options */
 
+/* mavlink baudrate */
+#define CONF_MAVLINK_BAUDRATE   (19200)
+
+/* tab config */
+/* maximum number of display tabs */
+#define CONF_MAX_TABS           (20)
 #define CONF_TABSWITCH_CH       CH8
 #define CONF_TABSWITCH_METHOD   TAB_SWITCH_DEMO
 #define CONF_TABSWITCH_CH_MIN   (1000)
 #define CONF_TABSWITCH_CH_MAX   (1950)
 
-/* default unit system */
-#define DEFAULT_UNITS           (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_FAHRENHEIT)
+/* unit system */
+#define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_FAHRENHEIT)
+
+/* rssi config */
+#define CONF_RSSI_SOURCE        (RSSI_SOURCE_RSSI)
+#define CONF_RSSI_MIN           (0)
+#define CONF_RSSI_MAX           (255)
+#define CONF_RSSI_UNITS         (RSSI_PERCENT)
 
 
-
+/* end of default config options */
+/*********************************/
 
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 1
 
 #define F_CPU 16000000L
 
-/* number of mavlink comm channels */
 #define MAVLINK_COMM_NUM_BUFFERS 1
 
 
