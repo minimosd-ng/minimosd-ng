@@ -66,7 +66,6 @@ enum {
   RSSI_SOURCE_CHANNEL,
   RSSI_SOURCE_ADC
 };
-
 /* chanel */
 enum {
   RSSI_CH1 = 0,
@@ -86,13 +85,11 @@ enum {
   RSSI_ADC6 = 6,
   RSSI_ADC7 = 7,
 };
-
 /* units */
 enum {
   RSSI_PERCENT,
   RSSI_RAW,
 };
-
 struct rssi_config {
   unsigned char source;
   unsigned char ch;
