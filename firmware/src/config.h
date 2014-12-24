@@ -15,7 +15,7 @@
 #define CONF_TABSWITCH_CH_MAX   (1950)
 
 /* unit system */
-#define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_FAHRENHEIT)
+#define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_CELCIUS)
 
 /* rssi config */
 #define CONF_RSSI_SOURCE        (RSSI_SOURCE_RSSI)
@@ -52,11 +52,12 @@
 #define TEMPERATURE_UNIT_CELCIUS    0x04
 #define TEMPERATURE_UNIT_FAHRENHEIT 0x08
 
+/* conversion constants */
+#define M2FEET                      (3.2808)
+#define MILE2FEET                   (5280)
+#define M2MILE                      (M2FEET / MILE2FEET)
 
-#define M2FEET    (3.2808)
-#define MILE2FEET (5280)
-#define M2MILE    (M2FEET / MILE2FEET)
-
+#define CELCIUS2FAHR(x)             ((x * 18)/10 + 3200)
 
 enum {
   TAB_SWITCH_PERCENT,

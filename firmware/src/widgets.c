@@ -58,6 +58,7 @@ WIDGET_IMPORT(relaltitude_widget);
 WIDGET_IMPORT(groundspeed_widget);
 WIDGET_IMPORT(airspeed_widget);
 WIDGET_IMPORT(throttle_widget);
+WIDGET_IMPORT(temperature_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -85,6 +86,7 @@ WIDGETS( \
   &groundspeed_widget,
   &airspeed_widget,
   &throttle_widget,
+  &temperature_widget,
   NULL,
 );
 
@@ -119,6 +121,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, GROUNDSPEED_WIDGET_ID,   15,  0,
   1, AIRSPEED_WIDGET_ID,      15,  1,
   1, THROTTLE_WIDGET_ID,      15,  2,
+  1, TEMPERATURE_WIDGET_ID,   15,  3,
   TAB_TABLE_END,
   };
 
