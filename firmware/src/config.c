@@ -27,6 +27,15 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 struct minimosd_ng_config config = {
   .mavlink_baudrate = 19200,
+  
+  .units = DEFAULT_UNITS,
+
+  .rssi = {
+    .source = RSSI_SOURCE_RSSI,
+    .min = 0,
+    .max = 255,
+    .units = RSSI_PERCENT,
+  },
 
   /* tab switching */
   .tab_sw = {
