@@ -55,6 +55,7 @@ WIDGET_IMPORT(flightstats_widget);
 WIDGET_IMPORT(radar_widget);
 WIDGET_IMPORT(wpdirection_widget);
 WIDGET_IMPORT(relaltitude_widget);
+WIDGET_IMPORT(groundspeed_widget);
 WIDGET_IMPORT(airspeed_widget);
 
 WIDGETS( \
@@ -113,6 +114,8 @@ unsigned char widget_default_config[] EEMEM = {
   4, HOMEDIRECTION_WIDGET_ID,  0, 15,
   1, WPDIRECTION_WIDGET_ID,    0, 14,
   1, RELALTITUDE_WIDGET_ID,    0, 15,
+  1, GROUNDSPEED_WIDGET_ID,   15,  0,
+  1, AIRSPEED_WIDGET_ID,      15,  1,
   TAB_TABLE_END,
   };
 
