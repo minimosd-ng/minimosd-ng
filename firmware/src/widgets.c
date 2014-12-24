@@ -57,6 +57,7 @@ WIDGET_IMPORT(wpdirection_widget);
 WIDGET_IMPORT(relaltitude_widget);
 WIDGET_IMPORT(groundspeed_widget);
 WIDGET_IMPORT(airspeed_widget);
+WIDGET_IMPORT(throttle_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -83,6 +84,7 @@ WIDGETS( \
   &relaltitude_widget,
   &groundspeed_widget,
   &airspeed_widget,
+  &throttle_widget,
   NULL,
 );
 
@@ -116,6 +118,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, RELALTITUDE_WIDGET_ID,    0, 15,
   1, GROUNDSPEED_WIDGET_ID,   15,  0,
   1, AIRSPEED_WIDGET_ID,      15,  1,
+  1, THROTTLE_WIDGET_ID,      15,  2,
   TAB_TABLE_END,
   };
 

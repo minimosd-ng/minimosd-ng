@@ -28,6 +28,7 @@ enum {
   RELALTITUDE_WIDGET_ID,
   GROUNDSPEED_WIDGET_ID,
   AIRSPEED_WIDGET_ID,
+  THROTTLE_WIDGET_ID,
 };
 
 /* we should always have at least one tab */
