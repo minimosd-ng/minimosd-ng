@@ -43,7 +43,7 @@ static char draw(void)
   char idx = (char) ((int) ((mavdata.nav_bearing - mavdata.vfr_hud.heading) * 16) / 360);
   idx = (idx & 0xf) << 1;
   max7456_printf(state.x, state.y, "%c%c",
-        MAX7456_DIR_ARROWS + idx, MAX7456_DIR_ARROWS + idx + 1);
+        MAX7456_FONT_DIR_ARROWS + idx, MAX7456_FONT_DIR_ARROWS + idx + 1);
   return 1;
 }
 
