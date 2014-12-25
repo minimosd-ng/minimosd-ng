@@ -32,6 +32,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DEBUG_WIDGET_TIMMING 0
 
+
 /* import widgets */
 WIDGET_IMPORT(pitch_widget);
 WIDGET_IMPORT(roll_widget);
@@ -89,41 +90,6 @@ WIDGETS( \
   &temperature_widget,
   NULL,
 );
-
-/* configuration burned to the eeprom */
-unsigned char widget_default_config[] EEMEM = {
-  STARTUP_TAB, STARTUP_WIDGET_ID, 3, 4,
-
-  /* tab, widget_id, x, y */
-  1, ROLL_WIDGET_ID,           0,  0,
-  1, PITCH_WIDGET_ID,          0,  1,
-  1, RSSI_WIDGET_ID,           0,  2,
-  1, ALTITUDE_WIDGET_ID,       0,  3,
-  1, CLOCK_WIDGET_ID,          0,  4,
-  1, GPSCOORDS_WIDGET_ID,      0,  5,
-  1, GPSSTATUS_WIDGET_ID,      0,  7,
-  2, RCCHANNELS_WIDGET_ID,    12,  0,
-  1, BATVOLTAGE_WIDGET_ID,     0,  8,
-  1, BATCURRENT_WIDGET_ID,     0,  9,
-  1, BATREMAIN_WIDGET_ID,      0, 10,
-  1, COG_WIDGET_ID,            0, 11,
-  1, WINDROSE_WIDGET_ID,       0, 12,
-  1, HEADING_WIDGET_ID,        0, 13,
-  1, HOMEDISTANCE_WIDGET_ID,   8,  0,
-  1, HOMEDIRECTION_WIDGET_ID,  8,  1,
-  1, HORIZON_WIDGET_ID,        8,  7,
-  3, FLIGHTSTATS_WIDGET_ID,    0,  0,
-  4, RADAR_WIDGET_ID,          0,  0,
-  4, HOMEDISTANCE_WIDGET_ID,   0, 14,
-  4, HOMEDIRECTION_WIDGET_ID,  0, 15,
-  1, WPDIRECTION_WIDGET_ID,    0, 14,
-  1, RELALTITUDE_WIDGET_ID,    0, 15,
-  1, GROUNDSPEED_WIDGET_ID,   15,  0,
-  1, AIRSPEED_WIDGET_ID,      15,  1,
-  1, THROTTLE_WIDGET_ID,      15,  2,
-  1, TEMPERATURE_WIDGET_ID,   15,  3,
-  TAB_TABLE_END,
-  };
 
 
 extern struct minimosd_ng_config config;
