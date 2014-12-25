@@ -58,6 +58,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, AIRSPEED_WIDGET_ID,      15,  1,
   1, THROTTLE_WIDGET_ID,      15,  2,
   1, TEMPERATURE_WIDGET_ID,   15,  3,
+  1, WINDSPEED_WIDGET_ID,     15,  4,
   TAB_TABLE_END,
 };
 

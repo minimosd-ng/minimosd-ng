@@ -108,8 +108,8 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.rssi = mavlink_msg_rc_channels_raw_get_rssi(msg);
     break;           
   case MAVLINK_MSG_ID_WIND:
-    mavdata.wind_direction = mavlink_msg_wind_get_direction(msg); // 0..360 deg, 0=north
-    mavdata.wind_speed = mavlink_msg_wind_get_speed(msg); //m/s
+    mavdata.wind_direction = (int) mavlink_msg_wind_get_direction(msg);
+    mavdata.wind_speed = mavlink_msg_wind_get_speed(msg);
     break;
   case MAVLINK_MSG_ID_SCALED_PRESSURE:
     mavdata.temperature = mavlink_msg_scaled_pressure_get_temperature(msg); /* 0.01 celcius */
@@ -143,10 +143,11 @@ void mavlink_process(void)
 
 void calc_process(void)
 {
+  struct calc_data *c = &mavdata.calcs;
   /* calcs for home */
-  float dlat = mavdata.calcs.home_lat - mavdata.gps_lat;
-  float dlon = mavdata.calcs.home_lon - mavdata.gps_lon;
-  float cos_lat = cos(ToRad(fabs(mavdata.calcs.home_lat)));
+  float dlat = c->home_lat - mavdata.gps_lat;
+  float dlon = c->home_lon - mavdata.gps_lon;
+  float cos_lat = cos(ToRad(fabs(c->home_lat)));
 
   /* calculate aprox home distance */
   float dlon_cos = dlon * cos_lat;
@@ -164,7 +165,7 @@ void calc_process(void)
   if(bearing < 0)
     bearing += 360;
 
-  mavdata.calcs.home_distance = (unsigned int) dist;
-  mavdata.calcs.home_direction = (unsigned int) bearing;
+  c->home_distance = (unsigned int) dist;
+  c->home_direction = (unsigned int) bearing;
 }
 

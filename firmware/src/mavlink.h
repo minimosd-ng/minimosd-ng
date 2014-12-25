@@ -46,7 +46,8 @@ struct mavlink_data {
   unsigned char wp_number;
   
   /* wind */
-  float wind_direction, wind_speed;
+  int wind_direction;
+  float wind_speed;
 
   unsigned int temperature;
   
