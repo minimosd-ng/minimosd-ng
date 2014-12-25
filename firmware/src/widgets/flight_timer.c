@@ -42,12 +42,14 @@ extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
-  struct datetime *t = get_time();
+  struct time t;
+
   char buf[10];
-  sprintf(buf, "%2d:%02d:%02d", t->h, t->m, t->s);
+  get_time(get_uptime() - mavdata.calcs.flight_start, &t);
+  sprintf(buf, "%2d:%02d:%02d", t.h, t.m, t.s);
   max7456_puts(state.x, state.y, buf);
   return 1;
 }
 
-WIDGET_DECLARE(clock_widget, CLOCK_WIDGET_ID, draw);
+WIDGET_DECLARE(flighttimer_widget, FLIGHTTIMER_WIDGET_ID, draw);
 

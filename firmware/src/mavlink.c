@@ -167,5 +167,9 @@ void calc_process(void)
 
   c->home_distance = (unsigned int) dist;
   c->home_direction = (unsigned int) bearing;
+
+
+  /* flight start time */
+  c->flight_start = 0;
 }
 

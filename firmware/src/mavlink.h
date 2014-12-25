@@ -13,6 +13,8 @@ struct calc_data {
   unsigned int home_direction;
 
   float home_lat, home_lon;
+
+  unsigned int flight_start, flight_end;
 };
 
 

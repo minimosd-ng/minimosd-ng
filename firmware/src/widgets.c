@@ -38,7 +38,7 @@ WIDGET_IMPORT(pitch_widget);
 WIDGET_IMPORT(roll_widget);
 WIDGET_IMPORT(rssi_widget);
 WIDGET_IMPORT(altitude_widget);
-WIDGET_IMPORT(clock_widget);
+WIDGET_IMPORT(flighttimer_widget);
 WIDGET_IMPORT(gpscoords_widget);
 WIDGET_IMPORT(gpsstats_widget);
 WIDGET_IMPORT(rcchannels_widget);
@@ -71,7 +71,7 @@ WIDGETS( \
   &batvoltage_widget,
   &batcurrent_widget,
   &batremain_widget,
-  &clock_widget,
+  &flighttimer_widget,
   &rcchannels_widget,
   &rssi_widget,
   &startup_widget,

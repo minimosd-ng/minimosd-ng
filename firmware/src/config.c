@@ -35,7 +35,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, PITCH_WIDGET_ID,          0,  1,
   1, RSSI_WIDGET_ID,           0,  2,
   1, ALTITUDE_WIDGET_ID,       0,  3,
-  1, CLOCK_WIDGET_ID,          0,  4,
+  1, FLIGHTTIMER_WIDGET_ID,    0,  4,
   1, GPSCOORDS_WIDGET_ID,      0,  5,
   1, GPSSTATUS_WIDGET_ID,      0,  7,
   2, RCCHANNELS_WIDGET_ID,    12,  0,

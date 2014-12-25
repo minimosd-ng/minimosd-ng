@@ -29,9 +29,12 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 /* counter that increments each 125us */
 volatile unsigned char cnt125;
 
-static struct datetime time;
 static unsigned int last_tick;
 static unsigned char toogle = 0;
+
+/* seconds since system startup */
+/* 16bit should be enough for up to 18 hours */
+static unsigned int uptime = 0;
 
 /* counter that increments each 1ms */
 volatile unsigned int jiffies;
@@ -88,21 +91,25 @@ void clock_process(void)
     toogle = ~toogle;
     if (toogle)
       return;
-    if (++time.s == 60) {
-      time.s = 0;
-      if (++time.m == 60) {
-        time.m = 0;
-        if (++time.h == 24) {
-          time.h = 0;
-        }
-      }
-    }
+    uptime++;
   }
 }
 
-struct datetime* get_time(void)
+
+unsigned int get_uptime(void)
 {
-  return &time;
+  return uptime;
+}
+
+void get_time(unsigned int seconds, struct time *t)
+{
+  unsigned int i = seconds;
+  t->s = i % 60;
+  i /= 60;
+  t->m = i % 60;
+  i /= 60;
+  t->h = i;
+  return;
 }
 
 unsigned char get_toogle(void)
