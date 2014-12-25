@@ -46,7 +46,7 @@ static char draw(void)
   }
 
   /* wind direction arrow */
-  max7456_printf(state.x+2, state.y, "%c%c",
+  max7456_printf(state.x+1, state.y, "%c%c",
         MAX7456_FONT_DIR_ARROWS + idx, MAX7456_FONT_DIR_ARROWS + idx + 1);
 
   if (config.units & LENGTH_UNITS_IMPERIAL)
@@ -54,7 +54,7 @@ static char draw(void)
   else
     speed /= 1000;      /* km per hour */
 
-  max7456_printf(state.x+4, state.y, "%3d", (int) speed);
+  max7456_printf(state.x+3, state.y, "%3d", (int) speed);
 
   return 1;
 }
