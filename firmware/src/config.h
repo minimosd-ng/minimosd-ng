@@ -3,6 +3,8 @@
 
 /* default config options */
 
+/* default vehicle */
+#define CONF_VEHICLE            APM_PLANE
 /* mavlink baudrate */
 #define CONF_MAVLINK_BAUDRATE   (19200)
 
@@ -34,7 +36,8 @@
 
 #define MAVLINK_COMM_NUM_BUFFERS 1
 
-
+#define APM_PLANE 0
+#define APM_COPTER 1
 
 #define CH1 0
 #define CH2 1
@@ -58,6 +61,8 @@
 #define M2MILE                      (M2FEET / MILE2FEET)
 
 #define CELCIUS2FAHR(x)             ((x * 18)/10 + 3200)
+#define RAD2DEG(x)                  (x*57.2957795131)
+#define DEG2RAD(x)                  (x*0.0174532925199)
 
 enum {
   TAB_SWITCH_PERCENT,
@@ -110,6 +115,9 @@ struct rssi_config {
 };
 
 struct minimosd_ng_config {
+  /* type of vehicle */
+  unsigned char vehicle;
+
   /* mavlink baudrate */
   unsigned int mavlink_baudrate;
 

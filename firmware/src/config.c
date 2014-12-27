@@ -52,8 +52,8 @@ unsigned char widget_default_config[] EEMEM = {
   4, RADAR_WIDGET_ID,          0,  0,
   4, HOMEDISTANCE_WIDGET_ID,   0, 14,
   4, HOMEDIRECTION_WIDGET_ID,  0, 15,
-  1, WPDIRECTION_WIDGET_ID,    0, 14,
-  1, RELALTITUDE_WIDGET_ID,    0, 15,
+  1, WAYPOINT_WIDGET_ID,      22,  0,
+  1, RELALTITUDE_WIDGET_ID,    0, 14,
   1, GROUNDSPEED_WIDGET_ID,   15,  0,
   1, AIRSPEED_WIDGET_ID,      15,  1,
   1, THROTTLE_WIDGET_ID,      15,  2,
@@ -64,6 +64,7 @@ unsigned char widget_default_config[] EEMEM = {
 
 
 struct minimosd_ng_config config = {
+  .vehicle = CONF_VEHICLE,
   .mavlink_baudrate = CONF_MAVLINK_BAUDRATE,
   
   .units = CONF_DEFAULT_UNITS,
