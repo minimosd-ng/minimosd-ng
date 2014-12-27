@@ -54,7 +54,7 @@ WIDGET_IMPORT(homedirection_widget);
 WIDGET_IMPORT(horizon_widget);
 WIDGET_IMPORT(flightstats_widget);
 WIDGET_IMPORT(radar_widget);
-WIDGET_IMPORT(wpdirection_widget);
+WIDGET_IMPORT(waypoint_widget);
 WIDGET_IMPORT(relaltitude_widget);
 WIDGET_IMPORT(groundspeed_widget);
 WIDGET_IMPORT(airspeed_widget);
@@ -83,7 +83,7 @@ WIDGETS( \
   &horizon_widget,
   &flightstats_widget,
   &radar_widget,
-  &wpdirection_widget,
+  &waypoint_widget,
   &relaltitude_widget,
   &groundspeed_widget,
   &airspeed_widget,
