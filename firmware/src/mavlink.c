@@ -58,8 +58,6 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.bat_voltage = mavlink_msg_sys_status_get_voltage_battery(msg) / 1000.0;
     mavdata.bat_current = mavlink_msg_sys_status_get_current_battery(msg);
     mavdata.bat_remaining = mavlink_msg_sys_status_get_battery_remaining(msg);
-    //osd_mode = apm_mav_component;//Debug
-    //osd_nav_mode = apm_mav_system;//Debug
     break;
   case MAVLINK_MSG_ID_GPS_RAW_INT:
     mavdata.gps_altitude = mavlink_msg_gps_raw_int_get_alt(msg) / 1000.0;
@@ -79,22 +77,22 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.vfr_hud.throttle = mavlink_msg_vfr_hud_get_throttle(msg);
     break;
   case MAVLINK_MSG_ID_ATTITUDE:
-    mavdata.pitch = ToDeg(mavlink_msg_attitude_get_pitch(msg));
-    mavdata.roll = ToDeg(mavlink_msg_attitude_get_roll(msg));
-    //mavdata.yaw = ToDeg(mavlink_msg_attitude_get_yaw(msg));
+    mavdata.pitch = RAD2DEG(mavlink_msg_attitude_get_pitch(msg));
+    mavdata.roll = RAD2DEG(mavlink_msg_attitude_get_roll(msg));
+    //mavdata.yaw = RAD2DEG(mavlink_msg_attitude_get_yaw(msg));
     break;
   case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT:
     //nav_roll = mavlink_msg_nav_controller_output_get_nav_roll(msg);
     //nav_pitch = mavlink_msg_nav_controller_output_get_nav_pitch(msg);
     //nav_bearing = mavlink_msg_nav_controller_output_get_nav_bearing(msg);
     mavdata.nav_bearing = mavlink_msg_nav_controller_output_get_target_bearing(msg);
-    mavdata.nav_wp_dist = mavlink_msg_nav_controller_output_get_wp_dist(msg);
+    mavdata.nav_wp_distance = mavlink_msg_nav_controller_output_get_wp_dist(msg);
     mavdata.nav_alt_error = mavlink_msg_nav_controller_output_get_alt_error(msg);
     mavdata.nav_aspd_error = mavlink_msg_nav_controller_output_get_aspd_error(msg);
     mavdata.nav_xtrack_error = mavlink_msg_nav_controller_output_get_xtrack_error(msg);
     break;
   case MAVLINK_MSG_ID_MISSION_CURRENT:
-    mavdata.wp_number = (unsigned int) mavlink_msg_mission_current_get_seq(msg);
+    mavdata.wp_sequence = mavlink_msg_mission_current_get_seq(msg);
     break;
   case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
     mavdata.ch_raw[0] = mavlink_msg_rc_channels_raw_get_chan1_raw(msg);
@@ -147,15 +145,15 @@ void calc_process(void)
   /* calcs for home */
   float dlat = c->home_lat - mavdata.gps_lat;
   float dlon = c->home_lon - mavdata.gps_lon;
-  float cos_lat = cos(ToRad(fabs(c->home_lat)));
+  float cos_lat = cos(DEG2RAD(fabs(c->home_lat)));
 
   /* calculate aprox home distance */
   float dlon_cos = dlon * cos_lat;
-  float dist = ToRad(EARTH_AVG_RADIUS) * sqrt(dlat*dlat + dlon_cos*dlon_cos);
+  float dist = DEG2RAD(EARTH_AVG_RADIUS) * sqrt(dlat*dlat + dlon_cos*dlon_cos);
 
   /* home initial bearing */
   float dlat_cos = dlat / cos_lat;
-  float bearing = 90 + ToDeg(atan2(dlat_cos, -dlon));
+  float bearing = 90 + RAD2DEG(atan2(dlat_cos, -dlon));
 
   /* return bearing */
   bearing += 180;

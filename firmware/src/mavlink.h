@@ -41,11 +41,11 @@ struct mavlink_data {
 
   /* nav controller */
   int nav_bearing;
-  unsigned int nav_wp_dist;
+  unsigned int nav_wp_distance;
   float nav_alt_error, nav_aspd_error, nav_xtrack_error;
   
   /* mission */
-  unsigned char wp_number;
+  unsigned char wp_sequence;
   
   /* wind */
   int wind_direction;
@@ -65,8 +65,37 @@ struct mavlink_data {
   //unsigned int relative_alt;
 };
 
-#define ToDeg(x) (x*57.2957795131)
-#define ToRad(x) (x*0.0174532925199)
+
+enum {
+  PLANE_MODE_MANUAL = 0,
+  PLANE_MODE_CIRCLE = 1,
+  PLANE_MODE_STABILIZE = 2,
+  PLANE_MODE_TRAINING = 3,
+  PLANE_MODE_ACRO = 4,
+  PLANE_MODE_FBWA = 5,
+  PLANE_MODE_FBWB = 6,
+  PLANE_MODE_CRUISE = 7,
+  PLANE_MODE_AUTOTUNE = 8,
+  PLANE_MODE_AUTO = 10,
+  PLANE_MODE_RTL = 11,
+  PLANE_MODE_LOITER = 12,
+  PLANE_MODE_GUIDED = 15,
+};
+
+enum {
+  COPTER_MODE_STABILIZE = 0,
+  COPTER_MODE_ACRO = 1,
+  COPTER_MODE_ALTHOLD = 2,
+  COPTER_MODE_AUTO = 3,
+  COPTER_MODE_GUIDED = 4,
+  COPTER_MODE_LOITER = 5,
+  COPTER_MODE_RTL = 6,
+  COPTER_MODE_CIRCLE = 7,
+  COPTER_MODE_LAND = 9,
+  COPTER_MODE_DRIFT = 11,
+  COPTER_MODE_SPORT = 13,
+  COPTER_MODE_POSHOLD = 16,
+};
 
 #endif
 
