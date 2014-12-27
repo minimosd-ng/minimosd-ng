@@ -115,8 +115,8 @@ static void get_vars(struct ah_vars *vars)
     vars->subval_ovf = 7;
   }
 
-  vars->pitch_offset = (int) (tan(ToRad(mavdata.pitch) * PITCH_FACTOR * (-1)) * YSIZE) + YSIZE / 2;
-  vars->roll_ratio = tan(ToRad(mavdata.roll) * ROLL_FACTOR);
+  vars->pitch_offset = (int) (tan(DEG2RAD(mavdata.pitch) * PITCH_FACTOR * (-1)) * YSIZE) + YSIZE / 2;
+  vars->roll_ratio = tan(DEG2RAD(mavdata.roll) * ROLL_FACTOR);
 }
 
 static void get_horizon(char *buf, struct ah_vars *vars)

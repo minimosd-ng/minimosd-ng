@@ -74,7 +74,7 @@ static char draw(void)
   if (distance > scale)
     distance = scale;
 
-  direction_rad = ToRad(mavdata.calcs.home_direction);
+  direction_rad = DEG2RAD(mavdata.calcs.home_direction);
   s = sin(direction_rad) * distance + scale;
   x = (char) ((int) (s * XSIZE)/(scale*2));
 
