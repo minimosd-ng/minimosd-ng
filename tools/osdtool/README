@@ -1,0 +1,17 @@
+minimOSD-ng OSD configuration utility v0.1
+
+Implemented:
+- Font Upload
+
+TODO:
+- Tool setup
+- OSD setup
+- Panel setup
+
+
+This program in a very initial stage.
+To compile, just make sure you have all the GTK 2.0 libraries installed
+and type 'make' in the tool directory.
+
+The serial port and speed is defined in the osdtool.c file.
+

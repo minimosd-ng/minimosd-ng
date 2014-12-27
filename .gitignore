@@ -11,9 +11,6 @@
 *.o
 *.lst
 
-minimosd_ng
-tools
-
 # VC++ build artifacts
 *.exp
 *.ilk
