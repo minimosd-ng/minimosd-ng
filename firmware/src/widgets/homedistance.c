@@ -37,17 +37,29 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 static struct widget_state state;
 
 extern struct mavlink_data mavdata;
+extern struct minimosd_ng_config config;
 
 static char draw(void)
 {
-  unsigned int v = mavdata.calcs.home_distance;
-  char u = MAX7456_FONT_METERS;
-  if (v > 10000) {
-    v /= 1000;
-    u = MAX7456_FONT_KILOMETERS;
+  unsigned int distance = mavdata.calcs.home_distance;
+  char u = 'm';
+
+  if (config.units & LENGTH_UNITS_IMPERIAL) {
+    distance = (unsigned int) ((float) distance * M2FEET);
+    if (distance > 20000) {
+      distance /= MILE2FEET;
+      u = MAX7456_FONT_MILES;
+    } else {
+      u = 'f';
+    }
+  } else {
+    if (distance > 10000) {
+      distance /= 1000;
+      u = MAX7456_FONT_KM;
+    }
   }
   max7456_printf(state.x, state.y, "%c%4d%c",
-    MAX7456_FONT_HOME, v, u);
+    MAX7456_FONT_HOME, distance, u);
   return 1;
 }
 
