@@ -31,6 +31,7 @@ enum {
   THROTTLE_WIDGET_ID,
   TEMPERATURE_WIDGET_ID,
   WINDSPEED_WIDGET_ID,
+  FLIGHTMODE_WIDGET_ID,
 };
 
 /* we should always have at least one tab */
