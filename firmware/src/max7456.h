@@ -14,6 +14,8 @@
 #define MAX7456_FONT_MILES        (0x1c)
 #define MAX7456_FONT_WINDSPEED    (0x1d)
 #define MAX7456_FONT_FEETSEC      (0x1e)
+#define MAX7456_FONT_MODE         (0x7f)
+#define MAX7456_FONT_MOTORARMED   (0x86)
 #define MAX7456_FONT_DIR_ARROWS   (0x90)
 #define MAX7456_FONT_FAHRENHEIT   (0xbb)
 #define MAX7456_FONT_CELCIUS      (0xba)

@@ -51,8 +51,8 @@ void mavlink_parse_msg(mavlink_message_t *msg)
 {
   switch(msg->msgid) {
   case MAVLINK_MSG_ID_HEARTBEAT:
-    mavdata.mavbeat = 1;
-    mavdata.mode = (unsigned char) mavlink_msg_heartbeat_get_custom_mode(msg);
+    mavdata.custom_mode = (unsigned char) mavlink_msg_heartbeat_get_custom_mode(msg);
+    mavdata.base_mode = mavlink_msg_heartbeat_get_base_mode(msg);
     break;
   case MAVLINK_MSG_ID_SYS_STATUS:
     mavdata.bat_voltage = mavlink_msg_sys_status_get_voltage_battery(msg) / 1000.0;

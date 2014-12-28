@@ -33,8 +33,7 @@ struct mavlink_data {
   unsigned char bat_remaining;
 
   /* global */
-  unsigned char mavbeat;
-  unsigned char mode;
+  unsigned char custom_mode, base_mode;
   
   /* vrf hud */
   mavlink_vfr_hud_t vfr_hud;

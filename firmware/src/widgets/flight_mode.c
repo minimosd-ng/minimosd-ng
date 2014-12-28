@@ -39,80 +39,85 @@ extern struct minimosd_ng_config config;
 
 static char draw(void)
 {
-  unsigned char mode = mavdata.mode;
-  char buf[10];
+  unsigned char custom_mode = mavdata.custom_mode;
+  unsigned char armed = mavdata.base_mode & MAV_MODE_FLAG_SAFETY_ARMED;
+  char buf[6];
+  char *b = &buf[1];
 
   if (config.vehicle == APM_COPTER)
-    mode += 100;
+    custom_mode += 100;
 
-  switch (mode) {
+  switch (custom_mode) {
   case PLANE_MODE_MANUAL:
-    memcpy_P(buf, PSTR("manu"), 4);
+    memcpy_P(b, PSTR("manu"), 4);
     break;
   case PLANE_MODE_CIRCLE:
   case COPTER_MODE_CIRCLE:
-    memcpy_P(buf, PSTR("circ"), 4);
+    memcpy_P(b, PSTR("circ"), 4);
     break;
   case PLANE_MODE_STABILIZE:
   case COPTER_MODE_STABILIZE:
-    memcpy_P(buf, PSTR("stab"), 4);
+    memcpy_P(b, PSTR("stab"), 4);
     break;
   case PLANE_MODE_TRAINING:
-    memcpy_P(buf, PSTR("trai"), 4);
+    memcpy_P(b, PSTR("trai"), 4);
     break;
   case PLANE_MODE_ACRO:
   case COPTER_MODE_ACRO:
-    memcpy_P(buf, PSTR("acro"), 4);
+    memcpy_P(b, PSTR("acro"), 4);
     break;
   case PLANE_MODE_FBWA:
-    memcpy_P(buf, PSTR("fbwa"), 4);
+    memcpy_P(b, PSTR("fbwa"), 4);
     break;
   case PLANE_MODE_FBWB:
-    memcpy_P(buf, PSTR("fbwb"), 4);
+    memcpy_P(b, PSTR("fbwb"), 4);
     break;
   case PLANE_MODE_CRUISE:
-    memcpy_P(buf, PSTR("crui"), 4);
+    memcpy_P(b, PSTR("crui"), 4);
     break;
   case PLANE_MODE_AUTOTUNE:
-    memcpy_P(buf, PSTR("tune"), 4);
+    memcpy_P(b, PSTR("tune"), 4);
     break;
   case PLANE_MODE_AUTO:
   case COPTER_MODE_AUTO:
-    memcpy_P(buf, PSTR("auto"), 4);
+    memcpy_P(b, PSTR("auto"), 4);
     break;
   case PLANE_MODE_RTL:
   case COPTER_MODE_RTL:
-    memcpy_P(buf, PSTR("retl"), 4);
+    memcpy_P(b, PSTR("retl"), 4);
     break;
   case PLANE_MODE_LOITER:
   case COPTER_MODE_LOITER:
-    memcpy_P(buf, PSTR("loit"), 4);
+    memcpy_P(b, PSTR("loit"), 4);
     break;
   case PLANE_MODE_GUIDED:
   case COPTER_MODE_GUIDED:
-    memcpy_P(buf, PSTR("guid"), 4);
+    memcpy_P(b, PSTR("guid"), 4);
     break;
   case COPTER_MODE_ALTHOLD:
-    memcpy_P(buf, PSTR("alth"), 4);
+    memcpy_P(b, PSTR("alth"), 4);
     break;
   case COPTER_MODE_LAND:
-    memcpy_P(buf, PSTR("land"), 4);
+    memcpy_P(b, PSTR("land"), 4);
     break;
   case COPTER_MODE_DRIFT:
-    memcpy_P(buf, PSTR("drif"), 4);
+    memcpy_P(b, PSTR("drif"), 4);
     break;
   case COPTER_MODE_SPORT:
-    memcpy_P(buf, PSTR("spor"), 4);
+    memcpy_P(b, PSTR("spor"), 4);
     break;
   case COPTER_MODE_POSHOLD:
-    memcpy_P(buf, PSTR("phol"), 4);
+    memcpy_P(b, PSTR("phol"), 4);
     break;
   default:
-    memcpy_P(buf, PSTR("unkn"), 4);
+    memcpy_P(b, PSTR("unkn"), 4);
     break;
   }
 
-  max7456_putsn(state.x, state.y, buf, 4);
+  buf[0] = MAX7456_FONT_MODE;
+  buf[5] = armed ? MAX7456_FONT_MOTORARMED : 0x00;
+
+  max7456_putsn(state.x, state.y, buf, 6);
   return 1;
 }
 

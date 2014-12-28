@@ -44,7 +44,7 @@ static char draw(void)
   char idx = (char) ((int) ((mavdata.nav_bearing - mavdata.vfr_hud.heading) * 16) / 360);
   float distance = mavdata.nav_wp_distance;
   char buf[10];
-  unsigned char mode = mavdata.mode;
+  unsigned char mode = mavdata.custom_mode;
 
   if (state.props & WIDGET_INIT) {
     max7456_printf(state.x, state.y, "WP");
