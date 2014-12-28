@@ -44,6 +44,7 @@ static char draw(void)
   char idx = (char) ((int) ((mavdata.nav_bearing - mavdata.vfr_hud.heading) * 16) / 360);
   float distance = mavdata.nav_wp_distance;
   char buf[10];
+  unsigned char mode = mavdata.mode;
 
   if (state.props & WIDGET_INIT) {
     max7456_printf(state.x, state.y, "WP");
@@ -64,20 +65,20 @@ static char draw(void)
         MAX7456_FONT_DIR_ARROWS + idx, MAX7456_FONT_DIR_ARROWS + idx + 1);
   max7456_printf(state.x, state.y+1, "%4d", distance);
 
-  if ( ((config.vehicle == APM_PLANE) && \
-        ((mavdata.mode == PLANE_MODE_AUTO) || \
-         (mavdata.mode == PLANE_MODE_GUIDED) || \
-         (mavdata.mode == PLANE_MODE_CRUISE))) || \
-       ((config.vehicle == APM_COPTER) && \
-        (mavdata.mode == COPTER_MODE_AUTO)) ) {
+  if (config.vehicle == APM_COPTER)
+    mode += 100;
 
+  switch (mode) {
+  case (PLANE_MODE_AUTO):
+  case (PLANE_MODE_GUIDED):
+  case (PLANE_MODE_CRUISE):
+  case (COPTER_MODE_AUTO):
     distance = mavdata.nav_xtrack_error;
     if (config.units & LENGTH_UNITS_IMPERIAL)
       distance = (unsigned int) ((float) distance * M2FEET);
-
     max7456_printf(state.x, state.y+2, "Xe%4d%c",
                   distance);
-  } else {
+  default:
     memset(buf, ' ', 7);
     buf[7] = 0x00;
     max7456_putsn(state.x, state.y+2, buf, 7);
