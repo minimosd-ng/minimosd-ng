@@ -60,6 +60,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, TEMPERATURE_WIDGET_ID,   15,  3,
   1, WINDSPEED_WIDGET_ID,     15,  4,
   1, FLIGHTMODE_WIDGET_ID,    15,  5,
+  1, CLIMBRATE_WIDGET_ID,     15,  6,
   TAB_TABLE_END,
 };
 

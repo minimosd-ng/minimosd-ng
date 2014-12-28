@@ -62,6 +62,7 @@ WIDGET_IMPORT(throttle_widget);
 WIDGET_IMPORT(temperature_widget);
 WIDGET_IMPORT(windspeed_widget);
 WIDGET_IMPORT(flightmode_widget);
+WIDGET_IMPORT(climbrate_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -92,6 +93,7 @@ WIDGETS( \
   &temperature_widget,
   &windspeed_widget,
   &flightmode_widget,
+  &climbrate_widget,
   NULL,
 );
 
