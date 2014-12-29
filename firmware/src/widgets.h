@@ -43,9 +43,10 @@ enum {
 #define TAB_TABLE_END 0xff
 
 /* widget properties */
-#define WIDGET_DISABLED 0x00
 #define WIDGET_ENABLED  0x01
 #define WIDGET_INIT     0x02
+#define WIDGET_INVERTED 0x04
+#define WIDGET_BLINK    0x08
 
 struct widget_config {
   unsigned char tab;
