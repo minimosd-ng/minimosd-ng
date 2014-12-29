@@ -49,18 +49,18 @@ ISR(USART_RX_vect)
 
 static int uart_putchar(char c, FILE *stream)
 {
-	if (c == '\n')
-		uart_putchar('\r', stream);
-	loop_until_bit_is_set(UCSR0A, UDRE0);
-	UDR0 = c;
-	return 0;
+  if (c == '\n')
+    uart_putchar('\r', stream);
+  loop_until_bit_is_set(UCSR0A, UDRE0);
+  UDR0 = c;
+  return 0;
 }
 
 
 static FILE uartstdout = FDEV_SETUP_STREAM(uart_putchar, NULL,
 				_FDEV_SETUP_WRITE);
 
- 
+
 void init_uart(unsigned int b)
 {
   set_baudrate(b);

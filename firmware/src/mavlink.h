@@ -11,9 +11,10 @@ struct flight_stats {
   unsigned int flight_start, flight_end;
   unsigned int max_home_distance;
   unsigned int max_airspeed, max_groundspeed;
-  unsigned int max_altitude;
+  unsigned int max_home_altitude;
   unsigned int max_widspeed;
-  unsigned long total_diatance;
+  unsigned int used_battery;
+  unsigned long total_distance;
 };
 
 struct calc_data {
