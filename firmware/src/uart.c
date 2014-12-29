@@ -30,7 +30,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 struct uart_fifo {
   char buf[FIFO_MASK+1];
-  unsigned char rd, wr, len;
+  unsigned char rd, wr;
 };
 
 static struct uart_fifo rx_fifo;
@@ -40,11 +40,14 @@ void uart_rx(unsigned char c);
 
 ISR(USART_RX_vect)
 {
-  rx_fifo.buf[rx_fifo.wr++] = UDR0;
-  if (rx_fifo.wr == rx_fifo.rd)
+  unsigned char n_wr = (rx_fifo.wr + 1) & FIFO_MASK;
+  if (n_wr == rx_fifo.rd) {
+    n_wr = UDR0;
     printf("OVR\n");
-  rx_fifo.wr &= FIFO_MASK;
-  rx_fifo.len++;
+  } else {
+    rx_fifo.buf[rx_fifo.wr] = UDR0;
+    rx_fifo.wr = n_wr;
+  }
 }
 
 static int uart_putchar(char c, FILE *stream)
@@ -68,7 +71,6 @@ void init_uart(unsigned int b)
   /* reset fifo */
   rx_fifo.wr = 0;
   rx_fifo.rd = 0;
-  rx_fifo.len = 0;
 
 	/* 8 bit, no parity, 1 stop bit */
 	UCSR0C = (3<<UCSZ00);
@@ -88,12 +90,10 @@ void set_baudrate(unsigned int b)
 
 unsigned char uart_getc(unsigned char *c)
 {
-  unsigned char ret = 0;
-  if (rx_fifo.len > 0) {
+  unsigned char ret = (rx_fifo.rd != rx_fifo.wr);
+  if (ret) {
     *c = rx_fifo.buf[rx_fifo.rd++];
     rx_fifo.rd &= FIFO_MASK;
-    rx_fifo.len--;
-    ret = 1;
   }
   return ret;
 }
