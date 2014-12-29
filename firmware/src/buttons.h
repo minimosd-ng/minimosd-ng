@@ -1,8 +1,9 @@
 #ifndef __BUTTONS_H__
 #define __BUTTONS_H__
 
+#if CONF_RCCONFIG_ENABLE
 unsigned char get_buttons(void);
-
+#endif
 
 #define BUTTON_LEFT   0x01
 #define BUTTON_RIGHT  0x02

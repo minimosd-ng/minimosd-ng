@@ -20,6 +20,8 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 *********************************************************************/
 
+#if CONF_RCCONFIG_ENABLE
+
 #include "config.h"
 #include "buttons.h"
 #include "mavlink.h"
@@ -71,3 +73,4 @@ unsigned char get_buttons(void)
   return res;
 }
 
+#endif
