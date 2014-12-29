@@ -33,11 +33,13 @@ enum {
   WINDSPEED_WIDGET_ID,
   FLIGHTMODE_WIDGET_ID,
   CLIMBRATE_WIDGET_ID,
+  TABINFO_WIDGET_ID,
 };
 
 /* we should always have at least one tab */
 /* tab ID 0xff is reserved for end of table indicator */
 #define STARTUP_TAB   0x00
+#define ALL_TABS      0xfd
 #define TAB_TABLE_END 0xff
 
 /* widget properties */

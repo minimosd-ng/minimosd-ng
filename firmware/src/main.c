@@ -31,7 +31,6 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DEBUG 1
 #if DEBUG
-#include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
 #define PRINTF(...)
@@ -44,6 +43,9 @@ int main(void)
 {
   unsigned char STATE = 0;
   unsigned int n, t = 0;
+#if DEBUG
+  char buf[10];
+#endif
 
   /* load global config from eeprom */
   load_config();
@@ -51,8 +53,8 @@ int main(void)
   /* init serial port */
   init_uart(config.mavlink_baudrate);
 
-  PRINTF("\nRESET!\n");
-  PRINTF("MinimOSD-ng\n");
+  PRINTF(P("\nRESET!\n"));
+  PRINTF(P("MinimOSD-ng\n"));
 
   /* init timer */
   init_timer();

@@ -63,6 +63,7 @@ WIDGET_IMPORT(temperature_widget);
 WIDGET_IMPORT(windspeed_widget);
 WIDGET_IMPORT(flightmode_widget);
 WIDGET_IMPORT(climbrate_widget);
+WIDGET_IMPORT(tabinfo_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -94,6 +95,7 @@ WIDGETS( \
   &windspeed_widget,
   &flightmode_widget,
   &climbrate_widget,
+  &tabinfo_widget,
   NULL,
 );
 
@@ -101,10 +103,10 @@ WIDGETS( \
 extern struct minimosd_ng_config config;
 extern struct mavlink_data mavdata;
 
-static unsigned char current_tidx = TAB_TABLE_END;
+unsigned char current_tidx = TAB_TABLE_END;
 static struct widget *rlist[WIDGETS_NUM];
 static struct widget **rwid;
-static unsigned char *tab_list;
+unsigned char *tab_list;
 static unsigned char nlock;
 
 static void load_widgets_tab(unsigned char tidx);
@@ -136,6 +138,8 @@ static unsigned char* init_tab_list(void)
     eeprom_read_block(&cfg, (const void*) addr++, sizeof(struct widget_config));
     if (cfg.tab == TAB_TABLE_END)
       break;
+    if (cfg.tab == ALL_TABS)
+      continue;
     if (!search_on_list(tlist, cfg.tab)) {
       (*cnt)++;
       *p++ = cfg.tab;
@@ -147,8 +151,8 @@ static unsigned char* init_tab_list(void)
   tab_list = malloc((*cnt) + 1);
   if (tab_list != NULL)
     memcpy(tab_list, tlist, (*cnt) + 1);
-  
-  return tab_list;  
+
+  return tab_list;
 }
 
 
@@ -175,6 +179,8 @@ static void find_config(unsigned char tab, unsigned char id, struct widget_confi
   struct widget_config *addr = 0x00;
   while ((unsigned int) addr < (0x400 - 0x10)) {
     eeprom_read_block(cfg, (const void*) addr++, sizeof(struct widget_config));
+    if (cfg->tab == ALL_TABS)
+      cfg->tab = tab;
     if (((cfg->id == id) && (cfg->tab == tab)) || (cfg->tab == TAB_TABLE_END))
       break;
   };
@@ -233,7 +239,7 @@ void widgets_process(void)
 
   switch (ts->method) {
   case TAB_SWITCH_PERCENT:
-  /* percent method will split evenly a 
+  /* percent method will split evenly a
      channel in the number of tabs */
     v = ((raw - CONF_TABSWITCH_CH_MIN) / (CH_DELTA / (int) nr_tabs));
     /* trim value */

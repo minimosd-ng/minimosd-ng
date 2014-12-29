@@ -28,7 +28,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 
 /* default configuration to be burned in the eeprom */
 unsigned char widget_default_config[] EEMEM = {
-  STARTUP_TAB, STARTUP_WIDGET_ID, 3, 4,
+  STARTUP_TAB, STARTUP_WIDGET_ID, 1, 3,
 
   /* tab, widget_id, x, y */
   1, ROLL_WIDGET_ID,           0,  0,
@@ -61,6 +61,7 @@ unsigned char widget_default_config[] EEMEM = {
   1, WINDSPEED_WIDGET_ID,     15,  4,
   1, FLIGHTMODE_WIDGET_ID,    15,  5,
   1, CLIMBRATE_WIDGET_ID,     15,  6,
+  ALL_TABS, TABINFO_WIDGET_ID, 27, 0,
   TAB_TABLE_END,
 };
 
@@ -68,7 +69,7 @@ unsigned char widget_default_config[] EEMEM = {
 struct minimosd_ng_config config = {
   .vehicle = CONF_VEHICLE,
   .mavlink_baudrate = CONF_MAVLINK_BAUDRATE,
-  
+
   .units = CONF_DEFAULT_UNITS,
 
   .rssi = {
