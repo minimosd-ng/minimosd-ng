@@ -21,7 +21,8 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "config.h"
-
+#include "buttons.h"
+#include "mavlink.h"
 
 extern struct mavlink_data mavdata;
 
