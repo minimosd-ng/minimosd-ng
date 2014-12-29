@@ -21,18 +21,9 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "config.h"
-#include <stdio.h>
-#include <string.h>
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
-
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
 
 static struct widget_state state;
 
@@ -40,12 +31,13 @@ extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
-  char buf[15];
-  sprintf(buf, "%11.6f", mavdata.gps_lat);
-  max7456_puts(state.x, state.y, buf);
-
-  sprintf(buf, "%11.6f", mavdata.gps_lon);
-  max7456_puts(state.x, state.y+1, buf);
+  if (state.props & WIDGET_INIT) {
+    max7456_putc(state.x, state.y, MAX7456_FONT_LAT);
+    max7456_putc(state.x, state.y+1, MAX7456_FONT_LON);
+    state.props &= ~WIDGET_INIT;
+  }
+  max7456_printf(state.x+1, state.y,   "%11.6f", mavdata.gps_lat);
+  max7456_printf(state.x+1, state.y+1, "%11.6f", mavdata.gps_lon);
   return 1;
 }
 

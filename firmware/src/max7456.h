@@ -2,6 +2,8 @@
 #define __MAX7456_H__
 
 /* special font charaters */
+#define MAX7456_FONT_LAT          (0x03)
+#define MAX7456_FONT_LON          (0x04)
 #define MAX7456_FONT_DEGREE       (0x05)
 #define MAX7456_FONT_ROLL         (0x06)
 #define MAX7456_FONT_PITCH        (0x07)
