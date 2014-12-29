@@ -10,11 +10,23 @@
 /* mavlink baudrate */
 #define CONF_MAVLINK_BAUDRATE   (19200)
 
+/* config navigation control */
+#define CONF_ENTERCOMB          (BUTTON_RIGHT | BUTTON_BACK | BUTTON_DOWN)
+#define CONF_LEFTRIGHT_CH       CH1
+#define CONF_LEFTRIGHT_INV      0
+#define CONF_UPDOWN_CH          CH2
+#define CONF_UPDOWN_INV         0
+#define CONF_BACKENTER_CH       CH4
+#define CONF_BACKENTER_INV      0
+#define CONF_CH_CENTER          (1500)
+#define CONF_CH_HIGH            (1700)
+#define CONF_CH_LOW             (1300)
+
 /* tab config */
 /* maximum number of display tabs */
 #define CONF_MAX_TABS           (20)
 #define CONF_TABSWITCH_CH       CH8
-#define CONF_TABSWITCH_METHOD   TAB_SWITCH_DEMO
+#define CONF_TABSWITCH_METHOD   TAB_SWITCH_PERCENT
 #define CONF_TABSWITCH_CH_MIN   (1000)
 #define CONF_TABSWITCH_CH_MAX   (1950)
 
