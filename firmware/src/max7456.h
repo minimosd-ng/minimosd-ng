@@ -1,4 +1,4 @@
-#ifndef __MAX7456__
+#ifndef __MAX7456_H__
 #define __MAX7456_H__
 
 /* special font charaters */
@@ -121,6 +121,7 @@ void max7456_printf(unsigned char x, unsigned char y, char *s, ...);
 void max7456_clr(void);
 void max7456_nvmwr(unsigned char addr, unsigned char *bitmap);
 void max7456_nvmrd(unsigned char addr, unsigned char *bitmap);
+void max7456_setmode(unsigned char m);
 void max7456_process(unsigned char c);
 
 #endif

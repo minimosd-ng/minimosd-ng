@@ -85,10 +85,16 @@ void max7456_putc(unsigned char x, unsigned char y, char c)
   max7456_wr(MAX7456_REG_DMDI, c, SPI_END);
 }
 
+static unsigned char cmode = 0;
+void max7456_setmode(unsigned char m)
+{
+  cmode = m;
+}
+
 void max7456_puts(unsigned char x, unsigned char y, char *s)
 {
   unsigned int addr = y * 30 + x;
-  max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_AINC, SPI_START);
+  max7456_wr(MAX7456_REG_DMM, cmode | MAX7456_DMM_AINC, SPI_START);
   max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8), 0);
   max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr, 0);
   do {
@@ -100,7 +106,7 @@ void max7456_puts(unsigned char x, unsigned char y, char *s)
 void max7456_putsn(unsigned char x, unsigned char y, char *s, unsigned char n)
 {
   unsigned int addr = y * 30 + x;
-  max7456_wr(MAX7456_REG_DMM, MAX7456_DMM_AINC, SPI_START);
+  max7456_wr(MAX7456_REG_DMM, cmode | MAX7456_DMM_AINC, SPI_START);
   max7456_wr(MAX7456_REG_DMAH, (unsigned char) (addr >> 8), 0);
   max7456_wr(MAX7456_REG_DMAL, (unsigned char) addr, 0);
   do {
