@@ -1,6 +1,8 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
+#include <avr/pgmspace.h>
+
 /* default config options */
 
 /* default vehicle */
@@ -17,7 +19,7 @@
 #define CONF_TABSWITCH_CH_MAX   (1950)
 
 /* unit system */
-#define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_CELCIUS)
+#define CONF_DEFAULT_UNITS      (LENGTH_UNITS_IMPERIAL | TEMPERATURE_UNIT_CELCIUS)
 
 /* rssi config */
 #define CONF_RSSI_SOURCE        (RSSI_SOURCE_RSSI)
@@ -63,6 +65,12 @@
 #define CELCIUS2FAHR(x)             ((x * 18)/10 + 3200)
 #define RAD2DEG(x)                  (x*57.2957795131)
 #define DEG2RAD(x)                  (x*0.0174532925199)
+
+
+/* helper to use strings in prog mem */
+/* assuming a local "buf" is defined */
+#define P(s) (strcpy_P(buf, PSTR(s)))
+
 
 enum {
   TAB_SWITCH_PERCENT,
