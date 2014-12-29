@@ -32,16 +32,10 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "max7456.h"
 #include "mavlink.h"
 
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
-
 static struct widget_state state;
 
 extern struct mavlink_data mavdata;
+extern struct minimosd_ng_config config;
 
 #define SCALE1 200.0
 #define SCALE2 500.0
@@ -62,7 +56,14 @@ static char draw(void)
 {
   float direction_rad, s;
   unsigned int scale, distance = mavdata.calcs.home_distance;
-  char x, y;
+  char x, y, u;
+
+  if (config.units & LENGTH_UNITS_IMPERIAL) {
+    distance *= (unsigned int) ((float) distance * M2FEET);
+    u = 'f';
+  } else {
+    u = 'm';
+  }
 
   if (distance < SCALE1)
     scale = SCALE1;
@@ -70,7 +71,7 @@ static char draw(void)
     scale = SCALE2;
   else
     scale = SCALE3;
-  
+
   if (distance > scale)
     distance = scale;
 
@@ -81,11 +82,11 @@ static char draw(void)
   s = cos(direction_rad) * distance + scale;
   y = YSIZE - 1 - ((int) (s * YSIZE)/(scale*2));
 
-  max7456_putc(state.x + XCENTER, state.y + YCENTER, 0x2a);
+  max7456_putc(state.x + XCENTER, state.y + YCENTER, '*');
   max7456_putc(state.x + prev_home.x, state.y + prev_home.y, ' ');
-  max7456_putc(state.x + x, state.y + y, 0xb);
+  max7456_putc(state.x + x, state.y + y, MAX7456_FONT_HOME);
 
-  max7456_printf(state.x, state.y, "%4d%c", scale, 0xc);
+  max7456_printf(state.x, state.y, "%4d%c", scale, u);
 
   prev_home.x = x;
   prev_home.y = y;

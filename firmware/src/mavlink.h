@@ -7,14 +7,21 @@ void init_mavlink(void);
 void mavlink_process(void);
 void calc_process(void);
 
+struct flight_stats {
+  unsigned int flight_start, flight_end;
+  unsigned int max_home_distance;
+  unsigned int max_airspeed, max_groundspeed;
+  unsigned int max_altitude;
+  unsigned int max_widspeed;
+  unsigned long total_diatance;
+};
+
 struct calc_data {
   unsigned char has_home;
   unsigned int home_distance;
   unsigned int home_direction;
 
   float home_lat, home_lon;
-
-  unsigned int flight_start, flight_end;
 };
 
 
@@ -34,7 +41,7 @@ struct mavlink_data {
 
   /* global */
   unsigned char custom_mode, base_mode;
-  
+
   /* vrf hud */
   mavlink_vfr_hud_t vfr_hud;
 
@@ -42,10 +49,10 @@ struct mavlink_data {
   int nav_bearing;
   unsigned int nav_wp_distance;
   float nav_alt_error, nav_aspd_error, nav_xtrack_error;
-  
+
   /* mission */
   unsigned char wp_sequence;
-  
+
   /* wind */
   int wind_direction;
   float wind_speed;
@@ -56,7 +63,8 @@ struct mavlink_data {
   unsigned int ch_raw[8];
   unsigned char rssi;
 
-  struct calc_data calcs; 
+  struct calc_data calcs;
+  struct flight_stats stats;
 
   /* TODO: unused, cleanup later */
   //unsigned int relative_alt;

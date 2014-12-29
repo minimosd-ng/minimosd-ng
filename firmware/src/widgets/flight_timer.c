@@ -28,14 +28,6 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "mavlink.h"
 #include "timer.h"
 
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
-
-
 static struct widget_state state;
 
 extern struct mavlink_data mavdata;
@@ -45,7 +37,7 @@ static char draw(void)
   struct time t;
 
   char buf[10];
-  get_time(get_uptime() - mavdata.calcs.flight_start, &t);
+  get_time(get_uptime() - mavdata.stats.flight_start, &t);
   sprintf(buf, "%2d:%02d:%02d", t.h, t.m, t.s);
   max7456_puts(state.x, state.y, buf);
   return 1;

@@ -27,16 +27,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "mavlink.h"
 
 
-#define DEBUG 1
-#if DEBUG
-#include <stdio.h>
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
-
-
-static mavlink_message_t msg; 
+static mavlink_message_t msg;
 mavlink_status_t status;
 
 struct mavlink_data mavdata;
@@ -67,7 +58,7 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.gps_nrsats = mavlink_msg_gps_raw_int_get_satellites_visible(msg);
     mavdata.gps_cog = mavlink_msg_gps_raw_int_get_cog(msg);
     mavdata.gps_eph = mavlink_msg_gps_raw_int_get_eph(msg);
-    break; 
+    break;
   case MAVLINK_MSG_ID_VFR_HUD:
     mavdata.vfr_hud.airspeed = mavlink_msg_vfr_hud_get_airspeed(msg);
     mavdata.vfr_hud.groundspeed = mavlink_msg_vfr_hud_get_groundspeed(msg);
@@ -104,7 +95,7 @@ void mavlink_parse_msg(mavlink_message_t *msg)
     mavdata.ch_raw[6] = mavlink_msg_rc_channels_raw_get_chan7_raw(msg);
     mavdata.ch_raw[7] = mavlink_msg_rc_channels_raw_get_chan8_raw(msg);
     mavdata.rssi = mavlink_msg_rc_channels_raw_get_rssi(msg);
-    break;           
+    break;
   case MAVLINK_MSG_ID_WIND:
     mavdata.wind_direction = (int) mavlink_msg_wind_get_direction(msg);
     mavdata.wind_speed = mavlink_msg_wind_get_speed(msg);
@@ -165,9 +156,5 @@ void calc_process(void)
 
   c->home_distance = (unsigned int) dist;
   c->home_direction = (unsigned int) bearing;
-
-
-  /* flight start time */
-  c->flight_start = 0;
 }
 

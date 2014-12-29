@@ -27,21 +27,15 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "max7456.h"
 #include "mavlink.h"
 
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
-
 static struct widget_state state;
 
 extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
+  char buf[20];
   if (state.props & WIDGET_INIT) {
-    max7456_printf(state.x, state.y, "Flight status");
+    max7456_printf(state.x, state.y, P("Flight stats"));
     state.props &= ~WIDGET_INIT;
   }
 
