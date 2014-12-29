@@ -80,28 +80,6 @@ int main(void)
     if ((n - t) > 200) {
       t += 200;
 
-#if 0
-      if (now() < 5000)
-        mavdata.calcs.home_lat += 0.000043;
-      else if (now() < 10000)
-        mavdata.calcs.home_lon += 0.000043;
-      else if (now() < 20000)
-        mavdata.calcs.home_lon -= 0.000043;
-      else if (now() < 30000)
-        mavdata.calcs.home_lat -= 0.000043;
-      else if (now() < 40000)
-        mavdata.calcs.home_lon += 0.000043;
-#endif
-#if 0
-      mavdata.roll += 1;
-      if (mavdata.roll >= 180)
-        mavdata.roll = -180;
-
-      mavdata.pitch += 2;
-      if (mavdata.pitch >= 50)
-        mavdata.pitch = -50;
-#endif
-
       switch (STATE) {
       case 0:
         if (n > 3000) {
@@ -114,13 +92,12 @@ int main(void)
       default:
         break;
       }
-
       calc_process();
       clock_process();
     };
 
     if (uart_getc(&c)) {
-      /* check if we are entering font upload process */
+      /* check font upload */
       max7456_process(c);
       /* parse mavlink data stream */
       mavlink_process(c);
