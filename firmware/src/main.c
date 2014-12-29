@@ -41,7 +41,7 @@ extern struct mavlink_data mavdata;
  
 int main(void)
 {
-  unsigned char STATE = 0;
+  unsigned char STATE = 0, c;
   unsigned int n, t = 0;
 #if DEBUG
   char buf[10];
@@ -118,8 +118,13 @@ int main(void)
       calc_process();
       clock_process();
     };
-    /* parse mavlink data stream */
-    mavlink_process();
+
+    if (uart_getc(&c)) {
+      /* check if we are entering font upload process */
+      max7456_process(c);
+      /* parse mavlink data stream */
+      mavlink_process(c);
+    }
   }
 }
 

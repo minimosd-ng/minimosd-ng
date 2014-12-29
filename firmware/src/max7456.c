@@ -24,7 +24,10 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 #include "max7456.h"
+#include "widgets.h"
+#include "uart.h"
 
 #define SPI_START 0x01
 #define SPI_END   0x02
@@ -60,7 +63,7 @@ static unsigned char spi_transfer(unsigned char b,
   if (cs_ctrl & SPI_END)
     PORTD |= (1<<PD6);
   return SPDR;
-}  
+}
 
 static unsigned char max7456_rd(unsigned char reg, unsigned char flags)
 {
@@ -131,7 +134,7 @@ void max7456_nvmwr(unsigned char addr, unsigned char *bitmap)
 
   /* disable display */
   vm0 = max7456_rd(MAX7456_REG_VM0, SPI_START);
-  max7456_wr(MAX7456_REG_VM0, vm0 & ~MAX7456_VM0_ENABLE, 0);
+  max7456_wr(MAX7456_REG_VM0, 0, 0);
 
   /* set character address */
   max7456_wr(MAX7456_REG_CMAH, addr, 0);
@@ -231,6 +234,46 @@ void init_max7456(void)
     max7456_wr(b, MAX7456_RB_WH90 | MAX7456_RB_BL0, SPI_START | SPI_END);
 }
 
+void upload_font(void)
+{
+  unsigned char csum, i, addr = 0;
+  char buf[64];
 
+  /* disable refresh interrupt */
+  EIMSK &= ~_BV(INT0);
 
+  /* send ok to flag data receive ready */
+  printf(P("OK\n"));
+
+  /* expect 256 chars */
+  do {
+    csum = 0;
+    /* expect 64 bytes per char although only 56 are useful */
+    for (i = 0; i < 64; i++) {
+      while(!uart_getc(&buf[i]));
+      csum += buf[i];
+    }
+    max7456_nvmwr(addr, (unsigned char*) buf);
+    /* reply with the char index */
+    loop_until_bit_is_set(UCSR0A, UDRE0);
+    UDR0 = addr;
+    loop_until_bit_is_set(UCSR0A, UDRE0);
+    UDR0 = csum;
+  } while (++addr != 0);
+  printf(P("OK\n"));
+
+  EIMSK |= _BV(INT0);
+}
+
+static unsigned char cnt;
+void max7456_process(unsigned char c)
+{
+  if (c == 0xfa)
+    cnt++;
+  else
+    cnt = 0;
+
+  if (cnt == 10)
+    upload_font();
+}
 

@@ -4,7 +4,7 @@
 #include "mavlink/v1.0/ardupilotmega/mavlink.h"
 
 void init_mavlink(void);
-void mavlink_process(void);
+void mavlink_process(unsigned char c);
 void calc_process(void);
 
 struct flight_stats {

@@ -19,6 +19,7 @@
 #define MAX7456_FONT_MODE         (0x7f)
 #define MAX7456_FONT_MOTORARMED   (0x86)
 #define MAX7456_FONT_DIR_ARROWS   (0x90)
+#define MAX7456_FONT_PLANE        (0xb9)
 #define MAX7456_FONT_FAHRENHEIT   (0xbb)
 #define MAX7456_FONT_CELCIUS      (0xba)
 
@@ -120,5 +121,6 @@ void max7456_printf(unsigned char x, unsigned char y, char *s, ...);
 void max7456_clr(void);
 void max7456_nvmwr(unsigned char addr, unsigned char *bitmap);
 void max7456_nvmrd(unsigned char addr, unsigned char *bitmap);
+void max7456_process(unsigned char c);
 
 #endif
