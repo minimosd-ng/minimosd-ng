@@ -21,22 +21,7 @@
 #include <sys/ioctl.h>
 
 #define PORT "/dev/ttyUSB0"
-#define PORT_SPEED B57600
-
-
-
-
-/* unclear - osd is reseting but
-   this should be double checked */
-void setctrlpins(int fd, int on) 
-{ 
-#define TIOCM_CTS       0x020 
-#define TIOCM_DTR       0x002 
-#define TIOCM_DSR       0x100 
-#define TIOCM_RTS       0x004
-	int controlbits = TIOCM_RTS | TIOCM_CTS | TIOCM_DTR | TIOCM_DSR; 
-	ioctl(fd, (on ? TIOCMBIS : TIOCMBIC), &controlbits); 
-}
+#define PORT_SPEED B19200
 
 
 int strbin2int(char *buf)
@@ -101,10 +86,6 @@ static void upload_font_func(GtkWidget *widget, gpointer data)
 		return;
 	}
 
-	setctrlpins(sp, 1);
-	usleep(100000);
-	setctrlpins(sp, 0);
-
 	memset(&tty, 0, sizeof tty);
 	if (tcgetattr(sp, &tty) != 0) {
 		//error_message ("error %d from tcgetattr", errno);
@@ -123,11 +104,11 @@ static void upload_font_func(GtkWidget *widget, gpointer data)
 
 	if (tcsetattr (sp, TCSANOW, &tty) != 0)
 		g_print("Error in tcsetattr!\n");
-	
+
 	usleep(4000000);
 
 	printf("Entering font mode... ");
-	write(sp, "\xfa\xfa\xfa\xfa", 4);
+	write(sp, "\xfa\xfa\xfa\xfa\xfa\xfa\xfa\xfa\xfa\xfa", 10);
 
 	rx[0] = ' ';
 	while ((rx[2] != '\n') && (rx[1] != 'K') && (rx[0] != 'O')) {
@@ -136,12 +117,13 @@ static void upload_font_func(GtkWidget *widget, gpointer data)
 			rx[0] = rx[1];
 			rx[1] = rx[2];
 			rx[2] = rx[3];
-			printf("read '%c':'%x' ...\n", rx[3], rx[3]);
+			printf("read '%c':0x%02x ...\n", rx[3], rx[3]);
 		} else {
 			usleep(10000);
 		}
 	}
 
+  while (read(sp, &b, 1) != 1) usleep(1000);
 	g_print("OK\n");
 
 	j = 0;
@@ -160,19 +142,21 @@ static void upload_font_func(GtkWidget *widget, gpointer data)
 			printf("Ignored line '%s'\n", tok);
 		}
 
+
 		if (j == 64) {
 			while (read(sp, &b, 1) != 1) usleep(1000);
+
 			printf("Sending character %d (checksum %d)... ",
 					k, csum);
 			if (k != b) {
-				g_print("Error sending font: expected character index=%2x, received index=%2x\n", k, b);
+				g_print("\nError sending font: expected character index=%d, received index=%d\n", k, b);
 				return;
 			}
 			while (read(sp, &b, 1) != 1) usleep(1000);
 			//printf("csum_calc=%d, csum_rx=%d\n", csum, b);
 
 			if (csum != b) {
-				g_print("Error sending font: expected checksum=%2x, received checksum=%2x\n", csum, b);
+				g_print("\nError sending font: expected checksum=%2x, received checksum=%2x\n", csum, b);
 				return;
 			} else {
 				printf("OK\n");
