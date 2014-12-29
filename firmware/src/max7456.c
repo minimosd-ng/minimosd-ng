@@ -250,7 +250,7 @@ void upload_font(void)
     csum = 0;
     /* expect 64 bytes per char although only 56 are useful */
     for (i = 0; i < 64; i++) {
-      while(!uart_getc(&buf[i]));
+      while(!uart_getc((unsigned char*) &buf[i]));
       csum += buf[i];
     }
     max7456_nvmwr(addr, (unsigned char*) buf);

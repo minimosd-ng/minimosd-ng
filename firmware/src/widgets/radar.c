@@ -82,7 +82,7 @@ static char draw(void)
   s = cos(direction_rad) * distance + scale;
   y = YSIZE - 1 - ((int) (s * YSIZE)/(scale*2));
 
-  max7456_putc(state.x + XCENTER, state.y + YCENTER, '*');
+  max7456_putc(state.x + XCENTER, state.y + YCENTER, MAX7456_FONT_PLANE);
   max7456_putc(state.x + prev_home.x, state.y + prev_home.y, ' ');
   max7456_putc(state.x + x, state.y + y, MAX7456_FONT_HOME);
 
