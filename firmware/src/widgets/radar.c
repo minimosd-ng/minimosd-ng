@@ -41,7 +41,7 @@ extern struct minimosd_ng_config config;
 #define SCALE2 500.0
 #define SCALE3 1000.0
 
-#define XSIZE 21
+#define XSIZE 22
 #define YSIZE 11
 #define XCENTER 10
 #define YCENTER 5
@@ -57,6 +57,19 @@ static char draw(void)
   float direction_rad, s;
   unsigned int scale, distance = mavdata.calcs.home_distance;
   char x, y, u;
+
+  if (state.props & WIDGET_INIT) {
+    for (x = 0; x < XSIZE; x++) {
+      max7456_putc(state.x+x, state.y-1, 0xc7);
+      max7456_putc(state.x+x, state.y+YSIZE, 0xcf);
+    }
+    for (y = 0; y < YSIZE; y++) {
+      max7456_putc(state.x-1, state.y+y, 0xc4);
+      max7456_putc(state.x+XSIZE, state.y+y, 0xbf);
+    }
+
+    state.props &= ~WIDGET_INIT;
+  }
 
   if (config.units & LENGTH_UNITS_IMPERIAL) {
     distance *= (unsigned int) ((float) distance * M2FEET);
@@ -78,15 +91,19 @@ static char draw(void)
   direction_rad = DEG2RAD(mavdata.calcs.home_direction);
   s = sin(direction_rad) * distance + scale;
   x = (char) ((int) (s * XSIZE)/(scale*2));
+  if (x >= XSIZE)
+    x = XSIZE-1;
 
   s = cos(direction_rad) * distance + scale;
   y = YSIZE - 1 - ((int) (s * YSIZE)/(scale*2));
+  if (y == 255)
+    y = 0;
 
-  max7456_putc(state.x + XCENTER, state.y + YCENTER, MAX7456_FONT_PLANE);
+  //max7456_putc(state.x + XCENTER, state.y + YCENTER, MAX7456_FONT_PLANE);
   max7456_putc(state.x + prev_home.x, state.y + prev_home.y, ' ');
   max7456_putc(state.x + x, state.y + y, MAX7456_FONT_HOME);
 
-  max7456_printf(state.x, state.y, "%4d%c", scale, u);
+  max7456_printf(state.x+1, state.y-1, "%4d%c", scale, u);
 
   prev_home.x = x;
   prev_home.y = y;
