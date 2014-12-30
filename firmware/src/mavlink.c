@@ -21,10 +21,11 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "config.h"
-#include "uart.h"
 #include "widgets.h"
-#include <stdio.h>
 #include "mavlink.h"
+#include "timer.h"
+#include <stdlib.h>
+
 
 
 static mavlink_message_t msg;
@@ -34,9 +35,10 @@ struct mavlink_data mavdata;
 
 void init_mavlink(void)
 {
-
+  mavdata.calcs.has_home = 0;
+  mavdata.stats.flight_start = 0;
+  mavdata.stats.flight_start = 0;
 }
-
 
 void mavlink_parse_msg(mavlink_message_t *msg)
 {
@@ -119,11 +121,10 @@ void mavlink_process(unsigned char c)
 }
 
 
-#define EARTH_AVG_RADIUS  (6367449)
-
 void calc_process(void)
 {
   struct calc_data *c = &mavdata.calcs;
+
   /* calcs for home */
   float dlat = c->home_lat - mavdata.gps_lat;
   float dlon = c->home_lon - mavdata.gps_lon;
@@ -147,5 +148,41 @@ void calc_process(void)
 
   c->home_distance = (unsigned int) dist;
   c->home_direction = (unsigned int) bearing;
+
+
+  if (c->has_home < (SLOW_TICKS_PER_SECOND * 5)) {
+    /* get gps lat/lon within 5 sec of having 2D fix */
+    if (mavdata.gps_fix_type > 1) {
+      c->has_home++;
+    } else {
+      c->has_home = 0;
+    }
+    c->home_lat = mavdata.gps_lat;
+    c->home_lon = mavdata.gps_lon;
+  } else if (c->has_home < (SLOW_TICKS_PER_SECOND * 10)){
+    /* set home altitude when altitude is steady (delta < 1m) for 5 sec */
+    if (abs((long) c->home_altitude - (long) mavdata.vfr_hud.alt) < 1) {
+      c->has_home++;
+    } else {
+      c->has_home =  SLOW_TICKS_PER_SECOND * 5;
+    }
+    c->home_altitude = (unsigned int) mavdata.vfr_hud.alt;
+
+  }
+  /* guess when the flight starts */
+  if ((mavdata.stats.flight_start == 0) && \
+      (mavdata.vfr_hud.throttle > 10) && \
+      (c->has_home) && (c->home_altitude > 10)) {
+    mavdata.stats.flight_start = get_uptime();
+  }
+
+  /* find when landing occurs */
+  if ((mavdata.stats.flight_start != 0) && \
+      (mavdata.vfr_hud.throttle > 3) && \
+      (mavdata.vfr_hud.airspeed > 3) && \
+      (c->home_altitude > 10)) {
+    mavdata.stats.flight_end = get_uptime();
+  }
+
 }
 

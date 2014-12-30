@@ -21,8 +21,6 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "config.h"
-#include <stdio.h>
-#include <string.h>
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
@@ -35,11 +33,12 @@ extern struct mavlink_data mavdata;
 static char draw(void)
 {
   struct time t;
-
-  char buf[10];
-  get_time(get_uptime() - mavdata.stats.flight_start, &t);
-  sprintf(buf, "%2d:%02d:%02d", t.h, t.m, t.s);
-  max7456_puts(state.x, state.y, buf);
+  if (state.props & WIDGET_INIT) {
+    max7456_putc(state.x, state.y, MAX7456_FONT_CLOCK);
+    state.props &= ~WIDGET_INIT;
+  }
+  get_time(mavdata.stats.flight_end - mavdata.stats.flight_start, &t);
+  max7456_printf(state.x+2, state.y, "%02d:%02d", t.m, t.s);
   return 1;
 }
 

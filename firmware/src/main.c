@@ -71,9 +71,6 @@ int main(void)
   /* global enable interrupt */
   sei();
 
-  mavdata.calcs.home_lat = 41.290543;
-  mavdata.calcs.home_lon = -8.568684;
-
   while (1)
   {
     n = now();
