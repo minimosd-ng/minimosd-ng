@@ -21,6 +21,7 @@ struct calc_data {
   unsigned char has_home;
   unsigned int home_distance;
   unsigned int home_direction;
+  unsigned int home_altitude;
 
   float home_lat, home_lon;
 };

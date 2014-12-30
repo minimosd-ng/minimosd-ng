@@ -55,7 +55,7 @@ WIDGET_IMPORT(horizon_widget);
 WIDGET_IMPORT(flightstats_widget);
 WIDGET_IMPORT(radar_widget);
 WIDGET_IMPORT(waypoint_widget);
-WIDGET_IMPORT(relaltitude_widget);
+WIDGET_IMPORT(homealtitude_widget);
 WIDGET_IMPORT(groundspeed_widget);
 WIDGET_IMPORT(airspeed_widget);
 WIDGET_IMPORT(throttle_widget);
@@ -87,7 +87,7 @@ WIDGETS( \
   &flightstats_widget,
   &radar_widget,
   &waypoint_widget,
-  &relaltitude_widget,
+  &homealtitude_widget,
   &groundspeed_widget,
   &airspeed_widget,
   &throttle_widget,

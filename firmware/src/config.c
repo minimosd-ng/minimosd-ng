@@ -53,33 +53,30 @@ unsigned char widget_default_config[] EEMEM = {
   1, WINDROSE_WIDGET_ID,      23, 15,
 
   1, HOMEDISTANCE_WIDGET_ID,  22,  1,
-  1, RELALTITUDE_WIDGET_ID,   22,  2,
+  1, HOMEALTITUDE_WIDGET_ID,  22,  2,
   1, ALTITUDE_WIDGET_ID,      22,  3,
-  1, FLIGHTTIMER_WIDGET_ID,   21,  4,
+  1, FLIGHTTIMER_WIDGET_ID,   22,  4,
 
   1, WINDSPEED_WIDGET_ID,     22,  7,
   1, CLIMBRATE_WIDGET_ID,      1,  7,
 
+//  1, BATREMAIN_WIDGET_ID,      0, 10,
+//  1, COG_WIDGET_ID,            0, 11,
+
   /* tab 2 - radar */
-  2, RADAR_WIDGET_ID,          4, 3,
-  2, HOMEDISTANCE_WIDGET_ID,   0, 0,
-  2, HOMEDIRECTION_WIDGET_ID,  7, 0,
-  2, RELALTITUDE_WIDGET_ID,    0, 1,
+  2, RADAR_WIDGET_ID,          4,  3,
+  2, HOMEDIRECTION_WIDGET_ID, 14,  8,
+  2, HOMEDISTANCE_WIDGET_ID,   0,  0,
+  2, HOMEALTITUDE_WIDGET_ID,   0,  1,
 
+//  2, WAYPOINT_WIDGET_ID,      22,  10,
 
-//  11, BATREMAIN_WIDGET_ID,      0, 10,
-//  11, COG_WIDGET_ID,            0, 11,
+  /* tab 3 - flight stats */
+  3, FLIGHTSTATS_WIDGET_ID,    0,  0,
 
-
-  /* tab 3 - mission */
-  3, WAYPOINT_WIDGET_ID,      22,  10,
-
-  /* tab 4 - flight stats */
-  4, FLIGHTSTATS_WIDGET_ID,    0,  0,
-
-  /* tab 5 - debug */
-  5, RCCHANNELS_WIDGET_ID,    12,  0,
-  5, TEMPERATURE_WIDGET_ID,   15,  3,
+  /* tab 4 - debug */
+  4, RCCHANNELS_WIDGET_ID,    1,  1,
+  4, TEMPERATURE_WIDGET_ID,   20,  1,
 
   ALL_TABS, TABINFO_WIDGET_ID, 27, 0,
   TAB_TABLE_END,

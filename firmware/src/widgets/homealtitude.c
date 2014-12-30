@@ -32,7 +32,7 @@ extern struct minimosd_ng_config config;
 
 static char draw(void)
 {
-  float altitude = (float) mavdata.vfr_hud.alt;
+  float altitude = (float) mavdata.vfr_hud.alt - (float) mavdata.calcs.home_altitude ;
 
   if (state.props & WIDGET_INIT) {
     max7456_putc(state.x, state.y, MAX7456_FONT_HOMEALT);
@@ -52,5 +52,5 @@ static char draw(void)
   return 1;
 }
 
-WIDGET_DECLARE(relaltitude_widget, RELALTITUDE_WIDGET_ID, draw);
+WIDGET_DECLARE(homealtitude_widget, HOMEALTITUDE_WIDGET_ID, draw);
 
