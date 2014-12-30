@@ -21,30 +21,34 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "config.h"
-#include <stdio.h>
-#include <string.h>
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
 
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
-
 extern struct mavlink_data mavdata;
+extern struct minimosd_ng_config config;
 
 static struct widget_state state;
 
 static char draw(void)
 {
+  float altitude = (float) mavdata.gps_altitude;
+
   if (state.props & WIDGET_INIT) {
-    max7456_putc(state.x+5, state.y, MAX7456_FONT_METERS);
+    max7456_putc(state.x, state.y, 'a');
+    if (config.units & LENGTH_UNITS_IMPERIAL)
+      max7456_putc(state.x+6, state.y, 'f');
+    else
+      max7456_putc(state.x+6, state.y, 'm');
     state.props &= ~WIDGET_INIT;
   }
-  max7456_printf(state.x, state.y, "%5d", (long) mavdata.gps_altitude);
+  if (config.units & LENGTH_UNITS_IMPERIAL)
+    altitude *= M2FEET;
+
+  if (altitude > 99999)
+    altitude = 99999;
+
+  max7456_printf(state.x+1, state.y, "%5d", (long) altitude);
   return 1;
 }
 

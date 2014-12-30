@@ -26,41 +26,61 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include <avr/eeprom.h>
 
 
-/* default configuration to be burned in the eeprom */
+/* default configuration optionally burned in the eeprom */
 unsigned char widget_default_config[] EEMEM = {
   STARTUP_TAB, STARTUP_WIDGET_ID, 1, 3,
 
   /* tab, widget_id, x, y */
-  1, ROLL_WIDGET_ID,           0,  0,
-  1, PITCH_WIDGET_ID,          0,  1,
-  1, RSSI_WIDGET_ID,           0,  2,
-  1, ALTITUDE_WIDGET_ID,       0,  3,
-  1, FLIGHTTIMER_WIDGET_ID,    0,  4,
-  1, GPSCOORDS_WIDGET_ID,      0,  5,
-  1, GPSSTATUS_WIDGET_ID,      0,  7,
-  2, RCCHANNELS_WIDGET_ID,    12,  0,
-  1, BATVOLTAGE_WIDGET_ID,     0,  8,
-  1, BATCURRENT_WIDGET_ID,     0,  9,
-  1, BATREMAIN_WIDGET_ID,      0, 10,
-  1, COG_WIDGET_ID,            0, 11,
-  1, WINDROSE_WIDGET_ID,       0, 12,
-  1, HEADING_WIDGET_ID,        0, 13,
-  1, HOMEDISTANCE_WIDGET_ID,   8,  0,
-  1, HOMEDIRECTION_WIDGET_ID,  8,  1,
-  1, HORIZON_WIDGET_ID,        8,  7,
-  3, FLIGHTSTATS_WIDGET_ID,    0,  0,
-  4, RADAR_WIDGET_ID,          0,  0,
-  4, HOMEDISTANCE_WIDGET_ID,   0, 14,
-  4, HOMEDIRECTION_WIDGET_ID,  0, 15,
-  1, WAYPOINT_WIDGET_ID,      22,  10,
-  1, RELALTITUDE_WIDGET_ID,    0, 14,
-  1, GROUNDSPEED_WIDGET_ID,   15,  0,
-  1, AIRSPEED_WIDGET_ID,      15,  1,
-  1, THROTTLE_WIDGET_ID,      15,  2,
-  1, TEMPERATURE_WIDGET_ID,   15,  3,
-  1, WINDSPEED_WIDGET_ID,     15,  4,
-  1, FLIGHTMODE_WIDGET_ID,    15,  5,
-  1, CLIMBRATE_WIDGET_ID,     15,  6,
+
+  /* tab 1 - main tab */
+  1, AIRSPEED_WIDGET_ID,       1,  1,
+  1, GROUNDSPEED_WIDGET_ID,    1,  2,
+  1, THROTTLE_WIDGET_ID,       1,  3,
+  1, RSSI_WIDGET_ID,           1,  4,
+
+  1, ROLL_WIDGET_ID,          11,  1,
+  1, PITCH_WIDGET_ID,         22, 10,
+  1, HORIZON_WIDGET_ID,        8,  6,
+  1, HOMEDIRECTION_WIDGET_ID, 14,  3,
+
+  1, GPSSTATUS_WIDGET_ID,      1,  9,
+  1, BATVOLTAGE_WIDGET_ID,     1, 12,
+  1, BATCURRENT_WIDGET_ID,     1, 13,
+  1, GPSCOORDS_WIDGET_ID,      1, 14,
+
+  1, HEADING_WIDGET_ID,       19, 15,
+  1, FLIGHTMODE_WIDGET_ID,    24, 14,
+  1, WINDROSE_WIDGET_ID,      23, 15,
+
+  1, HOMEDISTANCE_WIDGET_ID,  22,  1,
+  1, RELALTITUDE_WIDGET_ID,   22,  2,
+  1, ALTITUDE_WIDGET_ID,      22,  3,
+  1, FLIGHTTIMER_WIDGET_ID,   21,  4,
+
+  1, WINDSPEED_WIDGET_ID,     22,  7,
+  1, CLIMBRATE_WIDGET_ID,      1,  7,
+
+  /* tab 2 - radar */
+  2, RADAR_WIDGET_ID,          4, 3,
+  2, HOMEDISTANCE_WIDGET_ID,   0, 0,
+  2, HOMEDIRECTION_WIDGET_ID,  7, 0,
+  2, RELALTITUDE_WIDGET_ID,    0, 1,
+
+
+//  11, BATREMAIN_WIDGET_ID,      0, 10,
+//  11, COG_WIDGET_ID,            0, 11,
+
+
+  /* tab 3 - mission */
+  3, WAYPOINT_WIDGET_ID,      22,  10,
+
+  /* tab 4 - flight stats */
+  4, FLIGHTSTATS_WIDGET_ID,    0,  0,
+
+  /* tab 5 - debug */
+  5, RCCHANNELS_WIDGET_ID,    12,  0,
+  5, TEMPERATURE_WIDGET_ID,   15,  3,
+
   ALL_TABS, TABINFO_WIDGET_ID, 27, 0,
   TAB_TABLE_END,
 };

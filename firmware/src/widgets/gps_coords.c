@@ -36,8 +36,8 @@ static char draw(void)
     max7456_putc(state.x, state.y+1, MAX7456_FONT_LON);
     state.props &= ~WIDGET_INIT;
   }
-  max7456_printf(state.x+1, state.y,   "%11.6f", mavdata.gps_lat);
-  max7456_printf(state.x+1, state.y+1, "%11.6f", mavdata.gps_lon);
+  max7456_printf(state.x+1, state.y,   "%10.6f", mavdata.gps_lat);
+  max7456_printf(state.x+1, state.y+1, "%10.6f", mavdata.gps_lon);
   return 1;
 }
 

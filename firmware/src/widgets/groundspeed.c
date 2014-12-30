@@ -27,24 +27,28 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "max7456.h"
 #include "mavlink.h"
 
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
-
 extern struct mavlink_data mavdata;
+extern struct minimosd_ng_config config;
 
 static struct widget_state state;
 
 static char draw(void)
 {
+  float v = (mavdata.vfr_hud.groundspeed * 3600);
   if (state.props & WIDGET_INIT) {
-    max7456_putc(state.x+3, state.y, MAX7456_FONT_KMH);
+    max7456_putc(state.x, state.y, MAX7456_FONT_GROUNDSPEED);
+    if (config.units & LENGTH_UNITS_IMPERIAL)
+      max7456_putc(state.x+4, state.y, MAX7456_FONT_MILESHOUR);
+    else
+      max7456_putc(state.x+4, state.y, MAX7456_FONT_KMH);
     state.props &= ~WIDGET_INIT;
   }
-  max7456_printf(state.x, state.y, "%3d", (int) mavdata.vfr_hud.groundspeed);
+  if (config.units & LENGTH_UNITS_IMPERIAL)
+    v *= M2MILE;
+  else
+    v /= 1000.0;
+
+  max7456_printf(state.x+1, state.y, "%3d", (int) v);
   return 1;
 }
 

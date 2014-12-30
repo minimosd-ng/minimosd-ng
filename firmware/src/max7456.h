@@ -2,6 +2,7 @@
 #define __MAX7456_H__
 
 /* special font charaters */
+#define MAX7456_FONT_THROTTLE     (0x02)
 #define MAX7456_FONT_LAT          (0x03)
 #define MAX7456_FONT_LON          (0x04)
 #define MAX7456_FONT_DEGREE       (0x05)
@@ -10,7 +11,12 @@
 #define MAX7456_FONT_RADIO        (0x09)
 #define MAX7456_FONT_HOME         (0x0b)
 #define MAX7456_FONT_METERS       (0x0c)
+#define MAX7456_FONT_VOLTS        (0x0d)
+#define MAX7456_FONT_AMPS         (0x0e)
 #define MAX7456_FONT_KMH          (0x10)
+#define MAX7456_FONT_HOMEALT      (0x12)
+#define MAX7456_FONT_AIRSPEED     (0x13)
+#define MAX7456_FONT_GROUNDSPEED  (0x14)
 #define MAX7456_FONT_CLIMBRATE    (0x15)
 #define MAX7456_FONT_MILESHOUR    (0x19)
 #define MAX7456_FONT_METERMIN     (0x1a)
@@ -22,8 +28,11 @@
 #define MAX7456_FONT_MOTORARMED   (0x86)
 #define MAX7456_FONT_DIR_ARROWS   (0x90)
 #define MAX7456_FONT_PLANE        (0xb9)
-#define MAX7456_FONT_FAHRENHEIT   (0xbb)
 #define MAX7456_FONT_CELCIUS      (0xba)
+#define MAX7456_FONT_FAHRENHEIT   (0xbb)
+#define MAX7456_FONT_BATVOLTS     (0xbc)
+#define MAX7456_FONT_BATAMPS      (0xbc)
+
 
 typedef enum {
   MAX7456_REG_VM0   = 0x00,

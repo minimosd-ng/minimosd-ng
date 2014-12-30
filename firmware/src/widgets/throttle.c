@@ -32,10 +32,11 @@ extern struct mavlink_data mavdata;
 static char draw(void)
 {
   if (state.props & WIDGET_INIT) {
-    max7456_putc(state.x+3, state.y, '%');
+    max7456_putc(state.x, state.y, MAX7456_FONT_THROTTLE);
+    max7456_putc(state.x+4, state.y, '%');
     state.props &= ~WIDGET_INIT;
   }
-  max7456_printf(state.x, state.y, "%3d", mavdata.vfr_hud.throttle);
+  max7456_printf(state.x+1, state.y, "%3d", mavdata.vfr_hud.throttle);
   return 1;
 }
 

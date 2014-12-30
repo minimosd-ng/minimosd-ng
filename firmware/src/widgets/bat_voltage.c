@@ -21,18 +21,9 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "config.h"
-#include <stdio.h>
-#include <string.h>
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
-
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
 
 static struct widget_state state;
 
@@ -40,9 +31,12 @@ extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
-  char buf[12];
-  sprintf(buf, "%5.2f%c", mavdata.bat_voltage, 0x0d);
-  max7456_puts(state.x, state.y, buf);
+  if (state.props & WIDGET_INIT) {
+    max7456_putc(state.x, state.y, MAX7456_FONT_BATVOLTS);
+    max7456_putc(state.x+6, state.y, MAX7456_FONT_VOLTS);
+    state.props &= ~WIDGET_INIT;
+  }
+  max7456_printf(state.x+1, state.y, "%5.2f", mavdata.bat_voltage);
   return 1;
 }
 
