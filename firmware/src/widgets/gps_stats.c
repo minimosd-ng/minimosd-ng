@@ -21,19 +21,10 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "config.h"
-#include <stdio.h>
-#include <string.h>
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
 #include "timer.h"
-
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
 
 static struct widget_state state;
 
@@ -41,26 +32,26 @@ extern struct mavlink_data mavdata;
 
 static char draw(void)
 {
-  char buf[10];
+  char s;
 
   switch (mavdata.gps_fix_type) {
+  default:
   case 0:
   case 1:
-    buf[0] = get_toogle() ? 0x2a : 0x20;
+    s = get_toogle() ? '*' : 0x20;
     break;
   case 2:
-    buf[0] = 0x1f;
+    s = 0x1f;
     break;
   case 3:
-    buf[0] = 0x0f;
+    s = 0x0f;
     break;
   }
 
   if (mavdata.gps_eph >= 200)
-    buf[0] = get_toogle() ? 0x2a : 0x20;
+    s = get_toogle() ? s : 0x20;
 
-  sprintf(&buf[1], "%2d", mavdata.gps_nrsats);
-  max7456_puts(state.x, state.y, buf);
+  max7456_printf(state.x, state.y, "%c%2d", s, mavdata.gps_nrsats);
   return 1;
 }
 
