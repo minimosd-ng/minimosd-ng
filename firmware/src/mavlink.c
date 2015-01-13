@@ -34,9 +34,17 @@ struct mavlink_data mavdata;
 
 void init_mavlink(void)
 {
+  struct flight_stats *s = &mavdata.stats;
   mavdata.calcs.has_home = 0;
-  mavdata.stats.flight_start = 0;
-  mavdata.stats.flight_end = 0;
+  s->flight_start = 0;
+  s->flight_end = 0;
+  s->total_distance = 0;
+
+  s->max_home_distance = 0;
+  s->max_airspeed = 0;
+  s->max_groundspeed = 0;
+  s->max_home_altitude = 0;
+  s->max_widspeed = 0;
 }
 
 void mavlink_parse_msg(mavlink_message_t *msg)
@@ -123,6 +131,7 @@ void mavlink_process(unsigned char c)
 void calc_process(void)
 {
   struct calc_data *c = &mavdata.calcs;
+  struct flight_stats *s = &mavdata.stats;
 
   /* calcs for home */
   float dlat = c->home_lat - mavdata.gps_lat;
@@ -166,23 +175,36 @@ void calc_process(void)
       c->has_home =  SLOW_TICKS_PER_SECOND * 5;
     }
     c->home_altitude = (unsigned int) mavdata.vfr_hud.alt;
-
   }
+
   /* guess when the flight starts */
-  if ((mavdata.stats.flight_start == 0) && \
+  if ((s->flight_start == 0) && \
       (mavdata.vfr_hud.throttle > 10) && \
       (c->has_home) && (c->home_altitude > 10) && \
       (mavdata.vfr_hud.airspeed > 8)) {
-    mavdata.stats.flight_end = mavdata.stats.flight_start = get_uptime();
+    s->flight_end = s->flight_start = get_uptime();
   }
 
   /* guess when landing occurs */
-  if ((mavdata.stats.flight_start != 0) && \
+  if ((s->flight_start != 0) && \
       ((mavdata.vfr_hud.throttle > 3) || \
        (mavdata.vfr_hud.airspeed > 3) || \
        (c->home_altitude > 10))) {
-    mavdata.stats.flight_end = get_uptime();
+    s->flight_end = get_uptime();
   }
 
+  /* total distance covered accumulator */
+  if (c->has_home) {
+    s->total_distance += mavdata.vfr_hud.groundspeed * SLOW_PROCESS_TICK / 1000;
+  }
+
+  /* store maximum values */
+  if (s->flight_start != 0) {
+    SET_MAX(s->max_home_distance, c->home_distance);
+    SET_MAX(s->max_airspeed, mavdata.vfr_hud.airspeed);
+    SET_MAX(s->max_groundspeed, mavdata.vfr_hud.groundspeed);
+    SET_MAX(s->max_home_altitude, c->home_altitude);
+    SET_MAX(s->max_widspeed, mavdata.wind_speed);
+  }
 }
 

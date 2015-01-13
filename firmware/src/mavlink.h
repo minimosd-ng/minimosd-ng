@@ -101,5 +101,7 @@ enum {
   COPTER_MODE_POSHOLD   = 116,
 };
 
+#define SET_MAX(a, b) { if (b > a) a = b; }
+
 #endif
 
