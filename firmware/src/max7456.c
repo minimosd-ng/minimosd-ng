@@ -136,11 +136,7 @@ void max7456_clr(void)
 
 void max7456_nvmwr(unsigned char addr, unsigned char *bitmap)
 {
-  unsigned char i, *b = bitmap, vm0;
-
-  /* disable display */
-  vm0 = max7456_rd(MAX7456_REG_VM0, SPI_START);
-  max7456_wr(MAX7456_REG_VM0, 0, 0);
+  unsigned char i, *b = bitmap;
 
   /* set character address */
   max7456_wr(MAX7456_REG_CMAH, addr, 0);
@@ -158,9 +154,6 @@ void max7456_nvmwr(unsigned char addr, unsigned char *bitmap)
 
   /* wait until done - bit 5 in the status register returns to 0 (12ms) */
   while (max7456_rd(MAX7456_REG_STAT, 0) & MAX7456_STAT_CMS);
-
-  /* enable display */
-  max7456_wr(MAX7456_REG_VM0, vm0, SPI_END);
 }
 
 void max7456_nvmrd(unsigned char addr, unsigned char *bitmap)
@@ -242,11 +235,15 @@ void init_max7456(void)
 
 void upload_font(void)
 {
-  unsigned char csum, i, addr = 0;
+  unsigned char csum, i, addr = 0, vm0;
   char buf[64];
 
   /* disable refresh interrupt */
   EIMSK &= ~_BV(INT0);
+
+  /* disable display */
+  vm0 = max7456_rd(MAX7456_REG_VM0, SPI_START);
+  max7456_wr(MAX7456_REG_VM0, 0, 0);
 
   /* send ok to flag data receive ready */
   printf(P("OK\n"));
@@ -267,6 +264,9 @@ void upload_font(void)
     UDR0 = csum;
   } while (++addr != 0);
   printf(P("OK\n"));
+
+  /* enable display */
+  max7456_wr(MAX7456_REG_VM0, vm0, SPI_END);
 
   EIMSK |= _BV(INT0);
 }

@@ -35,7 +35,7 @@ static char draw(void)
   float altitude = (float) mavdata.gps_altitude;
 
   if (state.props & WIDGET_INIT) {
-    max7456_putc(state.x, state.y, 'a');
+    max7456_putc(state.x, state.y, MAX7456_FONT_TOTALALT);
     if (config.units & LENGTH_UNITS_IMPERIAL)
       max7456_putc(state.x+6, state.y, 'f');
     else
