@@ -27,8 +27,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 
 
-
-static mavlink_message_t msg;
+mavlink_message_t msg;
 mavlink_status_t status;
 
 struct mavlink_data mavdata;
