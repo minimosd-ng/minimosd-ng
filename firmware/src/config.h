@@ -3,6 +3,10 @@
 
 /* default config options */
 
+/* callsign default config */
+#define CONF_CALLSIGN_SIZE      (8)
+#define CONF_CALLSIGN           "CALLSIGN"
+
 /* default vehicle */
 #define CONF_VEHICLE            APM_PLANE
 /* mavlink baudrate */
@@ -153,6 +157,8 @@ struct minimosd_ng_config {
 
   /* tab switching configuration */
   struct tab_switch tab_sw;
+
+  char callsign[CONF_CALLSIGN_SIZE];
 };
 
 void load_config(void);

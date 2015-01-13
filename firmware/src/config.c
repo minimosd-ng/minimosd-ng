@@ -101,6 +101,8 @@ struct minimosd_ng_config config = {
     .method = CONF_TABSWITCH_METHOD,
     .ch     = CONF_TABSWITCH_CH,
   },
+
+  .callsign = CONF_CALLSIGN,
 };
 
 void load_config(void)
