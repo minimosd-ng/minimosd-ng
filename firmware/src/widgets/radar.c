@@ -89,15 +89,16 @@ static char draw(void)
     distance = scale;
 
   direction_rad = DEG2RAD(mavdata.calcs.home_direction);
-  s = sin(direction_rad) * distance + scale;
+  s = sin(direction_rad) * (float) distance + scale;
   x = (char) ((int) (s * XSIZE)/(scale*2));
   if (x >= XSIZE)
     x = XSIZE-1;
 
-  s = cos(direction_rad) * distance + scale;
-  y = YSIZE - 1 - ((int) (s * YSIZE)/(scale*2));
-  if (y == 255)
-    y = 0;
+  s = cos(direction_rad) * (float) distance + scale;
+  y = (char) ((int) (s * YSIZE)/(scale*2));
+  if (y >= YSIZE)
+    y = YSIZE-1;
+  y = YSIZE - 1 - y;
 
   //max7456_putc(state.x + XCENTER, state.y + YCENTER, MAX7456_FONT_PLANE);
   max7456_putc(state.x + prev_home.x, state.y + prev_home.y, ' ');
