@@ -37,7 +37,7 @@ void init_mavlink(void)
 {
   mavdata.calcs.has_home = 0;
   mavdata.stats.flight_start = 0;
-  mavdata.stats.flight_start = 0;
+  mavdata.stats.flight_end = 0;
 }
 
 void mavlink_parse_msg(mavlink_message_t *msg)
