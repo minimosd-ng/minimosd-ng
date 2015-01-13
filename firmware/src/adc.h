@@ -36,8 +36,9 @@ enum {
 };
 
 
-void open_adc(unsigned char prescale, unsigned char ref);
-unsigned int read_adc(unsigned char chan);
+unsigned char open_adc(unsigned char prescale, unsigned char ref);
+void start_adc(unsigned char chan);
+unsigned char read_adc(unsigned int *value);
 void close_adc(void);
 
 #endif /* __ADC_H__ */

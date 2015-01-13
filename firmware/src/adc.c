@@ -3,11 +3,12 @@
 
 static unsigned char open = 0;
 
-void open_adc(unsigned char prescale, unsigned char ref)
+unsigned char open_adc(unsigned char prescale, unsigned char ref)
 {
   if (open)
-    return;
-  open = 1;
+    return 1;
+  else
+    open = 1;
 
   /* Configure clock prescale and voltage reference */
   ADCSRA = prescale;
@@ -18,9 +19,10 @@ void open_adc(unsigned char prescale, unsigned char ref)
 
   /* Enable ADC */
   ADCSRA |= _BV(ADEN);
+  return 0;
 }
 
-unsigned int read_adc(unsigned char chan)
+void start_adc(unsigned char chan)
 {
   /* Setup input channel */
   ADMUX &= 0xf0;
@@ -28,12 +30,18 @@ unsigned int read_adc(unsigned char chan)
 
   /* Start conversion. */
   ADCSRA |= _BV(ADSC);
+}
 
-  /* Wait until conversion is completed. */
-  while ( ADCSRA & _BV(ADSC) );
+unsigned char read_adc(unsigned int *value)
+{
+  /* non-block wait until adc conversion is complete */
+  if (ADCSRA & _BV(ADSC))
+    return 1;
 
   /* Read ADC output */
-  return (unsigned int) ADC;
+  *value = (unsigned int) ADC;
+
+  return 0;
 }
 
 void close_adc(void)
