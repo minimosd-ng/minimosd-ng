@@ -24,6 +24,7 @@ along with MinimOSD-ng.  If not, see <http://www.gnu.org/licenses/>.
 #include "widgets.h"
 #include "max7456.h"
 #include "mavlink.h"
+#include "adc.h"
 
 extern struct mavlink_data mavdata;
 extern struct minimosd_ng_config config;
@@ -45,8 +46,10 @@ static char draw(void)
     v = mavdata.ch_raw[config.rssi.ch];
     break;
   case RSSI_SOURCE_ADC:
-    // TODO: add adc driver
-    v = 0;
+    open_adc(ADC_PS_128, ADC_REF_AVDD);
+    start_adc(config.rssi.ch);
+    while (read_adc(&v));
+    close_adc();
     break;
   case RSSI_SOURCE_RSSI:
   default:
