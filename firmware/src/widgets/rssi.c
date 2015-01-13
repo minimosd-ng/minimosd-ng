@@ -48,7 +48,7 @@ static char draw(void)
   case RSSI_SOURCE_ADC:
     open_adc(ADC_PS_128, ADC_REF_AVDD);
     start_adc(config.rssi.ch);
-    while (read_adc(&v));
+    while (read_adc((unsigned int *) &v));
     close_adc();
     break;
   case RSSI_SOURCE_RSSI:
