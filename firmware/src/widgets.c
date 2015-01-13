@@ -64,6 +64,8 @@ WIDGET_IMPORT(windspeed_widget);
 WIDGET_IMPORT(flightmode_widget);
 WIDGET_IMPORT(climbrate_widget);
 WIDGET_IMPORT(tabinfo_widget);
+WIDGET_IMPORT(batvoltage2_widget);
+WIDGET_IMPORT(callsign_widget);
 
 WIDGETS( \
   &pitch_widget,
@@ -96,6 +98,8 @@ WIDGETS( \
   &flightmode_widget,
   &climbrate_widget,
   &tabinfo_widget,
+  &batvoltage2_widget,
+  &callsign_widget,
   NULL,
 );
 

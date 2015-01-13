@@ -35,6 +35,7 @@ enum {
   CLIMBRATE_WIDGET_ID,
   TABINFO_WIDGET_ID,
   BATVOLTAGE2_WIDGET_ID,
+  CALLSIGN_WIDGET_ID,
 };
 
 /* we should always have at least one tab */
