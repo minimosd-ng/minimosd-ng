@@ -80,32 +80,28 @@ static void upload_font_func(GtkWidget *widget, gpointer data)
 	buf[fsize] = '\n';
 	buf[fsize+1] = 0;
 
-	sp = open(PORT, O_RDWR | O_NOCTTY | O_NONBLOCK);
+	sp = open(PORT, O_RDWR | O_NOCTTY);
 	if (sp < 0) {
 		g_print("Unable to open serial port!\n");
 		return;
 	}
 
-	memset(&tty, 0, sizeof tty);
+	memset(&tty, 0, sizeof(tty));
 	if (tcgetattr(sp, &tty) != 0) {
 		//error_message ("error %d from tcgetattr", errno);
 		g_print("Error from tcgetattr!\n");
 		return;
 	}
 
-	tty.c_lflag = 0;
-	tty.c_cflag = PORT_SPEED | CS8 | CLOCAL | CREAD;
-	tty.c_oflag = 0;
 
-	tty.c_cc[VMIN]  = 0;
+	tty.c_cflag = PORT_SPEED | CS8 | CLOCAL | CREAD;
+	tty.c_cc[VMIN]  = 1;
 	tty.c_cc[VTIME] = 5;
 
 	tcflush(sp, TCIFLUSH);
 
 	if (tcsetattr (sp, TCSANOW, &tty) != 0)
 		g_print("Error in tcsetattr!\n");
-
-	usleep(4000000);
 
 	printf("Entering font mode... ");
 	write(sp, "\xfa\xfa\xfa\xfa\xfa\xfa\xfa\xfa\xfa\xfa", 10);
