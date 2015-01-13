@@ -8,7 +8,9 @@
 /* mavlink baudrate */
 #define CONF_MAVLINK_BAUDRATE   (19200)
 
-/* tab config */
+/** tab config **/
+/* time to display startup tab */
+#define CONF_STARTUPTAB_SEC     (3)
 /* maximum number of display tabs */
 #define CONF_MAX_TABS           (20)
 #define CONF_TABSWITCH_CH       CH8
@@ -16,10 +18,10 @@
 #define CONF_TABSWITCH_CH_MIN   (1000)
 #define CONF_TABSWITCH_CH_MAX   (1950)
 
-/* unit system */
+/** unit system **/
 #define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_CELCIUS)
 
-/* widget specific config */
+/** widget specific config **/
 
 /* rssi config */
 #define CONF_RSSI_SOURCE        (RSSI_SOURCE_RSSI)
@@ -93,7 +95,6 @@
 #define DEG2RAD(x)                  (x*0.0174532925199)
 
 #define EARTH_AVG_RADIUS            (6367449)
-
 
 /* helper to use strings in prog mem */
 /* assumes a local "buf" is defined  */

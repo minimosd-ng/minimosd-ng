@@ -79,7 +79,7 @@ int main(void)
 
       switch (STATE) {
       case 0:
-        if (n > 3000) {
+        if (n > CONF_STARTUPTAB_SEC * 1000) {
           STATE = 1;
         }
         break;
