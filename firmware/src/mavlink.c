@@ -171,15 +171,16 @@ void calc_process(void)
   /* guess when the flight starts */
   if ((mavdata.stats.flight_start == 0) && \
       (mavdata.vfr_hud.throttle > 10) && \
-      (c->has_home) && (c->home_altitude > 10)) {
-    mavdata.stats.flight_start = get_uptime();
+      (c->has_home) && (c->home_altitude > 10) && \
+      (mavdata.vfr_hud.airspeed > 8)) {
+    mavdata.stats.flight_end = mavdata.stats.flight_start = get_uptime();
   }
 
-  /* find when landing occurs */
+  /* guess when landing occurs */
   if ((mavdata.stats.flight_start != 0) && \
-      (mavdata.vfr_hud.throttle > 3) && \
-      (mavdata.vfr_hud.airspeed > 3) && \
-      (c->home_altitude > 10)) {
+      ((mavdata.vfr_hud.throttle > 3) || \
+       (mavdata.vfr_hud.airspeed > 3) || \
+       (c->home_altitude > 10))) {
     mavdata.stats.flight_end = get_uptime();
   }
 
