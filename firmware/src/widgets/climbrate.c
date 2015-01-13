@@ -30,6 +30,11 @@ static struct widget_state state;
 extern struct mavlink_data mavdata;
 extern struct minimosd_ng_config config;
 
+#if CONF_CLIMBRATE_EMA > 0
+#define ALPHA (1.0/CONF_CLIMBRATE_EMA)
+static int avg;
+#endif
+
 static char draw(void)
 {
   int climb;
@@ -46,6 +51,11 @@ static char draw(void)
     climb = (int) ((float) mavdata.vfr_hud.climb * M2FEET * 60.0);
   else
     climb = (int) ((float) mavdata.vfr_hud.climb * 60.0);
+
+#if CONF_CLIMBRATE_EMA > 0
+  avg = avg - (int) (((float) avg - (float) climb) * ALPHA);
+  climb = avg;
+#endif
 
   max7456_printf(state.x+1, state.y, "%4d", climb);
   return 1;

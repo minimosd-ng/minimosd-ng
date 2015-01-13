@@ -3,10 +3,6 @@
 
 /* default config options */
 
-/* callsign default config */
-#define CONF_CALLSIGN_SIZE      (8)
-#define CONF_CALLSIGN           "CALLSIGN"
-
 /* default vehicle */
 #define CONF_VEHICLE            APM_PLANE
 /* mavlink baudrate */
@@ -23,13 +19,26 @@
 /* unit system */
 #define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_CELCIUS)
 
+/* widget specific config */
+
 /* rssi config */
 #define CONF_RSSI_SOURCE        (RSSI_SOURCE_RSSI)
 #define CONF_RSSI_MIN           (0)
 #define CONF_RSSI_MAX           (255)
 #define CONF_RSSI_UNITS         (RSSI_PERCENT)
 
-/* config navigation control */
+/* callsign default config */
+#define CONF_CALLSIGN_SIZE      (8)
+#define CONF_CALLSIGN           "CALLSIGN"
+
+/* climbrate exponential moving average
+   the number defines the averaging bucket 0=disable
+   currently apm has a bug that will make the value oscillate
+   https://github.com/diydrones/ardupilot/issues/937 */
+#define CONF_CLIMBRATE_EMA      10
+
+
+/* config navigation control - to implement */
 #define CONF_RCCONFIG_ENABLE    0
 #define CONF_ENTERCOMB          (BUTTON_RIGHT | BUTTON_BACK | BUTTON_DOWN)
 #define CONF_LEFTRIGHT_CH       CH1
