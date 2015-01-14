@@ -5,7 +5,7 @@ MinimOSD-ng is a new firmware written from scratch for the MinimOSD hardware.<br
 It's not built under arduino ide and you will need an AVR programmer to burn it (like a cheap usbasp).<br>
 The project is in an early stage but it can already be used.<br>
 
-[If you like this project, send me some beers here](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5SMU6YE5XG6JG)
+[Like this project? Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5SMU6YE5XG6JG)
 
 The concept
 ===========
