@@ -14,7 +14,7 @@ A tab is what you currently see on the screen.<br>
 It allows you to have any number of tabs.<br>
 One tab can have any number of widgets.<br>
 <br>
-A widget is the basic module of the OSD which can draw anything on screen.
+A widget is the basic module of the OSD which can draw anything on screen. Most of the widgets look is based on minimosd and minimosd-extra "panels".
 <br>
 <br>
 The font for the max7456 can be uploaded using the rudimentary tool located in tools/osdtool (linux only). The font itself is also located in the same place (tools/osdtool/charset.mcm).<br>
@@ -52,6 +52,8 @@ Available widgets
 * BATTERY CURRENT
 * BATTERY REMAINING
 * BATTERY VOLTAGE
+* BATTERY VOLTAGE 2
+* CALL SIGN
 * CLIMB RATE
 * COG
 * CLOCK / TIMER
@@ -97,9 +99,12 @@ Building
 5) Burn the flash 'make flash'<br>
 6) Burn eeprom: 'make eeprom'<br>
 <br>
-You may need to edit Makefile to correctly setup your AVR programmer.
-
-
+You may need to edit Makefile to correctly setup your AVR programmer.<br>
+You should also set the fuse that preserves eeprom throught a flash erase cycle.<br>
+The following fuse setting should be fine:<br>
+```
+avrdude -c usbasp -p m328p -U lfuse:w:0x05:m 	-U hfuse:w:0xD1:m
+```
 
 Pull requests are welcome.
 
