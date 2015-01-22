@@ -94,6 +94,7 @@ struct minimosd_ng_config config = {
     .min = CONF_RSSI_MIN,
     .max = CONF_RSSI_MAX,
     .units = CONF_RSSI_UNITS,
+    .ch = CONF_RSSI_CH,
   },
 
   /* tab switching */

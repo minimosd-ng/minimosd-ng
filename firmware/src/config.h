@@ -21,6 +21,7 @@
 /** unit system **/
 #define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_CELCIUS)
 
+
 /** widget specific config **/
 
 /* rssi config */
@@ -28,6 +29,8 @@
 #define CONF_RSSI_MIN           (0)
 #define CONF_RSSI_MAX           (255)
 #define CONF_RSSI_UNITS         (RSSI_PERCENT)
+/* channel is useless if source is mavlink rssi) */
+#define CONF_RSSI_CH            (RSSI_CH1)
 
 /* callsign default config */
 #define CONF_CALLSIGN_SIZE      (8)
