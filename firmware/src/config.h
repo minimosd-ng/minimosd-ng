@@ -19,7 +19,7 @@
 #define CONF_TABSWITCH_CH_MAX   (1950)
 
 /** unit system **/
-#define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_CELCIUS)
+#define CONF_DEFAULT_UNITS      (LENGTH_UNITS_METRIC | TEMPERATURE_UNIT_CELSIUS)
 
 
 /** widget specific config **/
@@ -85,7 +85,7 @@
 /* unit system definitions */
 #define LENGTH_UNITS_METRIC         0x01
 #define LENGTH_UNITS_IMPERIAL       0x02
-#define TEMPERATURE_UNIT_CELCIUS    0x04
+#define TEMPERATURE_UNIT_CELSIUS    0x04
 #define TEMPERATURE_UNIT_FAHRENHEIT 0x08
 
 /* conversion constants */
@@ -93,7 +93,7 @@
 #define MILE2FEET                   (5280)
 #define M2MILE                      (M2FEET / MILE2FEET)
 
-#define CELCIUS2FAHR(x)             ((x * 18)/10 + 3200)
+#define CELSIUS2FAHR(x)             ((x * 18)/10 + 3200)
 #define RAD2DEG(x)                  (x*57.2957795131)
 #define DEG2RAD(x)                  (x*0.0174532925199)
 

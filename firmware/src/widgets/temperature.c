@@ -38,12 +38,12 @@ static char draw(void)
     if (config.units & TEMPERATURE_UNIT_FAHRENHEIT)
       max7456_putc(state.x+5, state.y, MAX7456_FONT_FAHRENHEIT);
     else
-      max7456_putc(state.x+5, state.y, MAX7456_FONT_CELCIUS);
+      max7456_putc(state.x+5, state.y, MAX7456_FONT_CELSIUS);
     state.props &= ~WIDGET_INIT;
   }
 
   if (config.units & TEMPERATURE_UNIT_FAHRENHEIT)
-    temp = CELCIUS2FAHR(temp);
+    temp = CELSIUS2FAHR(temp);
 
   max7456_printf(state.x, state.y, "%5.1f", (float) (temp/100.0));
   return 1;

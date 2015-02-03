@@ -30,7 +30,7 @@
 #define MAX7456_FONT_DIR_ARROWS   (0x90)
 #define MAX7456_FONT_TOTALALT     (0xb2)
 #define MAX7456_FONT_PLANE        (0xb9)
-#define MAX7456_FONT_CELCIUS      (0xba)
+#define MAX7456_FONT_CELSIUS      (0xba)
 #define MAX7456_FONT_FAHRENHEIT   (0xbb)
 #define MAX7456_FONT_BATVOLTS     (0xbc)
 #define MAX7456_FONT_BATAMPS      (0xbd)

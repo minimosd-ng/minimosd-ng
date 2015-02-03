@@ -58,7 +58,7 @@ static char draw(void)
   if (config.units & TEMPERATURE_UNIT_FAHRENHEIT)
     max7456_printf(state.x+19, state.y+5, P("Fahrenheit"));
   else
-    max7456_printf(state.x+19, state.y+5, P("Celcius"));
+    max7456_printf(state.x+19, state.y+5, P("Celsius"));
 
   return 1;
 }
