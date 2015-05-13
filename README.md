@@ -104,8 +104,7 @@ You may need to edit Makefile to correctly setup your AVR programmer.<br>
 You should also set the fuse that preserves eeprom throught a flash erase cycle.<br>
 The following fuse setting should be fine:<br>
 ```
-avrdude -c usbasp -p m328p -U lfuse:w:0xff:m -U hfuse:w:0xD1:m -U efuse:w:0x05:m
-(according to datasheet it seems that avrdude has the lfuse and efuse swapped)
+avrdude -c usbasp -p m328p -U lfuse:w:0xff:m -U hfuse:w:0xd1:m -U efuse:w:0x05:m
 ```
 
 Pull requests are welcome.
